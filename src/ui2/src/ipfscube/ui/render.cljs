@@ -160,25 +160,26 @@
 (defn rc-page-main
   [channels state*]
   (reagent.core/with-let
-    [_ (useEffect (fn []
-                    (println ::rc-page-main-mount)
-                    (fn useEffect-cleanup []
-                      (println ::rc-page-main-unmount))))]
-    [layout channels state*
-     [:<>
-      [:div ::rc-page-main]
-      
-      #_[:<>
-         (if (empty? @state*)
+    []
+    (let [_ (useEffect (fn []
+                         (println ::rc-page-main-mount)
+                         (fn useEffect-cleanup []
+                           (println ::rc-page-main-unmount))))]
+      [layout channels state*
+       [:<>
+        [:div ::rc-page-main]
 
-           [:div "loading..."]
+        #_[:<>
+           (if (empty? @state*)
 
-           [:<>
-            [:pre {} (with-out-str (pprint @state*))]
-            [ant-button {:icon (reagent.core/as-element [ant-icon-sync-outlined])
-                         :size "small"
-                         :title "button"
-                         :on-click (fn [] ::button-click)}]])]]]))
+             [:div "loading..."]
+
+             [:<>
+              [:pre {} (with-out-str (pprint @state*))]
+              [ant-button {:icon (reagent.core/as-element [ant-icon-sync-outlined])
+                           :size "small"
+                           :title "button"
+                           :on-click (fn [] ::button-click)}]])]]])))
 
 
 (defn rc-page-foo-name

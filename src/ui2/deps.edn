@@ -12,4 +12,5 @@
         github.cljctools/rsocket-js {:local/root  "/ctx/cljctools/rsocket-js"}
 
         github.ipfs.ipfs-cube/ui2-meta {:local/root  "/ctx/ipfs-cube/src/ui2-meta"}
-        github.ipfs.ipfs-cube/daemon-meta {:local/root  "/ctx/ipfs-cube/src/daemon-meta"}}}
+        github.ipfs.ipfs-cube/daemon-meta {:local/root  "/ctx/ipfs-cube/src/daemon-meta"}
+        github.username.ipfs-lab/notepad {:local/root  "/ctx/ipfs-lab/src/notepad"}}}

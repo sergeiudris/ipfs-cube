@@ -21,7 +21,10 @@
    [ipfscube.daemon.spec :as daemon.spec]
    [ipfscube.daemon.chan :as daemon.chan]
 
-   [ipfscube.ui.render :as ui.render]))
+   [ipfscube.ui.render :as ui.render]
+   
+   [notepad.docker-from-browser1]
+   ))
 
 (goog-define BAR_PORT 0)
 
