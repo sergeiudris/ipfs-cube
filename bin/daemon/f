@@ -42,4 +42,9 @@ native_cli(){
   -jar ./target/app.standalone.jar
 }
 
+upx_compress(){
+  # https://github.com/upx/upx
+  upx -9 -o ./target/app.upx.native ./target/app.native
+}
+
 "$@"

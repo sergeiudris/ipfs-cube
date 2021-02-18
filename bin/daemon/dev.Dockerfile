@@ -58,6 +58,13 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg |  apt-key add - && \
 
 RUN sudo apt update && sudo apt install -y xvfb libgtk2.0-0 libxss1 libgconf-2-4
 
+## upx
+ENV UPX_VERSION=3.96
+ENV PATH $PATH:/usr/local/upx
+RUN curl -Ls "https://github.com/upx/upx/releases/download/v${UPX_VERSION}/upx-${UPX_VERSION}-amd64_linux.tar.xz" | \
+    tar -xJ -C /usr/local/ && \
+    ln -s /usr/local/upx-${UPX_VERSION}-amd64_linux /usr/local/upx
+
 ARG workdir
 
 WORKDIR ${workdir}
