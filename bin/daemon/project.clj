@@ -54,6 +54,7 @@
                         "--allow-incomplete-classpath"
                         "--initialize-at-build-time"
                         "--enable-url-protocols=http"
+                        "-H:IncludeResources='.*html$'"
                         "--verbose"
                         "--no-fallback"]}
 
@@ -63,5 +64,5 @@
   :source-paths ["src"]
   :java-source-paths ["src"]
   :test-paths [] #_["test"]
-  :resource-paths [] #_["resources" "config"]
+  :resource-paths ["resources" "/ctx/ipfs-cube/bin/ui2/resources"]
   :auto-clean false)

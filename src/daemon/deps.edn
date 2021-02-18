@@ -13,4 +13,6 @@
         github.cljctools/cljc {:local/root  "/ctx/cljctools/cljc"}
         github.cljctools/csp {:local/root  "/ctx/cljctools/csp"}
 
+        com.sparkjava/spark-core {:mvn/version "2.9.1"}
+
         github.ipfs.ipfs-cube/daemon-meta {:local/root  "/ctx/ipfs-cube/src/daemon-meta"}}}

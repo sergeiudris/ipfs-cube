@@ -1,4 +1,5 @@
 (ns ipfscube.daemon.main
+  (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -17,7 +18,9 @@
 
    [ipfscube.daemon.spec :as daemon.spec]
    [ipfscube.daemon.chan :as daemon.chan])
-  (:gen-class))
+  (:import
+   spark.Spark
+   spark.Route))
 
 (def counter1 (atom 0))
 (def counter2 (atom 0))
@@ -27,6 +30,24 @@
 (s/def ::foo string?)
 
 (def foo1 (s/gen ::foo))
+
+(def host "0.0.0.0")
+(def port 8080)
+
+(defn create-server []
+  (def ^:dynamic *tmp* "something defined in runtime")
+  (Spark/port port)
+  (.location Spark/staticFiles  "/public")
+  (Spark/init)
+  (Spark/get "/hello" (reify Route
+                        (handle [_ req res]
+                          (format "hello world, %s" *tmp*)))))
+
+(comment
+ 
+ 
+ ;;
+ )
 
 (defn -main [& args]
   (println ::main)
@@ -42,10 +63,12 @@
         (<! (timeout 1000))
         (>! foo| @counter1)
         (recur)))
-  (a/<!! (go (loop []
-               (when-let [value (<! foo|)]
-                 (println ::loop-b value)
-                 (recur))))))
+  (go (loop []
+        (when-let [value (<! foo|)]
+          (println ::loop-b value)
+          (recur))))
+  (println (format "; starting http server on %s:%s" host port))
+  (create-server))
 
 ;; (def channels (merge
 ;;                (daemon.chan/create-channels)))
