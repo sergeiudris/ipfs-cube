@@ -1,4 +1,4 @@
 {:paths ["src" "resources"]
  :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
              "clojars" {:url "https://clojars.org/repo/"}}
- :deps {github.ipfs.ipfs-cube/daemon-jvm {:local/root "/ctx/ipfs-cube/src/daemon-jvm"}}}
+ :deps {github.ipfs.ipfs-cube/daemon {:local/root "/ctx/ipfs-cube/src/daemon"}}}

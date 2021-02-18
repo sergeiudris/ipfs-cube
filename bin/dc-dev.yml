@@ -29,10 +29,8 @@ services:
     command: tail -f /dev/null
     # command: bash f dev
     ports:
-      - 7001:7001
-      - 7002:7002
-      - 7003:7003
-      - 8080:8080
+      - 7788:7788
+      - 3080:8080
       # - 8085:8080
     networks:
       - base-network
