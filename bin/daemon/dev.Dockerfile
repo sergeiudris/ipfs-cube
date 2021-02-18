@@ -35,14 +35,14 @@ RUN curl -Ls "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-
 RUN gu install native-image
 
 ## clojure
-ENV CLOJURE_TOOLS=linux-install-1.10.1.727.sh
+ENV CLOJURE_TOOLS=linux-install-1.10.2.774.sh
 RUN curl -O https://download.clojure.org/install/$CLOJURE_TOOLS && \
     chmod +x $CLOJURE_TOOLS && \
     sudo ./$CLOJURE_TOOLS && \
     clojure -Stree
 
 ## leiningen
-ENV LEIN_VERSION=2.9.3
+ENV LEIN_VERSION=2.9.5
 ENV LEIN_DIR=/usr/local/bin/
 RUN curl -O https://raw.githubusercontent.com/technomancy/leiningen/${LEIN_VERSION}/bin/lein && \
     mv lein ${LEIN_DIR} && \

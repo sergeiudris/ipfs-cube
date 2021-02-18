@@ -26,4 +26,8 @@ native(){
   lein native-image
 }
 
+native_deps(){
+  clojure -A:native-image 
+}
+
 "$@"

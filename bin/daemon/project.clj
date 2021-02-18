@@ -14,6 +14,8 @@
 
   :min-lein-version "2.9.3"
 
+  :dependencies [[org.clojure/clojure "1.10.3-rc1"]]
+
   :plugins [[org.clojure/tools.deps.alpha "0.8.677"]
             [lein-tools-deps "0.4.5" :exclusions [org.clojure/tools.deps.alpha]]
             [io.taylorwood/lein-native-image "0.3.1"]]
@@ -46,8 +48,9 @@
 
   :native-image {:name "app.native"            ;; name of output image, optional
                 ;  :graal-bin "/path/to/graalvm/" ;; path to GraalVM home, optional
+                 :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
                  :opts ["--no-server" ;; pass-thru args to GraalVM native-image, optional
-                        ; "--report-unsupported-elements-at-runtime"
+                        ;; "--report-unsupported-elements-at-runtime"
                         "--allow-incomplete-classpath"
                         "--initialize-at-build-time"
                         "--enable-url-protocols=http"
