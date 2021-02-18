@@ -50,7 +50,7 @@
                 ;  :graal-bin "/path/to/graalvm/" ;; path to GraalVM home, optional
                  :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
                  :opts ["--no-server" ;; pass-thru args to GraalVM native-image, optional
-                        ;; "--report-unsupported-elements-at-runtime"
+                        "--report-unsupported-elements-at-runtime"
                         "--allow-incomplete-classpath"
                         "--initialize-at-build-time"
                         "--enable-url-protocols=http"
