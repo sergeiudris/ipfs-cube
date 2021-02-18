@@ -48,7 +48,7 @@ services:
       resources:
         limits:
           cpus: '4'
-          memory: 4096M
+          memory: 13000M
 
   compiler:
     image: ipfs-cube.compiler

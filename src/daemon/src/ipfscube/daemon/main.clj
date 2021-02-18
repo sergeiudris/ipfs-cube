@@ -6,41 +6,44 @@
                                      pipeline pipeline-async]]
    [clojure.string :as str]
 
-   [cljctools.csp.op.spec :as op.spec]
-   [cljctools.cljc.core :as cljc.core]
+  ;;  [cljctools.csp.op.spec :as op.spec]
+  ;;  [cljctools.cljc.core :as cljc.core]
 
-   [ipfscube.daemon.spec :as daemon.spec]
-   [ipfscube.daemon.chan :as daemon.chan]))
+  ;;  [ipfscube.daemon.spec :as daemon.spec]
+  ;;  [ipfscube.daemon.chan :as daemon.chan]
+   )
+  (:gen-class))
 
-(def channels (merge
-               (daemon.chan/create-channels)))
+;; (def channels (merge
+;;                (daemon.chan/create-channels)))
 
-(def ctx {::daemon.spec/state* (atom {})})
+;; (def ctx {::daemon.spec/state* (atom {})})
 
-(defn create-proc-ops
-  [channels ctx]
-  (let [{:keys [::daemon.chan/ops|]} channels]
-    (go
-      (loop []
-        (when-let [[value port] (alts! [ops|])]
-          (condp = port
-            ops|
-            (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
+;; (defn create-proc-ops
+;;   [channels ctx]
+;;   (let [{:keys [::daemon.chan/ops|]} channels]
+;;     (go
+;;       (loop []
+;;         (when-let [[value port] (alts! [ops|])]
+;;           (condp = port
+;;             ops|
+;;             (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
 
-              {::op.spec/op-key ::daemon.chan/init
-               ::op.spec/op-type ::op.spec/fire-and-forget}
-              (let [{:keys []} value]
-                (println ::init)))))
-        (recur)))))
+;;               {::op.spec/op-key ::daemon.chan/init
+;;                ::op.spec/op-type ::op.spec/fire-and-forget}
+;;               (let [{:keys []} value]
+;;                 (println ::init)))))
+;;         (recur)))))
 
 
 
-(def _ (create-proc-ops channels {}))
+;; (def _ (create-proc-ops channels {}))
 
 (defn -main [& args]
   (println ::-main)
-  (daemon.chan/op
-   {::op.spec/op-key ::daemon.chan/init
-    ::op.spec/op-type ::op.spec/fire-and-forget}
-   channels
-   {}))
+  ;; (daemon.chan/op
+  ;;    {::op.spec/op-key ::daemon.chan/init
+  ;;     ::op.spec/op-type ::op.spec/fire-and-forget}
+  ;;    channels
+  ;;    {})
+  )
