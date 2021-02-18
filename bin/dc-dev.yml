@@ -20,12 +20,12 @@ volumes:
 services:
 
   daemon:
-    image: ipfs-cube.daemon-jvm
+    image: ipfs-cube.daemon
     build:
-      context: ./daemon-jvm
+      context: ./daemon
       dockerfile: ./dev.Dockerfile
       args:
-        workdir:  /ctx/ipfs-cube/bin/daemon-jvm
+        workdir:  /ctx/ipfs-cube/bin/daemon
     command: tail -f /dev/null
     # command: bash f dev
     ports:
@@ -38,7 +38,7 @@ services:
       - base-network
     # user: 1000:1000
     volumes:
-      - ./daemon-jvm/.user:/root
+      - ./daemon/.user:/root
       - type: volume
         source: ctx
         target: /ctx
