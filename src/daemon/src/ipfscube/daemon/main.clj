@@ -42,10 +42,10 @@
         (<! (timeout 1000))
         (>! foo| @counter1)
         (recur)))
-  (go (loop []
-        (when-let [value (<! foo|)]
-          (println ::loop-b value)
-          (recur)))))
+  (a/<!! (go (loop []
+               (when-let [value (<! foo|)]
+                 (println ::loop-b value)
+                 (recur))))))
 
 ;; (def channels (merge
 ;;                (daemon.chan/create-channels)))
