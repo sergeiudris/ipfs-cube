@@ -14,7 +14,7 @@ shadow(){
 }
 
 server(){
-    shadow -A:dev server
+    shadow -A:dev:ui server
     # yarn server
 }
 

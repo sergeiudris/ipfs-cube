@@ -28,7 +28,7 @@
                               :after-load ipfscube.daemon.main/reload}}
 
           :ui {:target :browser
-               :output-dir "/ctx/ipfs-cube/bin/ui2/resources/public/js-out"
+               :output-dir #shadow/env ["SHADOW_OUTPUT_DIR" :default "/ctx/ipfs-cube/bin/ui2/resources/public/js-out"]
                :asset-path "./js-out"
                :module-loader true
                :modules {:main {:entries [ipfscube.ui.main]}}

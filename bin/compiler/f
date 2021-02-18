@@ -27,12 +27,13 @@ dev(){
 
 compile(){
     npm i
-    shadow -A:dev compile  :ui
+    shadow -A:dev:ui compile  :ui
 }
 
 release(){
     npm i
-    shadow -A:dev release :ui 
+    # export SHADOW_OUTPUT_DIR="/ctx/ipfs-cube/bin/daemon/resources/public/js-out"
+    shadow -A:dev:ui release :ui 
 }
 
 tree(){

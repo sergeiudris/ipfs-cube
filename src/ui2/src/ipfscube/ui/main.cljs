@@ -27,11 +27,10 @@
    ))
 
 (goog-define BAR_PORT 0)
-
 (goog-define FOO_ORIGIN "")
 
-(set! BAR_PORT (str (subs js/location.port 0 2) (subs (str BAR_PORT) 2)))
-(set! FOO_ORIGIN "http://localhost:3001")
+#_(set! BAR_PORT (str (subs js/location.port 0 2) (subs (str BAR_PORT) 2)))
+#_(set! FOO_ORIGIN "http://localhost:3001")
 
 (def channels (merge
                (daemon.chan/create-channels)
