@@ -54,7 +54,8 @@
                         "--allow-incomplete-classpath"
                         "--initialize-at-build-time"
                         "--enable-url-protocols=http"
-                        "-H:IncludeResources='.*html$'"
+                        "-H:IncludeResources=.*public.*"
+                        "-H:Log=registerResource:"
                         "--verbose"
                         "--no-fallback"]}
 

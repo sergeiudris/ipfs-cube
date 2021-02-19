@@ -56,4 +56,6 @@ resources/*.jks
 resources/*.pem
 resources/*.tmp
 
+resources/public
+
 

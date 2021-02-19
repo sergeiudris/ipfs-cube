@@ -23,6 +23,8 @@ uberjar(){
 }
 
 native(){
+  # rm -rf resources/public
+  # cp -r /ctx/ipfs-cube/bin/ui2/resources/public ./resources
   lein native-image
 }
 
@@ -32,13 +34,15 @@ native_deps(){
 
 native_cli(){
   native-image \
-  --verbose \
-  -H:Log=registerResource: \
-  --no-fallback \
-  --initialize-at-build-time \
+  --no-server \
   --report-unsupported-elements-at-runtime \
   --allow-incomplete-classpath \
+  --initialize-at-build-time \
   --enable-url-protocols=http \
+  -H:IncludeResources=.*public.* \
+  -H:Log=registerResource: \
+  --verbose \
+  --no-fallback \
   -jar ./target/app.standalone.jar
 }
 
