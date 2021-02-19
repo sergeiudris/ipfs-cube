@@ -1,4 +1,4 @@
-{:paths ["src"]
+{:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3-rc1"}
         org.clojure/core.async {:mvn/version "1.3.610"}
 
@@ -14,5 +14,12 @@
         github.cljctools/csp {:local/root  "/ctx/cljctools/csp"}
 
         com.sparkjava/spark-core {:mvn/version "2.9.1"}
+
+        github.into-docker/clj-docker-client {:git/url "https://github.com/into-docker/clj-docker-client"
+                                              :sha "5d3f1a3568c24b9029eb193fd3ff5daf16f32bd2"
+                                              :tag "1.0.2"}
+
+       ;;  com.github.docker-java/docker-java-core  {:mvn/version "3.2.7"}
+       ;;  com.github.docker-java/docker-java-transport-httpclient5  {:mvn/version "3.2.7"}
 
         github.ipfs.ipfs-cube/daemon-meta {:local/root  "/ctx/ipfs-cube/src/daemon-meta"}}}

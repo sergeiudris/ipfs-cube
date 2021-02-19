@@ -17,10 +17,19 @@
    [cljctools.cljc.core :as cljc.core]
 
    [ipfscube.daemon.spec :as daemon.spec]
-   [ipfscube.daemon.chan :as daemon.chan])
+   [ipfscube.daemon.chan :as daemon.chan]
+
+   [clj-docker-client.core :as docker]
+   
+   
+   )
   (:import
    spark.Spark
-   spark.Route))
+   spark.Route
+
+   com.github.dockerjava.api.DefaultDockerClientConfig
+   com.github.dockerjava.api.DockerHttpClient
+   com.github.dockerjava.api.DockerClient))
 
 (def counter1 (atom 0))
 (def counter2 (atom 0))
@@ -35,6 +44,7 @@
 (def port 8080)
 
 (defn create-server []
+  (println (format "; starting http server on %s:%s" host port))
   (def ^:dynamic *tmp* "something defined in runtime")
   (Spark/port port)
   (.location Spark/staticFiles  "/public")
@@ -43,13 +53,32 @@
                         (handle [_ req res]
                           (format "hello world, %s" *tmp*)))))
 
-(comment
- 
- 
- ;;
- )
+(def ^:const docker-api-version "v1.41")
 
-(defn -main [& args]
+(comment
+
+  (docker/categories docker-api-version)
+
+  (def images (docker/client {:category :images
+                              :api-version docker-api-version
+                              :conn     {:uri "unix:///var/run/docker.sock"}}))
+
+  (docker/ops images)
+
+  (def image-list (docker/invoke images {:op     :ImageList}))
+  (count image-list)
+
+  (->> image-list
+       (drop 5)
+       (take 5))
+
+  (filter (fn [img]
+            (some #(str/includes? % "daemon") (:RepoTags img))) image-list)
+
+ ;;
+  )
+
+#_(defn -main [& args]
   (println ::main)
   (println (clojure-version))
   (println (s/conform ::foo 42))
@@ -67,38 +96,44 @@
         (when-let [value (<! foo|)]
           (println ::loop-b value)
           (recur))))
-  (println (format "; starting http server on %s:%s" host port))
   (create-server))
 
-;; (def channels (merge
-;;                (daemon.chan/create-channels)))
+(def channels (merge
+               (daemon.chan/create-channels)))
 
-;; (def ctx {::daemon.spec/state* (atom {})})
+(def ctx {::daemon.spec/state* (atom {})})
 
-;; (defn create-proc-ops
-;;   [channels ctx]
-;;   (let [{:keys [::daemon.chan/ops|]} channels]
-;;     (go
-;;       (loop []
-;;         (when-let [[value port] (alts! [ops|])]
-;;           (condp = port
-;;             ops|
-;;             (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
+(defn create-proc-ops
+  [channels ctx]
+  (let [{:keys [::daemon.chan/ops|]} channels]
+    (go
+      (loop []
+        (when-let [[value port] (alts! [ops|])]
+          (condp = port
+            ops|
+            (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
 
-;;               {::op.spec/op-key ::daemon.chan/init
-;;                ::op.spec/op-type ::op.spec/fire-and-forget}
-;;               (let [{:keys []} value]
-;;                 (println ::init)))))
-;;         (recur)))))
+              {::op.spec/op-key ::daemon.chan/init
+               ::op.spec/op-type ::op.spec/fire-and-forget}
+              (let [{:keys []} value]
+                (println ::init)
+                (create-server)
+                (go (let [images (docker/client {:category :images
+                                                 :api-version docker-api-version
+                                                 :conn     {:uri "unix:///var/run/docker.sock"}})
+                          image-list (docker/invoke images {:op     :ImageList})]
+                      (println ::docker-images (count image-list))))
+                (println ::init-done)))))
+        (recur)))))
 
 
 
-;; (def _ (create-proc-ops channels {}))
+(def _ (create-proc-ops channels {}))
 
-;; (defn -main [& args]
-;;   (println ::-main)
-;;   (daemon.chan/op
-;;    {::op.spec/op-key ::daemon.chan/init
-;;     ::op.spec/op-type ::op.spec/fire-and-forget}
-;;    channels
-;;    {}))
+(defn -main [& args]
+  (println ::-main)
+  (daemon.chan/op
+   {::op.spec/op-key ::daemon.chan/init
+    ::op.spec/op-type ::op.spec/fire-and-forget}
+   channels
+   {}))
