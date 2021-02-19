@@ -5,3 +5,6 @@ target
 tmp
 src
 .user
+!target/app.native
+!target/app.upx.native
+

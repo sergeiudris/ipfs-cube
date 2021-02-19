@@ -51,4 +51,12 @@ upx_compress(){
   upx -9 -o ./target/app.upx.native ./target/app.native
 }
 
+docker_build_release(){
+  docker build -t ipfs-cube.daemon-release -f release.Dockerfile .
+}
+
+docker_run_release(){
+  docker run -it --rm ipfs-cube.daemon-release
+}
+
 "$@"

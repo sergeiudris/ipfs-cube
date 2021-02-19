@@ -1,2 +1,5 @@
-FROM local.jvm-prod-builder as builder
-FROM local.jvm-prod-runner
+FROM ubuntu:20.04
+
+COPY ./target/app.upx.native /opt/app
+
+ENTRYPOINT ["/opt/app"]
