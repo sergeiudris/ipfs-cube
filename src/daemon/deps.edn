@@ -17,6 +17,9 @@
 
        ;;  io.pedestal/pedestal.service {:mvn/version "0.5.8"}
        ;;  io.pedestal/pedestal.jetty {:mvn/version "0.5.8"}
+       ;;  io.pedestal/pedestal.immutant {:mvn/version "0.5.8"}
+       ;;  io.pedestal/pedestal.tomcat {:mvn/version "0.5.8"}
+
        ;;  ring-cors/ring-cors  {:mvn/version "0.1.13"}
        ;;  ch.qos.logback/logback-classic {:mvn/version "1.2.3"
        ;;                                  :exclusions [org.slf4j/slf4j-api]}
