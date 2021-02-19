@@ -16,20 +16,24 @@
    [cljctools.csp.op.spec :as op.spec]
    [cljctools.cljc.core :as cljc.core]
 
+  ;;  [io.pedestal.http :as pedestal.http]
+  ;;  [io.pedestal.http.route :as pedestal.http.route]
+  ;;  [io.pedestal.http.body-params :as pedestal.http.body-params]
+  ;;  [io.pedestal.http.content-negotiation :as pedestal.http.content-negotiation]
+  ;;  [io.pedestal.http.ring-middlewares :as pedestal.http.ring-middlewares]
+
    [ipfscube.daemon.spec :as daemon.spec]
    [ipfscube.daemon.chan :as daemon.chan]
 
-   [clj-docker-client.core :as docker]
-   
-   
-   )
+   [clj-docker-client.core :as docker])
   (:import
    spark.Spark
    spark.Route
 
-   com.github.dockerjava.api.DefaultDockerClientConfig
-   com.github.dockerjava.api.DockerHttpClient
-   com.github.dockerjava.api.DockerClient))
+  ;;  com.github.dockerjava.api.DefaultDockerClientConfig
+  ;;  com.github.dockerjava.api.DockerHttpClient
+  ;;  com.github.dockerjava.api.DockerClient
+   ))
 
 (def counter1 (atom 0))
 (def counter2 (atom 0))
@@ -42,6 +46,70 @@
 
 (def host "0.0.0.0")
 (def port 8080)
+
+;; (def supported-types
+;;   ["text/html" "application/edn"  "text/plain" "application/transit+json"])
+
+;; (def content-negotiation-interceptor
+;;   (pedestal.http.content-negotiation/negotiate-content supported-types))
+
+;; (def common-interceptors [(pedestal.http.body-params/body-params)
+;;                           pedestal.http/html-body
+;;                           content-negotiation-interceptor])
+
+;; (def routes #{["/clojure-version" :get (fn [_] {:body (clojure-version) :status 200}) :route-name :root]
+;;               ["/echo" :get #(hash-map :body (pr-str %) :status 200) :route-name :echo]})
+
+;; (defn create-service
+;;   []
+;;   (let []
+;;     (merge
+;;      {:env :prod
+;;               ;; You can bring your own non-default interceptors. Make
+;;               ;; sure you include routing and set it up right for
+;;               ;; dev-mode. If you do, many other keys for configuring
+;;               ;; default interceptors will be ignored.
+;;               ;; ::http/interceptors []
+;;       ::pedestal.http/routes #(pedestal.http.route/expand-routes routes #_(deref #'service/routes))
+
+;;               ;; Uncomment next line to enable CORS support, add
+;;               ;; string(s) specifying scheme, host and port for
+;;               ;; allowed source(s):
+;;               ;;
+;;               ;; "http://localhost:8080"
+;;               ;;
+;;       ::pedestal.http/allowed-origins ["*"]
+;;       ::pedestal.http/secure-headers {:content-security-policy-settings {:object-src "none"}}
+
+;;               ;; Root for resource interceptor that is available by default.
+;;       ::pedestal.http/resource-path "/public"
+
+;;               ;; Either :jetty, :immutant or :tomcat (see comments in project.clj)
+;;       ::pedestal.http/type :jetty
+
+;;       ::pedestal.http/container-options (merge
+;;                                          {}
+;;                                          #_(when false #_ws-paths
+;;                                                  {:context-configurator #(pedestal.ws/add-ws-endpoints % ws-paths)}))
+;;       ::pedestal.http/host host
+;;       ::pedestal.http/port port}
+;;      {:env :dev
+;;       ::pedestal.http/join? false
+;;       ::pedestal.http/allowed-origins {:creds true :allowed-origins (constantly true)}})))
+
+;; (defn create-server
+;;   []
+;;   (let [service (create-service)
+;;         server (-> service ;; start with production configuration
+;;                    pedestal.http/default-interceptors
+;;                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/fast-resource "/resources/public" {:index? true}))
+;;                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file-info))
+;;                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file "/ctx/ipfs-cube/bin/ui2/resources"))
+;;                    pedestal.http/dev-interceptors
+;;                    pedestal.http/create-server
+;;                    pedestal.http/start)]
+;;     (println (format "Starting http server on %s:%s" (::pedestal.http/host service) (::pedestal.http/port service)))))
+
 
 (defn create-server []
   (println (format "; starting http server on %s:%s" host port))
@@ -79,24 +147,24 @@
   )
 
 #_(defn -main [& args]
-  (println ::main)
-  (println (clojure-version))
-  (println (s/conform ::foo 42))
-  (println (gen/generate foo1))
-  (go (loop []
-        (<! (timeout 1000))
-        (swap! counter1 inc)
-        (println ::loop-a @counter1)
-        (recur)))
-  (go (loop []
-        (<! (timeout 1000))
-        (>! foo| @counter1)
-        (recur)))
-  (go (loop []
-        (when-let [value (<! foo|)]
-          (println ::loop-b value)
-          (recur))))
-  (create-server))
+    (println ::main)
+    (println (clojure-version))
+    (println (s/conform ::foo 42))
+    (println (gen/generate foo1))
+    (go (loop []
+          (<! (timeout 1000))
+          (swap! counter1 inc)
+          (println ::loop-a @counter1)
+          (recur)))
+    (go (loop []
+          (<! (timeout 1000))
+          (>! foo| @counter1)
+          (recur)))
+    (go (loop []
+          (when-let [value (<! foo|)]
+            (println ::loop-b value)
+            (recur))))
+    (create-server))
 
 (def channels (merge
                (daemon.chan/create-channels)))
@@ -117,7 +185,7 @@
                ::op.spec/op-type ::op.spec/fire-and-forget}
               (let [{:keys []} value]
                 (println ::init)
-                (create-server)
+
                 (go (let [images (docker/client {:category :images
                                                  :api-version docker-api-version
                                                  :conn     {:uri "unix:///var/run/docker.sock"}})
@@ -128,10 +196,12 @@
 
 
 
-(def _ (create-proc-ops channels {}))
+;; (def _ (create-proc-ops channels {})) ;; cuases native image to fail
 
 (defn -main [& args]
   (println ::-main)
+  (create-proc-ops channels {})
+  (create-server)
   (daemon.chan/op
    {::op.spec/op-key ::daemon.chan/init
     ::op.spec/op-type ::op.spec/fire-and-forget}

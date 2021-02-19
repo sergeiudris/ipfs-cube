@@ -15,6 +15,15 @@
 
         com.sparkjava/spark-core {:mvn/version "2.9.1"}
 
+       ;;  io.pedestal/pedestal.service {:mvn/version "0.5.8"}
+       ;;  io.pedestal/pedestal.jetty {:mvn/version "0.5.8"}
+       ;;  ring-cors/ring-cors  {:mvn/version "0.1.13"}
+       ;;  ch.qos.logback/logback-classic {:mvn/version "1.2.3"
+       ;;                                  :exclusions [org.slf4j/slf4j-api]}
+       ;;  org.slf4j/jul-to-slf4j {:mvn/version "1.7.26"}
+       ;;  org.slf4j/jcl-over-slf4j {:mvn/version "1.7.26"}
+       ;;  org.slf4j/log4j-over-slf4j {:mvn/version "1.7.26"}
+        
         github.into-docker/clj-docker-client {:git/url "https://github.com/into-docker/clj-docker-client"
                                               :sha "5d3f1a3568c24b9029eb193fd3ff5daf16f32bd2"
                                               :tag "1.0.2"}

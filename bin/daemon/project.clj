@@ -53,7 +53,7 @@
                         "--report-unsupported-elements-at-runtime"
                         "--allow-incomplete-classpath"
                         "--initialize-at-build-time"
-                        "--enable-url-protocols=http"
+                        "--enable-url-protocols=http,https"
                         "-H:IncludeResources=.*public.*"
                         "-H:Log=registerResource:"
                         "--verbose"
