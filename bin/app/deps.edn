@@ -1,10 +1,10 @@
 {:paths ["src" "resources"]
  :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
              "clojars" {:url "https://clojars.org/repo/"}}
- :deps {github.ipfs.ipfs-cube/daemon {:local/root "/ctx/ipfs-cube/src/daemon"}}
+ :deps {github.ipfs.ipfs-cube/app {:local/root "/ctx/ipfs-cube/src/app"}}
 
  :aliases {:native-image
-           {:main-opts  ["-m clj.native-image ipfscube.daemon.main"
+           {:main-opts  ["-m clj.native-image ipfscube.app.main"
                          "--initialize-at-build-time"
                          "--no-fallback"
                          "--report-unsupported-elements-at-runtime"

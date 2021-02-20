@@ -19,13 +19,13 @@ volumes:
 
 services:
 
-  daemon:
-    image: ipfs-cube.daemon
+  app:
+    image: ipfs-cube.app
     build:
-      context: ./daemon
+      context: ./app
       dockerfile: ./dev.Dockerfile
       args:
-        workdir:  /ctx/ipfs-cube/bin/daemon
+        workdir:  /ctx/ipfs-cube/bin/app
     command: tail -f /dev/null
     # command: bash f dev
     ports:
@@ -36,7 +36,7 @@ services:
       - base-network
     # user: 1000:1000
     volumes:
-      - ./daemon/.user:/root
+      - ./app/.user:/root
       - /var/run/docker.sock:/var/run/docker.sock
       - type: volume
         source: ctx

@@ -1,4 +1,4 @@
-(ns ipfscube.daemon.main
+(ns ipfscube.app.main
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
@@ -22,8 +22,8 @@
   ;;  [io.pedestal.http.content-negotiation :as pedestal.http.content-negotiation]
   ;;  [io.pedestal.http.ring-middlewares :as pedestal.http.ring-middlewares]
 
-   [ipfscube.daemon.spec :as daemon.spec]
-   [ipfscube.daemon.chan :as daemon.chan]
+   [ipfscube.app.spec :as app.spec]
+   [ipfscube.app.chan :as app.chan]
 
    [clj-docker-client.core :as docker])
   (:import
@@ -141,7 +141,7 @@
        (take 5))
 
   (filter (fn [img]
-            (some #(str/includes? % "daemon") (:RepoTags img))) image-list)
+            (some #(str/includes? % "app") (:RepoTags img))) image-list)
 
  ;;
   )
@@ -167,13 +167,13 @@
     (create-server))
 
 (def channels (merge
-               (daemon.chan/create-channels)))
+               (app.chan/create-channels)))
 
-(def ctx {::daemon.spec/state* (atom {})})
+(def ctx {::app.spec/state* (atom {})})
 
 (defn create-proc-ops
   [channels ctx]
-  (let [{:keys [::daemon.chan/ops|]} channels]
+  (let [{:keys [::app.chan/ops|]} channels]
     (go
       (loop []
         (when-let [[value port] (alts! [ops|])]
@@ -181,7 +181,7 @@
             ops|
             (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
 
-              {::op.spec/op-key ::daemon.chan/init
+              {::op.spec/op-key ::app.chan/init
                ::op.spec/op-type ::op.spec/fire-and-forget}
               (let [{:keys []} value]
                 (println ::init)
@@ -202,8 +202,8 @@
   (println ::-main)
   (create-proc-ops channels {})
   (create-server)
-  (daemon.chan/op
-   {::op.spec/op-key ::daemon.chan/init
+  (app.chan/op
+   {::op.spec/op-key ::app.chan/init
     ::op.spec/op-type ::op.spec/fire-and-forget}
    channels
    {}))

@@ -15,8 +15,8 @@
 
         com.sparkjava/spark-core {:mvn/version "2.9.1"}
 
-       ;;  io.pedestal/pedestal.service {:mvn/version "0.5.8"}
-       ;;  io.pedestal/pedestal.jetty {:mvn/version "0.5.8"}
+        io.pedestal/pedestal.service {:mvn/version "0.5.8"}
+        io.pedestal/pedestal.jetty {:mvn/version "0.5.8"}
        ;;  io.pedestal/pedestal.immutant {:mvn/version "0.5.8"}
        ;;  io.pedestal/pedestal.tomcat {:mvn/version "0.5.8"}
 
@@ -34,4 +34,4 @@
        ;;  com.github.docker-java/docker-java-core  {:mvn/version "3.2.7"}
        ;;  com.github.docker-java/docker-java-transport-httpclient5  {:mvn/version "3.2.7"}
 
-        github.ipfs.ipfs-cube/daemon-meta {:local/root  "/ctx/ipfs-cube/src/daemon-meta"}}}
+        github.ipfs.ipfs-cube/app-meta {:local/root  "/ctx/ipfs-cube/src/app-meta"}}}

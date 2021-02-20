@@ -1,4 +1,4 @@
-(def MAIN 'ipfscube.daemon.main)
+(def MAIN 'ipfscube.app.main)
 #_(prn (clojure-version))
 #_(prn *command-line-args*)
 

@@ -18,8 +18,8 @@
    [ipfscube.ui.spec :as ui.spec]
    [ipfscube.ui.chan :as ui.chan]
 
-   [ipfscube.daemon.spec :as daemon.spec]
-   [ipfscube.daemon.chan :as daemon.chan]
+   [ipfscube.app.spec :as app.spec]
+   [ipfscube.app.chan :as app.chan]
 
    [ipfscube.ui.render :as ui.render]
    
@@ -33,11 +33,11 @@
 #_(set! FOO_ORIGIN "http://localhost:3001")
 
 (def channels (merge
-               (daemon.chan/create-channels)
+               (app.chan/create-channels)
                (ui.chan/create-channels)))
 
 (def ctx {::ui.spec/state* (ui.render/create-state*
-                            {::daemon.spec/peer-metas {}})})
+                            {::app.spec/peer-metas {}})})
 
 (defn create-proc-ops
   [channels ctx opts]
@@ -55,8 +55,8 @@
               (let [{:keys []} value]
                 (println ::init)
                 (ui.render/render-ui channels state* {})
-                #_(daemon.chan/op
-                   {::op.spec/op-key ::daemon.chan/request-state-update
+                #_(app.chan/op
+                   {::op.spec/op-key ::app.chan/request-state-update
                     ::op.spec/op-type ::op.spec/fire-and-forget}
                    channels
                    {}))

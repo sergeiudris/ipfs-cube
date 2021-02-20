@@ -12,8 +12,8 @@
    [reagent.core :as r]
    [reagent.dom :as rdom]
 
-   [ipfscube.daemon.spec :as daemon.spec]
-   [ipfscube.daemon.chan :as daemon.chan]
+   [ipfscube.app.spec :as app.spec]
+   [ipfscube.app.chan :as app.chan]
    [cljctools.csp.op.spec :as op.spec]
    [cljctools.cljc.core :as cljc.core]
 

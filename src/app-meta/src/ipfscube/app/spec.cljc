@@ -1,5 +1,5 @@
-(ns ipfscube.daemon.spec
-  #?(:cljs (:require-macros [ipfscube.daemon.spec]))
+(ns ipfscube.app.spec
+  #?(:cljs (:require-macros [ipfscube.app.spec]))
   (:require
    [clojure.spec.alpha :as s]))
 
