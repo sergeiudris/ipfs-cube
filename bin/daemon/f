@@ -48,15 +48,13 @@ native_cli(){
 
 upx_compress(){
   # https://github.com/upx/upx
+  rm ./target/app.upx.native
   upx -9 -o ./target/app.upx.native ./target/app.native
 }
 
-docker_build_release(){
-  docker build -t ipfs-cube.daemon-release -f release.Dockerfile .
-}
-
 docker_run_release(){
-  docker run -it --rm ipfs-cube.daemon-release
+  docker build -t ipfs-cube.daemon-release -f release.Dockerfile .
+  docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock ipfs-cube.daemon-release
 }
 
 "$@"

@@ -7,4 +7,6 @@ src
 .user
 !target/app.native
 !target/app.upx.native
+!target/app.standalone.jar
+
 
