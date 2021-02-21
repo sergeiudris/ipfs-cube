@@ -16,11 +16,11 @@
    [cljctools.csp.op.spec :as op.spec]
    [cljctools.cljc.core :as cljc.core]
 
-  ;;  [io.pedestal.http :as pedestal.http]
-  ;;  [io.pedestal.http.route :as pedestal.http.route]
-  ;;  [io.pedestal.http.body-params :as pedestal.http.body-params]
-  ;;  [io.pedestal.http.content-negotiation :as pedestal.http.content-negotiation]
-  ;;  [io.pedestal.http.ring-middlewares :as pedestal.http.ring-middlewares]
+   [io.pedestal.http :as pedestal.http]
+   [io.pedestal.http.route :as pedestal.http.route]
+   [io.pedestal.http.body-params :as pedestal.http.body-params]
+   [io.pedestal.http.content-negotiation :as pedestal.http.content-negotiation]
+   [io.pedestal.http.ring-middlewares :as pedestal.http.ring-middlewares]
 
    [ipfscube.app.spec :as app.spec]
    [ipfscube.app.chan :as app.chan]
@@ -47,79 +47,105 @@
 (def host "0.0.0.0")
 (def port 8080)
 
-;; (def supported-types
-;;   ["text/html" "application/edn"  "text/plain" "application/transit+json"])
+(def supported-types
+  ["text/html" "application/edn"  "text/plain" "application/transit+json"])
 
-;; (def content-negotiation-interceptor
-;;   (pedestal.http.content-negotiation/negotiate-content supported-types))
+(def content-negotiation-interceptor
+  (pedestal.http.content-negotiation/negotiate-content supported-types))
 
-;; (def common-interceptors [(pedestal.http.body-params/body-params)
-;;                           pedestal.http/html-body
-;;                           content-negotiation-interceptor])
+(def common-interceptors [(pedestal.http.body-params/body-params)
+                          pedestal.http/html-body
+                          content-negotiation-interceptor])
 
-;; (def routes #{["/clojure-version" :get (fn [_] {:body (clojure-version) :status 200}) :route-name :root]
-;;               ["/echo" :get #(hash-map :body (pr-str %) :status 200) :route-name :echo]})
+(def routes
+  #{["/clojure-version"
+     :get
+     (->>
+      (fn [request] {:body (clojure-version) :status 200})
+      (conj common-interceptors))
+     :route-name :clojure-version]
 
-;; (defn create-service
-;;   []
-;;   (let []
-;;     (merge
-;;      {:env :prod
-;;               ;; You can bring your own non-default interceptors. Make
-;;               ;; sure you include routing and set it up right for
-;;               ;; dev-mode. If you do, many other keys for configuring
-;;               ;; default interceptors will be ignored.
-;;               ;; ::http/interceptors []
-;;       ::pedestal.http/routes #(pedestal.http.route/expand-routes routes #_(deref #'service/routes))
+    ["/echo"
+     :get
+     (->>
+      (fn [request] {:body (pr-str request) :status 200})
+      (conj common-interceptors))
+     :route-name :echo]
 
-;;               ;; Uncomment next line to enable CORS support, add
-;;               ;; string(s) specifying scheme, host and port for
-;;               ;; allowed source(s):
-;;               ;;
-;;               ;; "http://localhost:8080"
-;;               ;;
-;;       ::pedestal.http/allowed-origins ["*"]
-;;       ::pedestal.http/secure-headers {:content-security-policy-settings {:object-src "none"}}
+    ["/bar"
+     :get
+     (->>
+      {:enter
+       (fn [{:keys [:request] :as context}]
+         (go
+           (let [response {:body "bar"
+                           :status 200}]
+             (<! (timeout 1000))
+             (assoc context :response response))))}
+      (conj common-interceptors))
+     :route-name :bar]})
 
-;;               ;; Root for resource interceptor that is available by default.
-;;       ::pedestal.http/resource-path "/public"
+(defn create-service
+  []
+  (let []
+    (merge
+     {:env :prod
+              ;; You can bring your own non-default interceptors. Make
+              ;; sure you include routing and set it up right for
+              ;; dev-mode. If you do, many other keys for configuring
+              ;; default interceptors will be ignored.
+              ;; ::http/interceptors []
+      ::pedestal.http/routes
+      #(pedestal.http.route/expand-routes routes #_(deref #'service/routes))
 
-;;               ;; Either :jetty, :immutant or :tomcat (see comments in project.clj)
-;;       ::pedestal.http/type :jetty
+              ;; Uncomment next line to enable CORS support, add
+              ;; string(s) specifying scheme, host and port for
+              ;; allowed source(s):
+              ;;
+              ;; "http://localhost:8080"
+              ;;
+      ::pedestal.http/allowed-origins ["*"]
+      ::pedestal.http/secure-headers {:content-security-policy-settings {:object-src "none"}}
 
-;;       ::pedestal.http/container-options (merge
-;;                                          {}
-;;                                          #_(when false #_ws-paths
-;;                                                  {:context-configurator #(pedestal.ws/add-ws-endpoints % ws-paths)}))
-;;       ::pedestal.http/host host
-;;       ::pedestal.http/port port}
-;;      {:env :dev
-;;       ::pedestal.http/join? false
-;;       ::pedestal.http/allowed-origins {:creds true :allowed-origins (constantly true)}})))
+              ;; Root for resource interceptor that is available by default.
+      ::pedestal.http/resource-path "/public"
 
-;; (defn create-server
-;;   []
-;;   (let [service (create-service)
-;;         server (-> service ;; start with production configuration
-;;                    pedestal.http/default-interceptors
-;;                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/fast-resource "/resources/public" {:index? true}))
-;;                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file-info))
-;;                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file "/ctx/ipfs-cube/bin/ui2/resources"))
-;;                    pedestal.http/dev-interceptors
-;;                    pedestal.http/create-server
-;;                    pedestal.http/start)]
-;;     (println (format "Starting http server on %s:%s" (::pedestal.http/host service) (::pedestal.http/port service)))))
+              ;; Either :jetty, :immutant or :tomcat (see comments in project.clj)
+      ::pedestal.http/type :jetty
+
+      ::pedestal.http/container-options (merge
+                                         {}
+                                         #_(when false #_ws-paths
+                                                 {:context-configurator #(pedestal.ws/add-ws-endpoints % ws-paths)}))
+      ::pedestal.http/host host
+      ::pedestal.http/port port}
+     {:env :dev
+      ::pedestal.http/join? false
+      ::pedestal.http/allowed-origins {:creds true :allowed-origins (constantly true)}})))
+
+(defn create-server
+  []
+  (let [service (create-service)
+        server (-> service ;; start with production configuration
+                   pedestal.http/default-interceptors
+                   #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/fast-resource "/resources/public" {:index? true}))
+                   #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file-info))
+                   #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file "/ctx/ipfs-cube/bin/ui2/resources"))
+                   pedestal.http/dev-interceptors
+                   pedestal.http/create-server
+                   pedestal.http/start)]
+    (println (format "Starting http server on %s:%s" (::pedestal.http/host service) (::pedestal.http/port service)))))
 
 
-(defn create-server []
-  (println (format "; starting http server on %s:%s" host port))
-  (def ^:dynamic *tmp* "something defined in runtime")
-  (Spark/port port)
-  (.location Spark/staticFiles  "/public")
-  (Spark/init)
-  (Spark/get "/hello" (reify Route
-                        (handle [_ req res]
-                          (format "hello world, %s" *tmp*)))))
+;; (defn create-server []
+;;   (println (format "; starting http server on %s:%s" host port))
+;;   (def ^:dynamic *tmp* "something defined in runtime")
+;;   (Spark/port port)
+;;   (.location Spark/staticFiles  "/public")
+;;   (Spark/init)
+;;   (Spark/get "/hello" (reify Route
+;;                         (handle [_ req res]
+;;                           (format "hello world, %s" *tmp*)))))
 
 (def ^:const docker-api-version "v1.41")
 
