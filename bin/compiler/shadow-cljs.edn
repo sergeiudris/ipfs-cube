@@ -7,25 +7,25 @@
                   :host "0.0.0.0"}
             3001 {:roots ["/ctx/ipfs-cube/bin/compiler/resources/public"]
                   :host "0.0.0.0"}}
- :builds {:daemon {:target #_:node-library :node-script
-                   :main ipfscube.daemon.main/main
-                   :exports-var ipfscube.daemon.main/exports
-                   :output-to "/ctx/ipfs-cube/bin/daemon-nodejs/resources/out/main.js"
-                   :compiler-options {:optimizations :simple
-                                      :infer-externs   false
-                                      :stable-names true
-                                      :recompile-dependents true
-                                      :source-maps true
-                                      :cross-chunk-method-motion false}
-                   :js-options
-                   {:js-provider :shadow
-                    :keep-native-requires true
-                    :keep-as-require #{}}
-                   :devtools {:repl-init-ns ipfscube.daemon.main
-                              :repl-pprint true
-                              :autobuild true
-                              :devtools-url "http://compiler:9630"
-                              :after-load ipfscube.daemon.main/reload}}
+ :builds {:app {:target #_:node-library :node-script
+                :main ipfscube.app.main/main
+                :exports-var ipfscube.app.main/exports
+                :output-to "/ctx/ipfs-cube/bin/app/resources/out/main.js"
+                :compiler-options {:optimizations :simple
+                                   :infer-externs   false
+                                   :stable-names true
+                                   :recompile-dependents true
+                                   :source-maps true
+                                   :cross-chunk-method-motion false}
+                :js-options
+                {:js-provider :shadow
+                 :keep-native-requires true
+                 :keep-as-require #{}}
+                :devtools {:repl-init-ns ipfscube.app.main
+                           :repl-pprint true
+                           :autobuild true
+                           :devtools-url "http://compiler:9630"
+                           :after-load ipfscube.app.main/reload}}
 
           :ui {:target :browser
                :output-dir #shadow/env ["SHADOW_OUTPUT_DIR" :default "/ctx/ipfs-cube/bin/ui2/resources/public/js-out"]

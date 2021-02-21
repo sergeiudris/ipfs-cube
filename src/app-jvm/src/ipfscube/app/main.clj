@@ -7,6 +7,7 @@
                                      pipeline pipeline-async]]
    [clojure.string :as str]
    [clojure.spec.alpha :as s]
+   [clojure.java.io :as io]
 
    [clojure.spec.gen.alpha :as sgen]
    #_[clojure.spec.test.alpha :as stest]
@@ -21,7 +22,6 @@
    [io.pedestal.http.body-params :as pedestal.http.body-params]
    [io.pedestal.http.content-negotiation :as pedestal.http.content-negotiation]
    [io.pedestal.http.ring-middlewares :as pedestal.http.ring-middlewares]
-
    [ipfscube.app.spec :as app.spec]
    [ipfscube.app.chan :as app.chan]
 
@@ -58,7 +58,15 @@
                           content-negotiation-interceptor])
 
 (def routes
-  #{["/clojure-version"
+  #{#_["/"
+       :get
+       (fn [request]
+         (ring.util.response/redirect "/index.html")
+         #_(ring.util.response/file-response
+            (.getAbsolutePath ^java.io.File (io/as-file (io/resource "public/index.html")))))
+       :route-name :root]
+
+    ["/clojure-version"
      :get
      (->>
       (fn [request] {:body (clojure-version) :status 200})
@@ -84,6 +92,18 @@
              (assoc context :response response))))}
       (conj common-interceptors))
      :route-name :bar]})
+
+(comment
+
+  (io/resource "public")
+
+  (ring.util.response/file-response
+   (.getAbsolutePath ^java.io.File (io/as-file (io/resource "public")))
+   {:index-files? true})
+  (.isDirectory (io/as-file (io/resource "public")))
+
+  ;;
+  )
 
 (defn create-service
   []
@@ -128,7 +148,7 @@
   (let [service (create-service)
         server (-> service ;; start with production configuration
                    pedestal.http/default-interceptors
-                   #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/fast-resource "/resources/public" {:index? true}))
+                   (update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/fast-resource "resources/public" {:index-files? true}))
                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file-info))
                    #_(update ::pedestal.http/interceptors conj (pedestal.http.ring-middlewares/file "/ctx/ipfs-cube/bin/ui2/resources"))
                    pedestal.http/dev-interceptors

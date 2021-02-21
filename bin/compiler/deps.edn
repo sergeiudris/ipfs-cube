@@ -6,8 +6,8 @@
         org.clojure/spec.alpha {:mvn/version "0.2.187"}
         org.clojure/test.check {:mvn/version "1.0.0"}
         org.clojure/core.async {:mvn/version "1.1.587"}}
- :aliases {:daemon-nodejs {:extra-deps {github.ipfs.ipfs-cube.bin/daemon-nodejs {:local/root "/ctx/ipfs-cube/bin/daemon-nodejs"}}}
-           :ui {:extra-deps {github.ipfs.ipfs-cube.bin/ui2 {:local/root "/ctx/ipfs-cube/bin/ui2"}}}
+ :aliases {:app {:extra-deps {github.ipfs.ipfs-cube.bin/app {:local/root "/ctx/ipfs-cube/src/app"}}}
+           :ui {:extra-deps {github.ipfs.ipfs-cube.bin/ui2 {:local/root "/ctx/ipfs-cube/src/ui2"}}}
            :dev {:extra-deps {thheller/shadow-cljs {:mvn/version "2.11.7"
                                                     :exclusions [nrepl/nrepl
                                                                  cider/piggieback

@@ -21,13 +21,13 @@ server(){
 dev(){
 
     npm i
-    shadow -A:dev:ui watch :ui
+    shadow -A:dev:app:ui watch :app :ui 
 
 }
 
 compile(){
     npm i
-    shadow -A:dev:ui compile  :ui
+    shadow -A:dev:app:ui compile  :ui
 }
 
 release(){
