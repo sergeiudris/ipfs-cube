@@ -27,6 +27,7 @@
 (defonce express (js/require "express"))
 (defonce cors (js/require "cors"))
 (defonce bodyParser (js/require "body-parser"))
+(defonce Docker (js/require "dockerode"))
 
 (defonce channels (merge
                    (app.chan/create-channels)))
@@ -61,6 +62,49 @@
             (<! (timeout 1000))
             (.send response id)))))
 
+(defn create-proc-ops
+  [channels ctx opts]
+  (let [{:keys [::app.chan/ops|]} channels
+        {:keys [::app.spec/state*]} ctx]
+    (go
+      (loop []
+        (when-let [[value port] (alts! [ops|])]
+          (condp = port
+            ops|
+            (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
+
+              {::op.spec/op-key ::app.chan/init
+               ::op.spec/op-type ::op.spec/fire-and-forget}
+              (let []
+                (println ::init))))
+          (recur))))))
+
+
+(defn main [& args]
+  (println ::main)
+  (do (create-proc-ops channels ctx {}))
+  (app.chan/op
+   {::op.spec/op-key ::app.chan/init
+    ::op.spec/op-type ::op.spec/fire-and-forget}
+   channels
+   {}))
+
+(def exports #js {:main main})
+
+(when (exists? js/module)
+  (set! js/module.exports exports))
+
+
+(comment
+
+  (def docker (Docker. (clj->js {"socketPath" "/var/run/docker.sock"})))
+
+  (go
+    (let [images (<p! (.listImages docker))]
+      (println (count images))))
+
+  ;;
+  )
 
 (comment
 
@@ -110,39 +154,6 @@
 
   ;;
   )
-
-(defn create-proc-ops
-  [channels ctx opts]
-  (let [{:keys [::app.chan/ops|]} channels
-        {:keys [::app.spec/state*]} ctx]
-    (go
-      (loop []
-        (when-let [[value port] (alts! [ops|])]
-          (condp = port
-            ops|
-            (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
-
-              {::op.spec/op-key ::app.chan/init
-               ::op.spec/op-type ::op.spec/fire-and-forget}
-              (let []
-                (println ::init))))
-          (recur))))))
-
-
-(defn main [& args]
-  (println ::main)
-  (do (create-proc-ops channels ctx {}))
-  (app.chan/op
-   {::op.spec/op-key ::app.chan/init
-    ::op.spec/op-type ::op.spec/fire-and-forget}
-   channels
-   {}))
-
-(def exports #js {:main main})
-
-(when (exists? js/module)
-  (set! js/module.exports exports))
-
 
 
 
