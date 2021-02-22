@@ -12,3 +12,5 @@
 **/.peer*
 **/.user*
 
+.ipfs*
+.cluster*

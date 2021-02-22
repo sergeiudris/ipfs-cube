@@ -76,3 +76,26 @@ services:
     ports:
       - 8000:8000
     command: dgraph-ratel
+
+  ipfs0:
+    image: ipfs/go-ipfs:v0.8.0
+    # ports:
+    #   - "4001:4001" # ipfs swarm - expose if needed/wanted
+    #   - "5001:5001" # ipfs api - expose if needed/wanted
+    #   - "8080:8080" # ipfs gateway - expose if needed/wanted
+    volumes:
+      - ./.ipfs0:/data/ipfs
+
+  cluster0:
+    image: ipfs/ipfs-cluster:v0.13.1
+    depends_on:
+      - ipfs0
+    environment:
+      CLUSTER_PEERNAME: cluster0
+      # CLUSTER_SECRET: ${CLUSTER_SECRET}
+      CLUSTER_SECRET: "4e2d42966a99d6f9587cfde10f82b21972136e6bd436f2ae0ad917918cbef05b"
+      CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs0/tcp/5001
+      CLUSTER_CRDT_TRUSTEDPEERS: '*'
+      CLUSTER_MONITORPINGINTERVAL: 2s # Speed up peer discovery
+    volumes:
+      - ./.cluster0:/data/ipfs-cluster
