@@ -3,14 +3,7 @@
         org.clojure/clojurescript {:mvn/version "1.10.758"}
         org.clojure/spec.alpha {:mvn/version "0.2.187"}
         org.clojure/test.check {:mvn/version "1.0.0"}
-       ;;  org.clojure/core.async {:mvn/version "1.1.587"}
-        andare/andare {:mvn/version "1.1.587"}
+        org.clojure/core.async {:mvn/version "1.1.587"}
         reagent/reagent {:mvn/version "1.0.0-rc1" :exclusions [cljsjs/react cljsjs/react-dom]}
 
-        github.cljctools/cljc {:local/root "/ctx/cljctools/cljc"}
-        github.cljctools/csp {:local/root "/ctx/cljctools/csp"}
-        github.cljctools/rsocket-js {:local/root  "/ctx/cljctools/rsocket-js"}
-
-        github.ipfs.ipfs-cube/ui2-meta {:local/root  "/ctx/ipfs-cube/src/ui2-meta"}
-        github.ipfs.ipfs-cube/app-meta {:local/root  "/ctx/ipfs-cube/src/app-meta"}
         github.username.ipfs-lab/notepad {:local/root  "/ctx/ipfs-lab/src/notepad"}}}

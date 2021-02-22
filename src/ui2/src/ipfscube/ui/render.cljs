@@ -10,15 +10,7 @@
    [cljs.reader :refer [read-string]]
    [clojure.pprint :refer [pprint]]
    [reagent.core :as r]
-   [reagent.dom :as rdom]
-
-   [ipfscube.app.spec :as app.spec]
-   [ipfscube.app.chan :as app.chan]
-   [cljctools.csp.op.spec :as op.spec]
-   [cljctools.cljc.core :as cljc.core]
-
-   [ipfscube.ui.spec :as ui.spec]
-   [ipfscube.ui.chan :as ui.chan]
+   [reagent.dom]
 
    ["react" :as React :refer [useEffect]]
    ["react-router-dom" :as ReactRouter :refer [BrowserRouter

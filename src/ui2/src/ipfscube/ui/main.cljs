@@ -11,20 +11,10 @@
    [goog.object]
    [clojure.string :as str]
    [cljs.reader :refer [read-string]]
+   [clojure.spec.alpha :as s]
+   [ipfscube.ui.render]
 
-   [cljctools.csp.op.spec :as op.spec]
-   [cljctools.cljc.core :as cljc.core]
-
-   [ipfscube.ui.spec :as ui.spec]
-   [ipfscube.ui.chan :as ui.chan]
-
-   [ipfscube.app.spec :as app.spec]
-   [ipfscube.app.chan :as app.chan]
-
-   [ipfscube.ui.render :as ui.render]
-   
-   [notepad.docker-from-browser1]
-   ))
+   [notepad.docker-from-browser1]))
 
 (goog-define BAR_PORT 0)
 (goog-define FOO_ORIGIN "")
@@ -32,53 +22,34 @@
 #_(set! BAR_PORT (str (subs js/location.port 0 2) (subs (str BAR_PORT) 2)))
 #_(set! FOO_ORIGIN "http://localhost:3001")
 
-(def channels (merge
-               (app.chan/create-channels)
-               (ui.chan/create-channels)))
+(def channels (let [ops| (chan 10)]
+                {::ops| ops|}))
 
-(def ctx {::ui.spec/state* (ui.render/create-state*
-                            {::app.spec/peer-metas {}})})
+(def ctx {::state* (ipfscube.ui.render/create-state*
+                    {::baz {}})})
 
-(defn create-proc-ops
-  [channels ctx opts]
-  (let [{:keys [::ui.chan/ops|]} channels
-        {:keys [::ui.spec/state*]} ctx]
+(do (clojure.spec.alpha/check-asserts true))
+(s/def ::foo keyword?)
+(s/def ::bar string?)
+
+(defn ^:export main
+  []
+  (println ::main)
+  (let [{:keys [::ops|]} channels
+        {:keys [::state*]} ctx]
+    (println ::BAR_PORT BAR_PORT)
+    (ipfscube.ui.render/render-ui channels state* {})
     (go
       (loop []
         (when-let [[value port] (alts! [ops|])]
           (condp = port
             ops|
-            (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
+            (condp = (:op value)
 
-              {::op.spec/op-key ::ui.chan/init
-               ::op.spec/op-type ::op.spec/fire-and-forget}
+              ::foo
               (let [{:keys []} value]
-                (println ::init)
-                (ui.render/render-ui channels state* {})
-                #_(app.chan/op
-                   {::op.spec/op-key ::app.chan/request-state-update
-                    ::op.spec/op-type ::op.spec/fire-and-forget}
-                   channels
-                   {}))
-
-              {::op.spec/op-key ::ui.chan/update-state
-               ::op.spec/op-type ::op.spec/fire-and-forget}
-              (let [{:keys []} value]
-                (swap! state* merge value))))
+                (println ::bar))))
 
           (recur))))))
-
-(def ops (create-proc-ops channels ctx {}))
-
-(defn ^:export main
-  []
-  (println ::main)
-  (println ::BAR_PORT BAR_PORT)
-  (ui.chan/op
-   {::op.spec/op-key ::ui.chan/init
-    ::op.spec/op-type ::op.spec/fire-and-forget}
-   channels
-   {}))
-
 
 (do (main))
