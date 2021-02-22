@@ -33,7 +33,7 @@ compile(){
 release(){
     npm i
     # export SHADOW_OUTPUT_DIR="/ctx/ipfs-cube/bin/daemon/resources/public/js-out"
-    shadow -A:dev:ui release :ui 
+    shadow -A:dev:ui:app release :ui :app
 }
 
 tree(){

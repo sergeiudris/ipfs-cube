@@ -1,20 +1,12 @@
 version: "3.8"
 
-networks:
-  base-network:
-    driver: bridge
-    name: ipfs-cube-network
-  # ipfs-network:
-  #   driver: bridge
-  #   name: ipfs-network
-
 volumes:
+
   ctx:
     driver: local
     driver_opts:
       type: none
       device: ../../
-      # device: $PWD/${WEB_APP_PATH}
       o: bind
 
 services:
@@ -23,33 +15,25 @@ services:
     image: ipfs-cube.app
     build:
       context: ./app
-      dockerfile: ./dev.Dockerfile
+      dockerfile: ./release.Dockerfile
       args:
         workdir:  /ctx/ipfs-cube/bin/app
-    command: tail -f /dev/null
-    # command: bash f dev
+    # https://github.com/docker/compose/issues/5007#issuecomment-335815508
+    # https://docs.docker.com/compose/startup-order/
+    command: bash -c "while ping -c1 compiler &>/dev/null ; do sleep 1 ; done; echo 'compiler finished' && bash f main"
+    depends_on: 
+      - compiler
+    links: 
+      - compiler:compiler
     ports:
-      # - 7788:7788
       - 3080:8080
-      # - 8085:8080
-    networks:
-      - base-network
-    # user: 1000:1000
     volumes:
-      - ./app/.user:/root
       - /var/run/docker.sock:/var/run/docker.sock
       - type: volume
         source: ctx
         target: /ctx
         volume:
           nocopy: true
-    stdin_open: true
-    tty: true
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 13000M
 
   compiler:
     image: ipfs-cube.compiler
@@ -58,36 +42,14 @@ services:
       dockerfile: ./Dockerfile
       args:
         workdir: /ctx/ipfs-cube/bin/compiler
-    command: tail -f /dev/null
-    # command: bash f dev
-    # expose:
-    #   - 7788
-    ports:
-      - 3000:3000
-      - 3001:3001
-      - 9500:9500
-      - 8899:8899
-      - 9630:9630
-    environment:
-      - BAR_PORT=7001
-      - SHADOWCLJS_DEVTOOLS_URL=http://localhost:9630
-    networks:
-      - base-network
-    # user: 1000:1000
+    # command: tail -f /dev/null
+    command: bash f release
     volumes:
-      - ./compiler/.user:/root
       - type: volume
         source: ctx
         target: /ctx
         volume:
           nocopy: true
-    stdin_open: true
-    tty: true
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 4096M
 
   zero:
     image: dgraph/dgraph:latest
@@ -108,7 +70,7 @@ services:
       - 9080:9080
     restart: on-failure
     command: dgraph alpha --my=alpha:7080 --zero=zero:5080
-  
+
   ratel:
     image: dgraph/dgraph:latest
     ports:
