@@ -10,7 +10,12 @@
    [goog.string.format :as format]
    [goog.string :refer [format]]
    [cljs.reader :refer [read-string]]
-   [clojure.spec.alpha :as s]))
+
+   [cljctools.csp.op.spec :as op.spec]
+   [cljctools.cljc.core :as cljc.core]
+
+   [ipfscube.app.spec :as app.spec]
+   [ipfscube.app.chan :as app.chan]))
 
 (defonce fs (js/require "fs"))
 (defonce path (js/require "path"))
@@ -24,15 +29,10 @@
 (defonce bodyParser (js/require "body-parser"))
 (defonce Docker (js/require "dockerode"))
 
+(defonce channels (merge
+                   (app.chan/create-channels)))
 
-(defonce channels (let [ops| (chan 10)]
-                    {::ops| ops|}))
-
-(do (clojure.spec.alpha/check-asserts true))
-(s/def ::foo string?)
-(s/def ::bar (s/keys :req [::foo]))
-
-(defonce ctx {::state*
+(defonce ctx {::app.spec/state*
               (atom
                {})})
 
@@ -62,21 +62,32 @@
             (<! (timeout 1000))
             (.send response id)))))
 
-
-(defn main [& args]
-  (println ::main)
-  (let [{:keys [::ops|]} channels
-        {:keys [::state*]} ctx]
+(defn create-proc-ops
+  [channels ctx opts]
+  (let [{:keys [::app.chan/ops|]} channels
+        {:keys [::app.spec/state*]} ctx]
     (go
       (loop []
         (when-let [[value port] (alts! [ops|])]
           (condp = port
             ops|
-            (condp = (:op value)
+            (condp = (select-keys value [::op.spec/op-key ::op.spec/op-type ::op.spec/op-orient])
 
-              ::foo
-              (let [])))
+              {::op.spec/op-key ::app.chan/init
+               ::op.spec/op-type ::op.spec/fire-and-forget}
+              (let []
+                (println ::init))))
           (recur))))))
+
+
+(defn main [& args]
+  (println ::main)
+  (do (create-proc-ops channels ctx {}))
+  (app.chan/op
+   {::op.spec/op-key ::app.chan/init
+    ::op.spec/op-type ::op.spec/fire-and-forget}
+   channels
+   {}))
 
 (def exports #js {:main main})
 
