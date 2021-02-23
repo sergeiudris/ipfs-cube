@@ -26,10 +26,12 @@
        ;;  org.slf4j/jul-to-slf4j {:mvn/version "1.7.26"}
        ;;  org.slf4j/jcl-over-slf4j {:mvn/version "1.7.26"}
        ;;  org.slf4j/log4j-over-slf4j {:mvn/version "1.7.26"}
-        
+
         github.into-docker/clj-docker-client {:git/url "https://github.com/into-docker/clj-docker-client"
                                               :sha "5d3f1a3568c24b9029eb193fd3ff5daf16f32bd2"
                                               :tag "1.0.2"}
+
+        seesaw/seesaw {:mvn/version "1.5.0"}
 
        ;;  com.github.docker-java/docker-java-core  {:mvn/version "3.2.7"}
        ;;  com.github.docker-java/docker-java-transport-httpclient5  {:mvn/version "3.2.7"}

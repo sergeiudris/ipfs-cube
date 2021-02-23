@@ -35,8 +35,11 @@ services:
     networks:
       - base-network
     # user: 1000:1000
+    environment:
+      - DISPLAY=${DISPLAY}
     volumes:
       - ./app/.user:/root
+      - /tmp/.X11-unix:/tmp/.X11-unix
       - /var/run/docker.sock:/var/run/docker.sock
       - type: volume
         source: ctx

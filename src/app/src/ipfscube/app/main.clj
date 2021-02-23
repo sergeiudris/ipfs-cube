@@ -25,11 +25,11 @@
    [ipfscube.app.spec :as app.spec]
    [ipfscube.app.chan :as app.chan]
 
+   [ipfscube.app.gui]
    [clj-docker-client.core :as docker])
   (:import
    spark.Spark
    spark.Route
-
   ;;  com.github.dockerjava.api.DefaultDockerClientConfig
   ;;  com.github.dockerjava.api.DockerHttpClient
   ;;  com.github.dockerjava.api.DockerClient
@@ -245,13 +245,13 @@
                 (println ::init-done)))))
         (recur)))))
 
-
-
 ;; (def _ (create-proc-ops channels {})) ;; cuases native image to fail
 
 (defn -main [& args]
   (println ::-main)
   (create-proc-ops channels {})
+  #_(mount-fx)
+  (ipfscube.app.gui/render)
   (create-server)
   (app.chan/op
    {::op.spec/op-key ::app.chan/init
