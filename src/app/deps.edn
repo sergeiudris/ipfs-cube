@@ -33,6 +33,8 @@
 
         seesaw/seesaw {:mvn/version "1.5.0"}
 
+        clj-systemtray/clj-systemtray {:mvn/version "0.2.1"}
+        
        ;;  com.github.docker-java/docker-java-core  {:mvn/version "3.2.7"}
        ;;  com.github.docker-java/docker-java-transport-httpclient5  {:mvn/version "3.2.7"}
 

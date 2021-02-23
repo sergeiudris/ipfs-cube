@@ -25,7 +25,8 @@
    [ipfscube.app.spec :as app.spec]
    [ipfscube.app.chan :as app.chan]
 
-   [ipfscube.app.gui]
+   #_[ipfscube.app.gui]
+   [ipfscube.app.tray]
    [clj-docker-client.core :as docker])
   (:import
    spark.Spark
@@ -251,7 +252,7 @@
   (println ::-main)
   (create-proc-ops channels {})
   #_(mount-fx)
-  (ipfscube.app.gui/render)
+  (ipfscube.app.tray/render)
   (create-server)
   (app.chan/op
    {::op.spec/op-key ::app.chan/init
