@@ -18,8 +18,10 @@ RUN apt-get update && \
 WORKDIR /tmp
 
 ##s openjdk
+# RUN apt-get update && \
+#     apt-get install -y openjdk-14-jdk
 RUN apt-get update && \
-    apt-get install -y openjdk-14-jdk
+    apt-get install -y openjdk-8-jdk
 
 # ## graalvm
 # # https://github.com/arjones/docker-graalvm/blob/master/Dockerfile

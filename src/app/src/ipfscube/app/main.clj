@@ -60,10 +60,15 @@
 (def routes
   #{#_["/"
        :get
-       (fn [request]
-         (ring.util.response/redirect "/index.html")
-         #_(ring.util.response/file-response
-            (.getAbsolutePath ^java.io.File (io/as-file (io/resource "public/index.html")))))
+       (->>
+        (fn [request]
+          (->
+           (ring.util.response/resource-response "index.html" {:root "public"})
+           (ring.util.response/content-type "index.html"))
+          #_(ring.util.response/redirect "/index.html")
+          #_(ring.util.response/file-response
+             (.getAbsolutePath ^java.io.File (io/as-file (io/resource "public/index.html")))))
+        (conj common-interceptors))
        :route-name :root]
 
     ["/clojure-version"
