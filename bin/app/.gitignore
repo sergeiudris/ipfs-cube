@@ -1,25 +1,61 @@
+# Project related
+
+# Java related
 pom.xml
+pom.xml.asc
 *jar
-/lib/
-/classes/
-/out/
-/resources/out
-/target/
-.lein-deps-sum
-.lein-repl-history
-.lein-plugins/
-.repl
+*.class
+
+# Leiningen
+classes/
+lib/
+native/
+checkouts/
+target/
+.lein-*
+repl-port
 .nrepl-port
-.cpcache/
-.rebel_readline_history
+.repl
 
-package-lock.json
+# Temp Files
+*.orig
+*~
+.*.swp
+.*.swo
+*.tmp
+*.bak
+*.log
 
-node_modules/
+# OS X
+.DS_Store
 
-.shadow-cljs
-resources/out
+# Logging
+*.log
+/logs/
+
+# Builds
 out/
-tmp/
+build/
+./.tmp/
 
-.user*
+.nrepl-port
+.cpcache
+.m2/settings.xml
+
+__pycache__
+
+# data
+tmp
+
+.user
+**/.peer*
+
+# cert
+
+resources/*.jks
+resources/*.pem
+resources/*.tmp
+
+resources/public
+
+

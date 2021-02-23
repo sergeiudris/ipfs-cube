@@ -1,13 +1,20 @@
 {:paths ["src" "resources"]
  :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
              "clojars" {:url "https://clojars.org/repo/"}}
- :deps {github.ipfsnode/app {:local/root "/ctx/ipfs-cube/src/app"}}
- :aliases {:dev {:extra-deps {thheller/shadow-cljs {:mvn/version "2.11.7"
-                                                    :exclusions [nrepl/nrepl
-                                                                 cider/piggieback
-                                                                 org.clojure/clojure
-                                                                 org.clojure/clojurescript
-                                                                 org.clojure/core.async]}
-                              nrepl/nrepl {:mvn/version "0.6.0"}
-                              cider/cider-nrepl {:mvn/version "0.24.0"}
-                              cider/piggieback {:mvn/version "0.4.2"}}}}}
+ :deps {github.ipfs.ipfs-cube/app {:local/root "/ctx/ipfs-cube/src/app"}}
+
+ :aliases {:native-image
+           {:main-opts  ["-m clj.native-image ipfscube.app.main"
+                         "--initialize-at-build-time"
+                         "--no-fallback"
+                         "--report-unsupported-elements-at-runtime"
+                        ;; optional native image name override
+                         "-H:Name=app.deps.native"
+                         "--verbose"
+                        ; "--dry-run"
+                         ]
+            :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+            :extra-deps
+            {clj.native-image/clj.native-image
+             {:git/url "https://github.com/taylorwood/clj.native-image.git"
+              :sha "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}}}
