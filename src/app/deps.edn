@@ -10,8 +10,8 @@
         com.cognitect/transit-clj  {:mvn/version "1.0.324"}
 
 
-        github.cljctools/cljc {:local/root  "/ctx/cljctools/cljc"}
-        github.cljctools/csp {:local/root  "/ctx/cljctools/csp"}
+        github.cljctools/cljc {:local/root  "../../../cljctools/cljc"}
+        github.cljctools/csp {:local/root  "../../../cljctools/csp"}
 
         com.sparkjava/spark-core {:mvn/version "2.9.1"}
 
@@ -36,4 +36,4 @@
         com.dorkbox/SystemTray {:mvn/version "3.17"}
         com.dorkbox/Utilities {:mvn/version "1.8.3"}
         
-        github.ipfs.ipfs-cube/app-meta {:local/root  "/ctx/ipfs-cube/src/app-meta"}}}
+        github.ipfs.ipfs-cube/app-meta {:local/root  "../app-meta"}}}

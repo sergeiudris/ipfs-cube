@@ -50,7 +50,8 @@
         _ (.add menu bar-entry)
         quit-entry (MenuItem. "quit" (reify ActionListener
                                        (actionPerformed [_ event]
-                                         (println ::quit))))
+                                         (println ::quit)
+                                         (System/exit 0))))
         _ (.add menu quit-entry)]
     #_(Desktop/browseURL "https://git.dorkbox.com/dorkbox/SystemTray")
     (println ::system-tray-created)))

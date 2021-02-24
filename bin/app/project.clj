@@ -65,5 +65,5 @@
   :source-paths ["src"]
   :java-source-paths ["src"]
   :test-paths [] #_["test"]
-  :resource-paths ["resources" "/ctx/ipfs-cube/bin/ui2/resources"]
+  :resource-paths ["resources" "../ui2/resources"]
   :auto-clean false)

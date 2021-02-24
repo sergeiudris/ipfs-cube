@@ -1,7 +1,7 @@
 {:paths ["src" "resources"]
  :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
              "clojars" {:url "https://clojars.org/repo/"}}
- :deps {github.ipfs.ipfs-cube/app {:local/root "/ctx/ipfs-cube/src/app"}}
+ :deps {github.ipfs.ipfs-cube/app {:local/root "../../src/app"}}
 
  :aliases {:native-image
            {:main-opts  ["-m clj.native-image ipfscube.app.main"
