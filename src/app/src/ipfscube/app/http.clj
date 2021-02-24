@@ -1,27 +1,36 @@
 (ns ipfscube.app.http
-  (:require [reitit.ring :as ring]
-            [reitit.coercion.spec]
-            [reitit.swagger :as swagger]
-            [reitit.swagger-ui :as swagger-ui]
-            [reitit.ring.coercion :as coercion]
-            [reitit.dev.pretty :as pretty]
-            [reitit.ring.middleware.muuntaja :as muuntaja]
-            [reitit.ring.middleware.exception :as exception]
-            [reitit.ring.middleware.multipart :as multipart]
-            [reitit.ring.middleware.parameters :as parameters]
-            [ring.util.response]
+  (:require
+   [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
+                                     pub sub unsub mult tap untap mix admix unmix pipe
+                                     timeout to-chan  sliding-buffer dropping-buffer
+                                     pipeline pipeline-async]]
+   [reitit.http :as http]
+   [reitit.ring :as ring]
+   [reitit.interceptor.sieppari]
+   [sieppari.async.core-async] ;; needed for core.async
+   [sieppari.async.manifold]   ;; needed for manifold
+   [muuntaja.interceptor]
+   [reitit.coercion.spec]
+   [reitit.swagger :as swagger]
+   [reitit.swagger-ui :as swagger-ui]
+   [reitit.ring.coercion :as coercion]
+   [reitit.dev.pretty :as pretty]
+   [reitit.ring.middleware.muuntaja :as muuntaja]
+   [reitit.ring.middleware.exception :as exception]
+   [reitit.ring.middleware.multipart :as multipart]
+   [reitit.ring.middleware.parameters :as parameters]
+   [ring.util.response]
             ;; Uncomment to use
             ; [reitit.ring.middleware.dev :as dev]
             ; [reitit.ring.spec :as spec]
             ; [spec-tools.spell :as spell]
-            [ring.adapter.jetty :as jetty]
-            [aleph.http :as aleph]
-            [muuntaja.core :as m]
-            [clojure.java.io :as io]
-            [clojure.spec.alpha :as s]
-            [spec-tools.core :as st]
-            [sieppari.async.manifold]
-            [manifold.deferred :as d]))
+   [ring.adapter.jetty :as jetty]
+   [aleph.http :as aleph]
+   [muuntaja.core :as m]
+   [clojure.java.io :as io]
+   [clojure.spec.alpha :as s]
+   [spec-tools.core :as st]
+   [manifold.deferred :as d]))
 
 (s/def ::file multipart/temp-file-part)
 (s/def ::file-params (s/keys :req-un [::file]))
@@ -44,9 +53,21 @@
     :swagger/default 10
     :reason "invalid number"}))
 
+(defn interceptor [f x]
+  {:enter (fn [ctx] (f (update-in ctx [:request :via] (fnil conj []) {:enter x})))
+   :leave (fn [ctx] (f (update-in ctx [:response :body] conj {:leave x})))})
+
+(defn handler [f]
+  (fn [{:keys [via]}]
+    (f {:status 200
+        :body (conj via :handler)})))
+
+(def <async> #(go %))
+(def <deferred> d/success-deferred)
+
 (def app
-  (ring/ring-handler
-   (ring/router
+  (http/ring-handler
+   (http/router
     [["/swagger.json"
       {:get {:no-doc true
              :swagger {:info {:title "my-api"}}
@@ -73,22 +94,45 @@
                           :body (io/input-stream
                                  (io/resource "reitit.png"))})}}]]
 
-     ["/async"
-      {:get {:swagger {:tags ["async"]}
+     ["/random-user"
+      {:get {:swagger {:tags ["random-user"]}
              :summary "fetches random users asynchronously over the internet"
              :parameters {:query (s/keys :req-un [::results] :opt-un [::seed])}
              :responses {200 {:body any?}}
              :handler (fn [{{{:keys [seed results]} :query} :parameters}]
-                        (d/chain
-                         (aleph/get
-                          "https://randomuser.me/api/"
-                          {:query-params {:seed seed, :results results}})
-                         :body
-                         (partial m/decode "application/json")
-                         :results
-                         (fn [results]
-                           {:status 200
-                            :body results})))}}]
+                        (go
+                          (<! (timeout 1000))
+                          @(d/chain
+                            (aleph/get
+                             "https://randomuser.me/api/"
+                             {:query-params {:seed seed, :results results}})
+                            :body
+                            (partial m/decode "application/json")
+                            :results
+                            (fn [results]
+                              {:status 200
+                               :body results}))))}}]
+
+     ["/async2"
+      {:interceptors [(interceptor <async> :async)]
+       :get {:swagger {:tags ["async"]}
+             :interceptors [(interceptor <async> :get)]
+             :handler (fn [request]
+                        (go
+                          (<! (timeout 1000))
+                          {:status 200
+                           :body [:async]}))}}]
+
+     ["/async"
+      {:interceptors [(interceptor <async> :async)]
+       :get {:interceptors [(interceptor <async> :get)]
+             :handler (handler <async>)}}]
+
+     ["/deferred"
+      {:interceptors [(interceptor <deferred> :deferred)]
+       :get {:swagger {:tags ["deferred"]}
+             :interceptors [(interceptor <deferred> :get)]
+             :handler (handler <deferred>)}}]
 
      ["/math"
       {:swagger {:tags ["math"]}}
@@ -97,9 +141,12 @@
        {:get {:summary "plus with spec query parameters"
               :parameters {:query ::math-request}
               :responses {200 {:body ::math-response}}
-              :handler (fn [{{{:keys [x y]} :query} :parameters}]
-                         {:status 200
-                          :body {:total (+ x y)}})}
+              :handler (fn [{{{:keys [x y] :as query} :query} :parameters}]
+                         (println query)
+                         (go
+                           (<! (timeout 1000))
+                           {:status 200
+                            :body {:total (+ x y)}}))}
         :post {:summary "plus with spec body parameters"
                :parameters {:body ::math-request}
                :responses {200 {:body ::math-response}}
@@ -137,17 +184,23 @@
       :config {:validatorUrl nil
                :operationsSorter "alpha"}})
     (ring/redirect-trailing-slash-handler #_{:method :add})
-    (fn [request]
-      (when (= (:uri request) "/")
-        (->
-         (ring.util.response/resource-response "index.html" {:root "public"})
-         (ring.util.response/content-type "text/html"))))
+    (fn handle-index
+      ([request]
+       (when (= (:uri request) "/")
+         (->
+          (ring.util.response/resource-response "index.html" {:root "public"})
+          (ring.util.response/content-type "text/html"))))
+      ([request respond raise]
+       (respond (handle-index request))))
     (ring/create-resource-handler {:path "/"
                                    :root "public"
                                    :index-files ["index.html"]})
-    (ring/create-default-handler))))
+    (ring/create-default-handler))
+   {:executor reitit.interceptor.sieppari/executor
+    :interceptors [(muuntaja.interceptor/format-interceptor)]}))
 
 (defn start []
-  (jetty/run-jetty #'app {:port 3080 :host "0.0.0.0" :join? false})
-  (println "server running in port 3080"))
-
+  (let [port 8080]
+    #_(jetty/run-jetty #'app {:port port :host "0.0.0.0" :join? false :async? true})
+    (aleph/start-server (aleph/wrap-ring-async-handler #'app) {:port port :host "0.0.0.0"})
+    (println (format "server running in port %d" port))))

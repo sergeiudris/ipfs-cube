@@ -103,7 +103,7 @@
 (defn -main [& args]
   (println ::-main)
   (create-proc-ops channels {})
-  (ipfscube.app.tray/create)
+  #_(ipfscube.app.tray/create)
   (ipfscube.app.http/start)
   (app.chan/op
    {::op.spec/op-key ::app.chan/init

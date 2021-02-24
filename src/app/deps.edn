@@ -13,10 +13,10 @@
         github.cljctools/cljc {:local/root  "../../../cljctools/cljc"}
         github.cljctools/csp {:local/root  "../../../cljctools/csp"}
 
-        ring/ring-jetty-adapter {:mvn/version "1.7.1"}
+        ring/ring-jetty-adapter {:mvn/version "1.8.1"}
         metosin/reitit  {:mvn/version "0.5.12"}
         aleph/aleph {:mvn/version "0.4.7-alpha5"}
-        
+
         github.into-docker/clj-docker-client {:git/url "https://github.com/into-docker/clj-docker-client"
                                               :sha "5d3f1a3568c24b9029eb193fd3ff5daf16f32bd2"
                                               :tag "1.0.2"}
