@@ -17,11 +17,13 @@ RUN apt-get update && \
 
 WORKDIR /tmp
 
-##s openjdk
+## openjdk
+# RUN apt-get update && \
+#     apt-get install -y openjdk-8-jdk
+RUN apt-get update && \
+    apt-get install -y openjdk-11-jdk
 # RUN apt-get update && \
 #     apt-get install -y openjdk-14-jdk
-RUN apt-get update && \
-    apt-get install -y openjdk-8-jdk
 
 # ## graalvm
 # # https://github.com/arjones/docker-graalvm/blob/master/Dockerfile
@@ -68,6 +70,8 @@ RUN sudo apt update && sudo apt install -y xvfb libgtk2.0-0 libxss1 libgconf-2-4
 # RUN curl -Ls "https://github.com/upx/upx/releases/download/v${UPX_VERSION}/upx-${UPX_VERSION}-amd64_linux.tar.xz" | \
 #     tar -xJ -C /usr/local/ && \
 #     ln -s /usr/local/upx-${UPX_VERSION}-amd64_linux /usr/local/upx
+
+# ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 ARG workdir
 

@@ -25,7 +25,6 @@
    [ipfscube.app.spec :as app.spec]
    [ipfscube.app.chan :as app.chan]
 
-   #_[ipfscube.app.gui]
    [ipfscube.app.tray]
    [clj-docker-client.core :as docker])
   (:import
@@ -251,8 +250,7 @@
 (defn -main [& args]
   (println ::-main)
   (create-proc-ops channels {})
-  #_(mount-fx)
-  (ipfscube.app.tray/render)
+  (ipfscube.app.tray/create)
   (create-server)
   (app.chan/op
    {::op.spec/op-key ::app.chan/init
