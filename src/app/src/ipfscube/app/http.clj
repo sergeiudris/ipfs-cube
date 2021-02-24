@@ -9,6 +9,7 @@
             [reitit.ring.middleware.exception :as exception]
             [reitit.ring.middleware.multipart :as multipart]
             [reitit.ring.middleware.parameters :as parameters]
+            [ring.util.response]
             ;; Uncomment to use
             ; [reitit.ring.middleware.dev :as dev]
             ; [reitit.ring.spec :as spec]
@@ -136,6 +137,11 @@
       :config {:validatorUrl nil
                :operationsSorter "alpha"}})
     (ring/redirect-trailing-slash-handler #_{:method :add})
+    (fn [request]
+      (when (= (:uri request) "/")
+        (->
+         (ring.util.response/resource-response "index.html" {:root "public"})
+         (ring.util.response/content-type "text/html"))))
     (ring/create-resource-handler {:path "/"
                                    :root "public"
                                    :index-files ["index.html"]})
@@ -144,3 +150,4 @@
 (defn start []
   (jetty/run-jetty #'app {:port 3080 :host "0.0.0.0" :join? false})
   (println "server running in port 3080"))
+
