@@ -22,6 +22,7 @@
    [io.pedestal.http.body-params :as pedestal.http.body-params]
    [io.pedestal.http.content-negotiation :as pedestal.http.content-negotiation]
    [io.pedestal.http.ring-middlewares :as pedestal.http.ring-middlewares]
+   [ring.util.response]
    [ipfscube.app.spec :as app.spec]
    [ipfscube.app.chan :as app.chan]
 
@@ -45,7 +46,7 @@
 (def foo1 (s/gen ::foo))
 
 (def host "0.0.0.0")
-(def port 8080)
+(def port 3080)
 
 (def supported-types
   ["text/html" "application/edn"  "text/plain" "application/transit+json"])
@@ -58,18 +59,18 @@
                           content-negotiation-interceptor])
 
 (def routes
-  #{#_["/"
-       :get
-       (->>
-        (fn [request]
-          (->
-           (ring.util.response/resource-response "index.html" {:root "public"})
-           (ring.util.response/content-type "index.html"))
-          #_(ring.util.response/redirect "/index.html")
-          #_(ring.util.response/file-response
-             (.getAbsolutePath ^java.io.File (io/as-file (io/resource "public/index.html")))))
-        (conj common-interceptors))
-       :route-name :root]
+  #{["/"
+     :get
+     (->>
+      (fn [request]
+        (->
+         (ring.util.response/resource-response "index.html" {:root "public"})
+         (ring.util.response/content-type "text/html"))
+        #_(ring.util.response/redirect "/index.html")
+        #_(ring.util.response/file-response
+           (.getAbsolutePath ^java.io.File (io/as-file (io/resource "public/index.html")))))
+      (conj common-interceptors))
+     :route-name :root]
 
     ["/clojure-version"
      :get
@@ -85,13 +86,13 @@
       (conj common-interceptors))
      :route-name :echo]
 
-    ["/bar"
+    ["/async"
      :get
      (->>
       {:enter
        (fn [{:keys [:request] :as context}]
          (go
-           (let [response {:body "bar"
+           (let [response {:body "async"
                            :status 200}]
              (<! (timeout 1000))
              (assoc context :response response))))}
