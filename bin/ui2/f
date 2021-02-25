@@ -14,15 +14,13 @@ shadow(){
 }
 
 server(){
-    shadow -A:dev:ui server
+    shadow -A:dev server
     # yarn server
 }
 
 dev(){
-
     npm i
     shadow -A:dev watch :main
-
 }
 
 compile(){

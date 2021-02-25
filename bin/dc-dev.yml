@@ -54,20 +54,18 @@ services:
           cpus: '4'
           memory: 13000M
 
-  compiler:
-    image: ipfs-cube.compiler
+  ui2:
+    image: ipfs-cube.ui2
     build:
-      context: ./compiler
+      context: ./ui2
       dockerfile: ./Dockerfile
       args:
-        workdir: /ctx/ipfs-cube/bin/compiler
+        workdir: /ctx/ipfs-cube/bin/ui2
     command: tail -f /dev/null
     # command: bash f dev
     # expose:
     #   - 7788
     ports:
-      - 3000:3000
-      - 3001:3001
       - 9500:9500
       - 8899:8899
       - 9630:9630
@@ -78,7 +76,7 @@ services:
       - base-network
     # user: 1000:1000
     volumes:
-      - ./compiler/.user:/root
+      - ./ui2/.user:/root
       - type: volume
         source: ctx
         target: /ctx
