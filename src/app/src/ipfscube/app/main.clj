@@ -15,30 +15,30 @@
    [clojure.test.check.properties :as prop]
 
    ;; http
-   [reitit.http :as http]
-   [reitit.ring :as ring]
-   [reitit.interceptor.sieppari]
+   [reitit.http]
+   [reitit.ring]
    [sieppari.async.core-async] ;; needed for core.async
    [sieppari.async.manifold]   ;; needed for manifold
    [muuntaja.interceptor]
    [reitit.coercion.spec]
-   [reitit.swagger :as swagger]
-   [reitit.swagger-ui :as swagger-ui]
-   [reitit.ring.coercion :as coercion]
-   [reitit.dev.pretty :as pretty]
-   [reitit.ring.middleware.muuntaja :as muuntaja]
-   [reitit.ring.middleware.exception :as exception]
-   [reitit.ring.middleware.multipart :as multipart]
-   [reitit.ring.middleware.parameters :as parameters]
+   [reitit.swagger]
+   [reitit.swagger-ui]
+   [reitit.dev.pretty]
+   [reitit.interceptor.sieppari]
+   [reitit.http.coercion]
+   [reitit.http.interceptors.parameters]
+   [reitit.http.interceptors.muuntaja]
+   [reitit.http.interceptors.exception]
+   [reitit.http.interceptors.multipart]
    [ring.util.response]
             ;; Uncomment to use
             ; [reitit.ring.middleware.dev :as dev]
             ; [reitit.ring.spec :as spec]
             ; [spec-tools.spell :as spell]
-   [ring.adapter.jetty :as jetty]
-   [aleph.http :as aleph]
-   [muuntaja.core :as m]
-   [spec-tools.core :as st]
+   [ring.adapter.jetty]
+   [aleph.http]
+   [muuntaja.core]
+   [spec-tools.core]
    [manifold.deferred :as d]
    ;;
    [cljctools.csp.op.spec :as op.spec]
@@ -83,7 +83,7 @@
 
 ;; (def _ (create-proc-ops channels {})) ;; cuases native image to fail
 
-(s/def ::file multipart/temp-file-part)
+(s/def ::file reitit.http.interceptors.multipart/temp-file-part)
 (s/def ::file-params (s/keys :req-un [::file]))
 
 (s/def ::name string?)
@@ -98,7 +98,7 @@
 
 (s/def ::seed string?)
 (s/def ::results
-  (st/spec
+  (spec-tools.core/spec
    {:spec (s/and int? #(< 0 % 100))
     :description "between 1-100"
     :swagger/default 10
@@ -117,12 +117,12 @@
 (def <deferred> d/success-deferred)
 
 (def app
-  (http/ring-handler
-   (http/router
+  (reitit.http/ring-handler
+   (reitit.http/router
     [["/swagger.json"
       {:get {:no-doc true
              :swagger {:info {:title "my-api"}}
-             :handler (swagger/create-swagger-handler)}}]
+             :handler (reitit.swagger/create-swagger-handler)}}]
 
      ["/files"
       {:swagger {:tags ["files"]}}
@@ -154,11 +154,11 @@
                         (go
                           (<! (timeout 1000))
                           @(d/chain
-                            (aleph/get
+                            (aleph.http/get
                              "https://randomuser.me/api/"
                              {:query-params {:seed seed, :results results}})
                             :body
-                            (partial m/decode "application/json")
+                            (partial muuntaja.core/decode "application/json")
                             :results
                             (fn [results]
                               {:status 200
@@ -189,52 +189,65 @@
       {:swagger {:tags ["math"]}}
 
       ["/plus"
-       {:get {:summary "plus with spec query parameters"
-              :parameters {:query ::math-request}
-              :responses {200 {:body ::math-response}}
-              :handler (fn [{{{:keys [x y] :as query} :query} :parameters}]
-                         (println query)
+       {:get {:summary "plus with data-spec query parameters"
+              :parameters {:query {:x int?, :y int?}}
+              :responses {200 {:body {:total pos-int?}}}
+              :handler (fn [{{{:keys [x y]} :query} :parameters}]
                          (go
                            (<! (timeout 1000))
                            {:status 200
                             :body {:total (+ x y)}}))}
-        :post {:summary "plus with spec body parameters"
-               :parameters {:body ::math-request}
-               :responses {200 {:body ::math-response}}
+        :post {:summary "plus with data-spec body parameters"
+               :parameters {:body {:x int?, :y int?}}
+               :responses {200 {:body {:total int?}}}
                :handler (fn [{{{:keys [x y]} :body} :parameters}]
                           {:status 200
-                           :body {:total (+ x y)}})}}]]]
+                           :body {:total (+ x y)}})}}]
+      
+      ["/minus"
+       {:get {:summary "minus with clojure.spec query parameters"
+              :parameters {:query (s/keys :req-un [::x ::y])}
+              :responses {200 {:body (s/keys :req-un [::total])}}
+              :handler (fn [{{{:keys [x y]} :query} :parameters}]
+                         {:status 200
+                          :body {:total (- x y)}})}
+        :post {:summary "minus with clojure.spec body parameters"
+               :parameters {:body (s/keys :req-un [::x ::y])}
+               :responses {200 {:body (s/keys :req-un [::total])}}
+               :handler (fn [{{{:keys [x y]} :body} :parameters}]
+                          {:status 200
+                           :body {:total (- x y)}})}}]]]
 
     {;;:reitit.middleware/transform dev/print-request-diffs ;; pretty diffs
        ;;:validate spec/validate ;; enable spec validation for route data
        ;;:reitit.spec/wrap spell/closed ;; strict top-level validation
-     :exception pretty/exception
+     :exception reitit.dev.pretty/exception
      :data {:coercion reitit.coercion.spec/coercion
-            :muuntaja m/instance
-            :middleware [;; swagger feature
-                         swagger/swagger-feature
-                           ;; query-params & form-params
-                         parameters/parameters-middleware
-                           ;; content-negotiation
-                         muuntaja/format-negotiate-middleware
-                           ;; encoding response body
-                         muuntaja/format-response-middleware
-                           ;; exception handling
-                         exception/exception-middleware
-                           ;; decoding request body
-                         muuntaja/format-request-middleware
-                           ;; coercing response bodys
-                         coercion/coerce-response-middleware
-                           ;; coercing request parameters
-                         coercion/coerce-request-middleware
-                           ;; multipart
-                         multipart/multipart-middleware]}})
-   (ring/routes
-    (swagger-ui/create-swagger-ui-handler
+            :muuntaja muuntaja.core/instance
+            :interceptors [;; swagger feature
+                           reitit.swagger/swagger-feature
+                             ;; query-params & form-params
+                           (reitit.http.interceptors.parameters/parameters-interceptor)
+                             ;; content-negotiation
+                           (reitit.http.interceptors.muuntaja/format-negotiate-interceptor)
+                             ;; encoding response body
+                           (reitit.http.interceptors.muuntaja/format-response-interceptor)
+                             ;; exception handling
+                           (reitit.http.interceptors.exception/exception-interceptor)
+                             ;; decoding request body
+                           (reitit.http.interceptors.muuntaja/format-request-interceptor)
+                             ;; coercing response bodys
+                           (reitit.http.coercion/coerce-response-interceptor)
+                             ;; coercing request parameters
+                           (reitit.http.coercion/coerce-request-interceptor)
+                             ;; multipart
+                           (reitit.http.interceptors.multipart/multipart-interceptor)]}})
+   (reitit.ring/routes
+    (reitit.swagger-ui/create-swagger-ui-handler
      {:path "/swagger-ui"
       :config {:validatorUrl nil
                :operationsSorter "alpha"}})
-    (ring/redirect-trailing-slash-handler #_{:method :add})
+    (reitit.ring/redirect-trailing-slash-handler #_{:method :add})
     (fn handle-index
       ([request]
        (when (= (:uri request) "/")
@@ -243,20 +256,19 @@
           (ring.util.response/content-type "text/html"))))
       ([request respond raise]
        (respond (handle-index request))))
-    (ring/create-resource-handler {:path "/"
-                                   :root "public"
-                                   :index-files ["index.html"]})
-    (ring/create-default-handler))
-   {:executor reitit.interceptor.sieppari/executor
-    :interceptors [(muuntaja.interceptor/format-interceptor)]}))
+    (reitit.ring/create-resource-handler {:path "/"
+                                          :root "public"
+                                          :index-files ["index.html"]})
+    (reitit.ring/create-default-handler))
+   {:executor reitit.interceptor.sieppari/executor}))
 
 (defn -main [& args]
   (println ::-main)
   (create-proc-ops channels {})
-  #_(ipfscube.app.tray/create)
+  (ipfscube.app.tray/create)
   (let [port 8080]
     #_(jetty/run-jetty #'app {:port port :host "0.0.0.0" :join? false :async? true})
-    (aleph/start-server (aleph/wrap-ring-async-handler #'app) {:port port :host "0.0.0.0"})
+    (aleph.http/start-server (aleph.http/wrap-ring-async-handler #'app) {:port port :host "0.0.0.0"})
     (println (format "server running in port %d" port)))
   (app.chan/op
    {::op.spec/op-key ::app.chan/init
