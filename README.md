@@ -1,4 +1,4 @@
-# ipfs-torrent-search
+# torrent-search-app
 a desktop app to search torrents, torrent index stored locally and on ipfs
 
 ## goal
