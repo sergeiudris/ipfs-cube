@@ -1,4 +1,4 @@
-# ipfs-client
+# ipfs-app
 like torrent client, but for ipfs, with search
 
 ## goal
