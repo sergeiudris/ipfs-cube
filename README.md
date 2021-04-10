@@ -1,9 +1,5 @@
-# ipfs-simple
+# ipfs-torrent-search
 like torrent client, but for ipfs, with search
-
-## already solved
-
-- already solved by torrent network and search
 
 ## goal
 
