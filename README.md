@@ -1,6 +1,12 @@
 # ipfs-index-search
 global decentralized app to create and search indexes (for example, torrents)
 
+## archived
+
+- app for storing and updating a torrent index is illegal 
+- outside of that, user maintained indexes are a weak rationale
+- the design is valid though, will be applied elsewhere
+
 ## goal
 
 - add and serach indexes: peers can create/update/fork/search indexes (for example, index of torrent files, files themselves are stored on torrent network)
