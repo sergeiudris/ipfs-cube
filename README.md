@@ -12,4 +12,5 @@ global decentralized app to create and search indexes (for example, torrents)
 - search is a query: search is simply db query, with all its power
 - decentralized identity: global index of users stores their DIDs, except for private key owned by peer
 - like repos on github: indexes can be forked
+- app data is not stored on ipfs: app uses ipfs network (for pubsub sync), data is stored in high level db on peer's machine
 - just a program: simple, free, open source, no barriers ratio-limits ads rewards economies etc. - just a program that does its thing, like transmission on linux
