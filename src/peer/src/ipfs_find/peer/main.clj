@@ -20,7 +20,9 @@
   [{:keys [::id] :as opts}]
   {::id id
    ::app.spec/state* (atom {})
-   ::system-tray? (or (boolean (System/getenv "IPFSFIND_SYSTEM_TRAY")) true)
+   ::system-tray? (if (System/getenv "IPFSFIND_SYSTEM_TRAY")
+                    (read-string (System/getenv "IPFSFIND_SYSTEM_TRAY"))
+                    true)
    ::channels {::app.spec/system-exit| (chan 1)}
    ::port 4080})
 
