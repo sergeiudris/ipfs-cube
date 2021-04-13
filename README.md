@@ -1,5 +1,5 @@
-# ipfs-search
-decentralized peer-to-peer ipfs search
+# ipfs-find
+decentralized peer-to-peer app to search and download IPFS files
 
 ## goal
 
