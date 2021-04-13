@@ -5,6 +5,7 @@
                                      timeout to-chan  sliding-buffer dropping-buffer
                                      pipeline pipeline-async]]
    [clojure.string]
+   [clojure.pprint :refer [pprint]]
    [clojure.spec.alpha :as s]
    [clojure.java.io :as io]
    [clj-http.client :as clj-http.client]
@@ -14,7 +15,7 @@
 
 (s/def ::pubsub-topic string?)
 
-(defn version
+(defn api-version
   []
   (go
     (let [response
@@ -27,7 +28,7 @@
            (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
       response)))
 
-(defn pubsub-sub
+(defn api-pubsub-sub
   [{:keys [::pubsub-topic] :or {pubsub-topic "123"}}]
   (go
     (with-open [stream (->
@@ -41,3 +42,42 @@
         (doseq [line lines]
           (println :line
                    (jsonista.core/read-value line jsonista.core/keyword-keys-object-mapper)))))))
+
+(defn api-swarm-peers
+  []
+  (go
+    (let [response
+          (->
+           (clj-http.client/request
+            {:url (str base-url "/api/v0/swarm/peers")
+             :method :post
+             :headers {:content-type "application/json"}
+             :query-params {"verbose" false
+                            "streams" false
+                            "latency" true
+                            "direction" true}})
+           :body
+           (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
+      (->>
+       response
+       :Peers
+       (map :Peer)
+       count
+       pprint)
+      response)))
+
+(defn api-resolve
+  []
+  (go
+    (let [response
+          (->
+           (clj-http.client/request
+            {:url (str base-url "/api/v0/resolve")
+             :method :post
+             :headers {:content-type "application/json"}
+             :query-params {"arg" "index.html"
+                            "dht-record-count" 10
+                            "dht-timeout" "30s"}})
+           :body
+           (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
+      response)))
