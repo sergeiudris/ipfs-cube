@@ -17,6 +17,8 @@
                 metosin/reitit  {:mvn/version "0.5.12"}
                 clj-http/clj-http {:mvn/version "3.12.1"}
                 ring-cors/ring-cors {:mvn/version "0.1.13"}
+                com.dorkbox/SystemTray {:mvn/version "3.17"}
+                com.dorkbox/Utilities {:mvn/version "1.8.3"}
                 tick/tick {}
                 github.ipfs-find/spec {:local/root "../../src/spec"}
                 github.ipfs-find/peer {:local/root "../../src/peer"}}
