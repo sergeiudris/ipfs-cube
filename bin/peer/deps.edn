@@ -1,4 +1,4 @@
-{:paths ["src" "resources"]
+{:paths []
 
  :deps {}
 
@@ -22,7 +22,7 @@
                 tick/tick {}
                 github.ipfs-find/spec {:local/root "../../src/spec"}
                 github.ipfs-find/peer {:local/root "../../src/peer"}}
-   :extra-paths ["../ui/resources"]
+   :extra-paths ["resources" "../ui/resources"]
    :main-opts ["-m" "ipfs-find.peer.main"]}
 
   :repl

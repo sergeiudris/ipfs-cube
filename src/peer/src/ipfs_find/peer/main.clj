@@ -11,6 +11,7 @@
 
    [ipfs-find.peer.reitit :as peer.reitit]
    [ipfs-find.peer.dgraph :as peer.dgraph]
+   [ipfs-find.peer.system-tray :as peer.system-tray]
    [ipfs-find.peer.ipfs :as peer.ipfs]))
 
 (defonce ^:private registry-ref (atom {}))
@@ -19,6 +20,7 @@
   [{:keys [::id] :as opts}]
   {::id id
    ::app.spec/state* (atom {})
+   ::system-tray? (or (boolean (System/getenv "IPFSFIND_SYSTEM_TRAY")) true)
    ::channels {::app.spec/system-exit| (chan 1)}
    ::port 4080})
 
@@ -37,9 +39,9 @@
                   ::channels
                   ::port]} opts]
       (<! (peer.reitit/stop channels {::peer.reitit/port port}))
-      (let [opts-in-registry (get @registry-ref id)]
-        (when (::procs-exit opts-in-registry)
-          (<! ((::procs-exit opts-in-registry)))))
+      #_(let [opts-in-registry (get @registry-ref id)]
+          (when (::procs-exit opts-in-registry)
+            (<! ((::procs-exit opts-in-registry)))))
       (swap! registry-ref dissoc id)
       (println ::unmount-done))))
 
@@ -49,6 +51,7 @@
     (let [opts (merge (create-opts opts) opts)
           {:keys [::dgraph-opts
                   ::channels
+                  ::system-tray?
                   ::port]
            {:keys [::app.spec/system-exit|]} ::channels} opts
           procs (atom [])
@@ -56,13 +59,6 @@
                        (doseq [[exit| proc|] @procs]
                          (close! exit|))
                        (a/merge (mapv second @procs)))]
-      (swap! registry-ref assoc id (merge
-                                    opts
-                                    {::procs-exit procs-exit}))
-      (<! (peer.reitit/start channels {::peer.reitit/port port}))
-      #_(<! (peer.dgraph/ready?))
-      (<! (peer.dgraph/upload-schema))
-
       (let [exit| (chan 1)
             proc|
             (go
@@ -82,6 +78,15 @@
                         (System/exit 0))))))
               (println ::go-block-exits))]
         (swap! procs conj [exit| proc|]))
+
+      (swap! registry-ref assoc id (merge
+                                    opts
+                                    {::procs-exit procs-exit}))
+      (<! (peer.reitit/start channels {::peer.reitit/port port}))
+      (when system-tray?
+        (peer.system-tray/mount {::peer.system-tray/quit| system-exit|}))
+      #_(<! (peer.dgraph/ready?))
+      (<! (peer.dgraph/upload-schema))
 
       (println ::mount-done))))
 

@@ -1,4 +1,4 @@
-(ns ipfs-find.app.system-tray
+(ns ipfs-find.peer.system-tray
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -28,7 +28,7 @@
 (defn mount
   [{:keys [::quit| ::id] :or {id "ipfs-find-system-tray"} :as opts}]
   (go
-    (let [image (clojure.java.io/resource "logo/find.png")
+    (let [image (clojure.java.io/resource "logo/logo.png")
           _ (println (type image))
           _ (set! SystemTray/DEBUG true)
           _ (println SystemTray/DEBUG)
