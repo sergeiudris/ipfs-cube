@@ -29,9 +29,7 @@
   [{:keys [::quit| ::id] :or {id "ipfs-find-system-tray"} :as opts}]
   (go
     (let [image (clojure.java.io/resource "logo/logo.png")
-          _ (println (type image))
           _ (set! SystemTray/DEBUG true)
-          _ (println SystemTray/DEBUG)
         ;; _ (CacheUtil/clear name)
           system-tray (SystemTray/get)
           _ (when (nil? system-tray)
