@@ -1,0 +1,124 @@
+version: "3.8"
+
+networks:
+  main-network:
+    driver: overlay
+    name: ipfs-find-peer${IPFSFIND_PEER_INDEX}
+  ipfs-network:
+    driver: bridge
+    name: ipfs-find-ipfs
+
+volumes:
+  ctx:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../../
+      o: bind
+  dgraph-volume:
+    name: ipfs-find-dgraph-peer${IPFSFIND_PEER_INDEX}
+  ipfs-volume:
+    name: ipfs-find-ipfs-peer${IPFSFIND_PEER_INDEX}
+
+services:
+
+  peer:
+    image: ipfs-find.peer
+    build:
+      context: ./peer
+      dockerfile: ./Dockerfile
+      args:
+        workdir:  /ctx/ipfs-find/bin/peer
+    command: tail -f /dev/null
+    # command: bash f dev
+    ports:
+      - ${IPFSFIND_REPL_PORT}:7781
+      - ${IPFSFIND_HTTP_PORT}:4080
+    networks:
+      main-network:
+    volumes:
+      - ./peer/.peer${IPFSFIND_PEER_INDEX}:/root
+      - type: volume
+        source: ctx
+        target: /ctx
+        volume:
+          nocopy: true
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4096M
+
+  zero:
+    image: dgraph/dgraph:v20.11.2
+    volumes:
+      - dgraph-volume:/dgraph
+    networks:
+      main-network:
+    # ports:
+    #   - 5080:5080
+    #   - 6080:6080
+    restart: on-failure
+    command: dgraph zero --my=zero:5080
+  
+  alpha:
+    image: dgraph/dgraph:v20.11.2
+    volumes:
+      - dgraph-volume:/dgraph
+    networks:
+      main-network:
+    # ports:
+    #   - 8080:8080
+    #   - 9080:9080
+    restart: on-failure
+    command: dgraph alpha --my=alpha:7080 --zero=zero:5080 --whitelist "0.0.0.0/0"
+  
+  ratel:
+    image: dgraph/dgraph:v20.11.2
+    networks:
+      main-network:
+    ports:
+      - 804${IPFSFIND_PEER_INDEX}:8000
+    command: dgraph-ratel
+
+  ipfs:
+    image: ipfs-find.ipfs
+    build:
+      context: ./ipfs
+      dockerfile: ./Dockerfile
+    ports:
+      - 440${IPFSFIND_PEER_INDEX}:4001
+      - 540${IPFSFIND_PEER_INDEX}:5001
+      - 840${IPFSFIND_PEER_INDEX}:8080
+      - 848${IPFSFIND_PEER_INDEX}:8081
+      # - 4001:4001
+    #   - 127.0.0.1:5001:5001
+    #   # - 127.0.0.1:8080:8080
+    #   # - 127.0.0.1:8081:8081
+    environment:
+      # - IPFS_PROFILE=server
+      # - IPFS_PROFILE=local-discovery
+      - IPFS_PATH=/data/ipfs
+    networks:
+      main-network:
+      ipfs-network:
+        aliases:
+          - ipfs${IPFSFIND_PEER_INDEX}
+    volumes:
+      - type: volume
+        source: ctx
+        target: /ctx
+        volume:
+          nocopy: true
+      - type: volume
+        source: ipfs-volume
+        target: /data/ipfs
+        volume:
+          nocopy: true
+      # - type: volume
+      #   source: ipfs-export
+      #   target: /export
+      #   volume:
+      #     nocopy: true

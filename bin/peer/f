@@ -1,0 +1,21 @@
+#!/bin/bash
+
+repl(){
+    clj -A:core:peer:repl
+}
+
+
+main(){
+  clojure -A:core:peer
+}
+
+
+uberjar(){
+  clojure -X:depstar uberjar \
+    :aot true \
+    :jar target/ipfs-find.jar \
+    :aliases '[:core :peer]' \
+    :main-class ipfs-find.peer.main
+}
+
+"$@"
