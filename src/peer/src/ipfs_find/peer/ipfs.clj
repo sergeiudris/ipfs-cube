@@ -52,8 +52,8 @@
             {:url (str base-url "/api/v0/swarm/peers")
              :method :post
              :headers {:content-type "application/json"}
-             :query-params {"verbose" false
-                            "streams" false
+             :query-params {"verbose" true
+                            "streams" true
                             "latency" true
                             "direction" true}})
            :body
@@ -61,23 +61,46 @@
       (->>
        response
        :Peers
-       (map :Peer)
-       count
-       pprint)
-      response)))
+       #_(map :Peer)
+       rand-nth
+       #_count
+       #_pprint))))
 
-(defn api-resolve
+(defn api-find-peer
   []
   (go
-    (let [response
+    (let [peer-id (:Peer (<! (api-swarm-peers)))
+          response
           (->
            (clj-http.client/request
-            {:url (str base-url "/api/v0/resolve")
+            {:url (str base-url "/api/v0/dht/findpeer")
              :method :post
              :headers {:content-type "application/json"}
-             :query-params {"arg" "index.html"
+             :query-params {"arg" peer-id
+                            "verbose" true}})
+           :body
+           (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
+      response)))
+
+(defn api-name-resolve
+  []
+  (go
+    (let [peer-id (:Peer (<! (api-swarm-peers)))
+          response
+          (->
+           (clj-http.client/request
+            {:url (str base-url "/api/v0/name/resolve")
+             :method :post
+             :headers {:content-type "application/json"}
+             :query-params {"arg" peer-id
                             "dht-record-count" 10
                             "dht-timeout" "30s"}})
            :body
            (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
       response)))
+
+
+(defn crawl
+  []
+  
+  )
