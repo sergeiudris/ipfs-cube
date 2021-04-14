@@ -26,7 +26,7 @@ services:
       - 9630:9630
     # user: 1000:1000
     volumes:
-      - ./ui/.user:/root
+      - ./ui/volumes/root:/root
       - type: volume
         source: ctx
         target: /ctx

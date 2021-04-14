@@ -39,7 +39,7 @@ services:
     networks:
       main-network:
     volumes:
-      - ./peer/.peer${IPFSFIND_PEER_INDEX}:/root
+      - ./peer/volumes/root${IPFSFIND_PEER_INDEX}:/root
       - type: volume
         source: ctx
         target: /ctx
@@ -100,8 +100,10 @@ services:
     #   # - 127.0.0.1:8080:8080
     #   # - 127.0.0.1:8081:8081
     environment:
+      # - FOO=bar
       # - IPFS_PROFILE=server
       # - IPFS_PROFILE=local-discovery
+      # - IPFS_PATH=/data/ipfs
       - IPFS_PATH=/data/ipfs
     networks:
       main-network:
@@ -109,18 +111,14 @@ services:
         aliases:
           - ipfs${IPFSFIND_PEER_INDEX}
     volumes:
+      - ./peer/volumes/ipfs${IPFSFIND_PEER_INDEX}:/data/ipfs
       - type: volume
         source: ctx
         target: /ctx
         volume:
           nocopy: true
-      - type: volume
-        source: ipfs-volume
-        target: /data/ipfs
-        volume:
-          nocopy: true
       # - type: volume
-      #   source: ipfs-export
-      #   target: /export
+      #   source: ipfs-volume
+      #   target: /data/ipfs
       #   volume:
       #     nocopy: true

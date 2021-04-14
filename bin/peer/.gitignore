@@ -1,4 +1,4 @@
 .cpcache/
 target/
-.peer*/
+volumes/
 .nrepl-port
