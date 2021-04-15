@@ -1,12 +1,12 @@
 #!/bin/bash
 
 repl(){
-    clj -A:core:peer:repl
+    clj -A:core:app:repl
 }
 
 
 main(){
-  clojure -A:core:peer
+  clojure -A:core:app
 }
 
 
@@ -14,8 +14,8 @@ uberjar(){
   clojure -X:depstar uberjar \
     :aot true \
     :jar target/ipfs-find.jar \
-    :aliases '[:core :peer]' \
-    :main-class ipfs-find.peer.main
+    :aliases '[:core :app]' \
+    :main-class ipfs-find.app.main
 }
 
 "$@"

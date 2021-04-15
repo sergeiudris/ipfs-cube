@@ -11,7 +11,7 @@
                               :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                               :tag "0.4.31-alpha"}}}
 
-  :peer
+  :app
   {:extra-deps {org.clojure/clojure {:mvn/version "1.10.3"}
                 ring/ring-jetty-adapter {:mvn/version "1.8.1"}
                 metosin/reitit  {:mvn/version "0.5.12"}
@@ -21,9 +21,9 @@
                 com.dorkbox/Utilities {:mvn/version "1.8.3"}
                 tick/tick {}
                 github.ipfs-find/spec {:local/root "../../src/spec"}
-                github.ipfs-find/peer {:local/root "../../src/peer"}}
+                github.ipfs-find/aoo {:local/root "../../src/app"}}
    :extra-paths ["resources" "../ui/resources"]
-   :main-opts ["-m" "ipfs-find.peer.main"]}
+   :main-opts ["-m" "ipfs-find.app.main"]}
 
   :repl
   {:extra-deps {github.cljctools/deps-repl {:git/url "https://github.com/cljctools/deps-repl"
@@ -32,7 +32,7 @@
                 nrepl/nrepl {:mvn/version "0.8.3"}
                 cider/cider-nrepl {:mvn/version "0.25.5"}}
    :main-opts ["-m" "lambdaisland.nrepl.main"
-               "--init-ns" "ipfs-find.peer.main"
+               "--init-ns" "ipfs-find.app.main"
                "--port" "7788"
                "--bind" "0.0.0.0"
                "--middleware" "cider.nrepl/cider-middleware"]}

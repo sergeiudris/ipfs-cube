@@ -1,4 +1,4 @@
-(ns ipfs-find.peer.main
+(ns ipfs-find.app.main
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -7,12 +7,12 @@
                                      pipeline pipeline-async]]
    [clojure.string]
 
-   [ipfs-find.peer.spec :as app.spec]
+   [ipfs-find.app.spec :as app.spec]
 
-   [ipfs-find.peer.reitit :as peer.reitit]
-   [ipfs-find.peer.dgraph :as peer.dgraph]
-   [ipfs-find.peer.system-tray :as peer.system-tray]
-   [ipfs-find.peer.ipfs :as peer.ipfs]))
+   [ipfs-find.app.reitit :as app.reitit]
+   [ipfs-find.app.dgraph :as app.dgraph]
+   [ipfs-find.app.system-tray :as app.system-tray]
+   [ipfs-find.app.ipfs :as app.ipfs]))
 
 (defonce ^:private registry-ref (atom {}))
 
@@ -40,7 +40,7 @@
     (let [{:keys [::dgraph-opts
                   ::channels
                   ::port]} opts]
-      (<! (peer.reitit/stop channels {::peer.reitit/port port}))
+      (<! (app.reitit/stop channels {::app.reitit/port port}))
       #_(let [opts-in-registry (get @registry-ref id)]
           (when (::procs-exit opts-in-registry)
             (<! ((::procs-exit opts-in-registry)))))
@@ -84,11 +84,11 @@
       (swap! registry-ref assoc id (merge
                                     opts
                                     {::procs-exit procs-exit}))
-      (<! (peer.reitit/start channels {::peer.reitit/port port}))
+      (<! (app.reitit/start channels {::app.reitit/port port}))
       (when system-tray?
-        (peer.system-tray/mount {::peer.system-tray/quit| system-exit|}))
-      #_(<! (peer.dgraph/ready?))
-      (<! (peer.dgraph/upload-schema))
+        (app.system-tray/mount {::app.system-tray/quit| system-exit|}))
+      #_(<! (app.dgraph/ready?))
+      (<! (app.dgraph/upload-schema))
 
       (println ::mount-done))))
 

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+build(){
+    go build -o target/main
+}
+
+
+main(){
+  go run .
+}
+
+"$@"

@@ -1,4 +1,4 @@
-(ns ipfs-find.peer.system-tray
+(ns ipfs-find.app.system-tray
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!

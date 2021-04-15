@@ -1,12 +1,39 @@
-# FROM ipfs/go-ipfs:v0.7.0@sha256:d5bc45bd354e3fef2161adb0daa7dc390316589cfdcc6b0edc1ad13ac66626fd
-# that's 0.8.0 + 2months
-FROM ipfs/go-ipfs:master-latest@sha256:f19d17f1572e3c1797b8b8dd59951b33aa1cf41a3543e0e69f34d2af08b10ec6 
+FROM ubuntu:20.04
 
-COPY container_daemon /usr/local/bin/start_ipfs
+ENV DEBIAN_FRONTEND="noninteractive"
 
-RUN chmod 0755 /usr/local/bin/start_ipfs
+## core
+RUN apt-get update && \
+    apt-get install -y \
+            sudo  \
+            git-core  \
+            rlwrap  \
+            software-properties-common  \
+            unzip wget curl net-tools lsof \
+            build-essential
 
-ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/start_ipfs"]
+RUN sudo apt update && sudo apt install -y xvfb libgtk2.0-0 libxss1 libgconf-2-4
 
-# Execute the daemon subcommand by default
-CMD ["daemon", "--writable", "--enable-pubsub-experiment", "--migrate=true"]
+WORKDIR /tmp
+
+## node
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+    apt-get install -y nodejs 
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg |  apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" |  tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && apt-get -y install yarn
+
+## golang
+# RUN curl -LO https://get.golang.org/$(uname)/go_installer && chmod +x go_installer && ./go_installer && rm go_installer
+ENV GOPATH=/root/go
+ENV PATH=$PATH:/usr/local/go/bin:${GOPATH}/bin
+ENV GO_DIST=go1.15.7.linux-amd64.tar.gz
+ENV GO111MODULE=on
+RUN curl -LO https://golang.org/dl/${GO_DIST} \
+    && tar -C /usr/local -xzf ${GO_DIST} \
+    && rm ${GO_DIST} \
+    && go version
+
+ARG workdir
+
+WORKDIR ${workdir}
