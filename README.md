@@ -1,6 +1,13 @@
 # ipfs-find
 decentralized peer-to-peer app to search and download IPFS files
 
+## archived
+
+- two diff problems for two diff networks
+- torrent search - files - is a torrent network problem
+- decentralized search on ipfs - is a completely different problem
+- https://github.com/sergeiudris/ipfs-lab/issues/11#issuecomment-820102586
+
 ## goal
 
 - like torrent client, but for ipfs, with search
