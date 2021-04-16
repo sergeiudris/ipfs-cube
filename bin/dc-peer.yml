@@ -85,52 +85,18 @@ services:
       - 804${IPFSFIND_PEER_INDEX}:8000
     command: dgraph-ratel
 
-  # go-ipfs:
-  #   image: ipfs-find.go-ipfs
-  #   build:
-  #     context: ./go-ipfs
-  #     dockerfile: ./Dockerfile
-  #   ports:
-  #     - 440${IPFSFIND_PEER_INDEX}:4001
-  #     - 540${IPFSFIND_PEER_INDEX}:5001
-  #     - 840${IPFSFIND_PEER_INDEX}:8080
-  #     - 848${IPFSFIND_PEER_INDEX}:8081
-  #     # - 4001:4001
-  #   #   - 127.0.0.1:5001:5001
-  #   #   # - 127.0.0.1:8080:8080
-  #   #   # - 127.0.0.1:8081:8081
-  #   environment:
-  #     # - FOO=bar
-  #     # - IPFS_PROFILE=server
-  #     # - IPFS_PROFILE=local-discovery
-  #     # - IPFS_PATH=/data/ipfs
-  #     - IPFS_PATH=/data/ipfs
-  #   networks:
-  #     main-network:
-  #     ipfs-network:
-  #       aliases:
-  #         - ipfs${IPFSFIND_PEER_INDEX}
-  #   volumes:
-  #     - ./peer/volumes/ipfs${IPFSFIND_PEER_INDEX}:/data/ipfs
-  #     - type: volume
-  #       source: ctx
-  #       target: /ctx
-  #       volume:
-  #         nocopy: true
-  #     # - type: volume
-  #     #   source: ipfs-volume
-  #     #   target: /data/ipfs
-  #     #   volume:
-  #     #     nocopy: true
-
   ipfs:
     image: ipfs-find.ipfs
+    # build:
+    #   context: ./go-ipfs
+    #   dockerfile: ./Dockerfile
     build:
-      context: ./ipfs
-      dockerfile: ./Dockerfile
+      context: ../../go-ipfs
+      dockerfile: ./ipfs-find.Dockerfile
       args:
-        workdir:  /ctx/ipfs-find/bin/ipfs
-    command: tail -f /dev/null
+        workdir:  /ctx/go-ipfs
+    # command: tail -f /dev/null
+    command: bash f main
     ports:
       - 440${IPFSFIND_PEER_INDEX}:4001
       - 540${IPFSFIND_PEER_INDEX}:5001
@@ -152,7 +118,9 @@ services:
         aliases:
           - ipfs${IPFSFIND_PEER_INDEX}
     volumes:
-      - ./ipfs/volumes/ipfs${IPFSFIND_PEER_INDEX}:/data/ipfs
+      # - ./peer/volumes/ipfs${IPFSFIND_PEER_INDEX}:/data/ipfs
+      - ../../go-ipfs/volumes/root${IPFSFIND_PEER_INDEX}:/root
+      - ../../go-ipfs/volumes/ipfs${IPFSFIND_PEER_INDEX}:/data/ipfs
       - type: volume
         source: ctx
         target: /ctx
@@ -163,3 +131,45 @@ services:
       #   target: /data/ipfs
       #   volume:
       #     nocopy: true
+
+  # ipfs:
+  #   image: ipfs-find.ipfs
+  #   build:
+  #     context: ./ipfs
+  #     dockerfile: ./Dockerfile
+  #     args:
+  #       workdir:  /ctx/ipfs-find/bin/ipfs
+  #   command: tail -f /dev/null
+  #   ports:
+  #     - 440${IPFSFIND_PEER_INDEX}:4001
+  #     - 540${IPFSFIND_PEER_INDEX}:5001
+  #     - 840${IPFSFIND_PEER_INDEX}:8080
+  #     - 848${IPFSFIND_PEER_INDEX}:8081
+  #     - 844${IPFSFIND_PEER_INDEX}:8000
+  #     # - 4001:4001
+  #   #   - 127.0.0.1:5001:5001
+  #   #   # - 127.0.0.1:8080:8080
+  #   #   # - 127.0.0.1:8081:8081
+  #   environment:
+  #     # - FOO=bar
+  #     # - IPFS_PROFILE=server
+  #     # - IPFS_PROFILE=local-discovery
+  #     # - IPFS_PATH=/data/ipfs
+  #     - IPFS_PATH=/data/ipfs
+  #   networks:
+  #     main-network:
+  #     ipfs-network:
+  #       aliases:
+  #         - ipfs${IPFSFIND_PEER_INDEX}
+  #   volumes:
+  #     - ./ipfs/volumes/ipfs${IPFSFIND_PEER_INDEX}:/data/ipfs
+  #     - type: volume
+  #       source: ctx
+  #       target: /ctx
+  #       volume:
+  #         nocopy: true
+  #     # - type: volume
+  #     #   source: ipfs-volume
+  #     #   target: /data/ipfs
+  #     #   volume:
+  #     #     nocopy: true
