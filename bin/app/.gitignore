@@ -2,3 +2,4 @@
 target/
 volumes/
 .nrepl-port
+resources/ipfs-find/

@@ -18,4 +18,11 @@ uberjar(){
     :main-class ipfs-find.app.main
 }
 
+resources(){
+  cd resources && \
+  git clone https://github.com/sergeiudris/ipfs-find && \
+  rm -rf .git && \
+  cd ../
+}
+
 "$@"
