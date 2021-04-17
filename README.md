@@ -1,10 +1,6 @@
 # ipfs-find
 decentralized peer-to-peer app to search and download IPFS files
 
-## archived
-
-- until needed
-
 ## goal
 
 - like torrent client, but for ipfs, with search
