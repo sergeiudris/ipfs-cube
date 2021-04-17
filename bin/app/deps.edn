@@ -20,10 +20,10 @@
                 com.dorkbox/SystemTray {:mvn/version "3.17"}
                 com.dorkbox/Utilities {:mvn/version "1.8.3"}
                 tick/tick {}
-                github.ipfs-find/spec {:local/root "../../src/spec"}
-                github.ipfs-find/aoo {:local/root "../../src/app"}}
+                github.find/spec {:local/root "../../src/spec"}
+                github.find/aoo {:local/root "../../src/app"}}
    :extra-paths ["resources" "../ui/resources"]
-   :main-opts ["-m" "ipfs-find.app.main"]}
+   :main-opts ["-m" "find.app.main"]}
 
   :repl
   {:extra-deps {github.cljctools/deps-repl {:git/url "https://github.com/cljctools/deps-repl"
@@ -32,7 +32,7 @@
                 nrepl/nrepl {:mvn/version "0.8.3"}
                 cider/cider-nrepl {:mvn/version "0.25.5"}}
    :main-opts ["-m" "lambdaisland.nrepl.main"
-               "--init-ns" "ipfs-find.app.main"
+               "--init-ns" "find.app.main"
                "--port" "7788"
                "--bind" "0.0.0.0"
                "--middleware" "cider.nrepl/cider-middleware"]}

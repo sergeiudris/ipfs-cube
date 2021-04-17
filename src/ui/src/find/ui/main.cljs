@@ -1,4 +1,4 @@
-(ns ipfs-find.ui.main
+(ns find.ui.main
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -47,8 +47,8 @@
    ["@ant-design/icons/SyncOutlined" :default AntIconSyncOutlined]
    ["@ant-design/icons/ReloadOutlined" :default AntIconReloadOutlined]
 
-   [ipfs-find.ui.spec :as ui.spec]
-   [ipfs-find.spec]))
+   [find.ui.spec :as ui.spec]
+   [find.spec]))
 
 (goog-define BAR_PORT 0)
 (goog-define FOO_ORIGIN "")
@@ -217,7 +217,7 @@
       [:div {:href "/"
              :class "ui-logo"}
        #_[:img {:class "logo-img" :src "./img/logo-4.png"}]
-       [:div {:class "logo-name"} "ipfs-find"]]
+       [:div {:class "logo-name"} "find"]]
       [:f> menu channels state*]]
      [ant-layout-content {:class "main-content"
                           :style {:margin-top "32px"
@@ -276,7 +276,7 @@
       [:div {:href "/"
              :class "ui-logo"}
        #_[:img {:class "logo-img" :src "./img/logo-4.png"}]
-       [:div {:class "logo-name"} "ipfs-find"]]
+       [:div {:class "logo-name"} "find"]]
       [:f> menu channels state*]]
      [ant-layout-content {:class "main-content"
                           :style {:margin-top "32px"

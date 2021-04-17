@@ -1,4 +1,4 @@
-(ns ipfs-find.app.reitit
+(ns find.app.reitit
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -42,8 +42,8 @@
    [clj-http.client :as hc]
 
    ;;
-   [ipfs-find.app.cors-interceptor]
-   [ipfs-find.spec]))
+   [find.app.cors-interceptor]
+   [find.spec]))
 
 (defonce ^:private registry-ref (atom {}))
 
@@ -90,24 +90,24 @@
 
      ["/sign-up"
       {:post {:summary "user sign-up"
-              :parameters {:body (s/keys :req [:ipfs-find.spec/username
-                                               :ipfs-find.spec/password])}
-              :responses {200 {:body :ipfs-find.spec/user-info}}
-              :handler (fn [{{{:keys [:ipfs-find.spec/username
-                                      :ipfs-find.spec/password]} :body} :parameters}]
+              :parameters {:body (s/keys :req [:find.spec/username
+                                               :find.spec/password])}
+              :responses {200 {:body :find.spec/user-info}}
+              :handler (fn [{{{:keys [:find.spec/username
+                                      :find.spec/password]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            {:status 200
-                            :body {:ipfs-find.spec/username "hello"}}))}}]
+                            :body {:find.spec/username "hello"}}))}}]
 
      ["/sign-in"
       {:post {:summary "user sign-in"
-              :parameters {:body (s/keys :req [:ipfs-find.spec/username
-                                               :ipfs-find.spec/password])}
-              :responses {200 {:body :ipfs-find.spec/user-info}}
+              :parameters {:body (s/keys :req [:find.spec/username
+                                               :find.spec/password])}
+              :responses {200 {:body :find.spec/user-info}}
               :handler (fn [{{{:as body
-                               :keys [:ipfs-find.spec/username
-                                      :ipfs-find.spec/password]} :body} :parameters}]
+                               :keys [:find.spec/username
+                                      :find.spec/password]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            (let [token  nil
@@ -125,29 +125,29 @@
                                passord-valid?
                                {:status 200
                                 :headers {"Authorization" (format "Token %s" token)}
-                                :body (select-keys body [:ipfs-find.spec/username])}))))}}]
+                                :body (select-keys body [:find.spec/username])}))))}}]
 
      ["/sign-out"
       {:post {:summary "user sign-out"
-              :parameters {:body (s/keys :req [:ipfs-find.spec/username
-                                               :ipfs-find.spec/password])}
-              :responses {200 {:body :ipfs-find.spec/user-info}}
-              :handler (fn [{{{:keys [:ipfs-find.spec/username
-                                      :ipfs-find.spec/password]} :body} :parameters}]
+              :parameters {:body (s/keys :req [:find.spec/username
+                                               :find.spec/password])}
+              :responses {200 {:body :find.spec/user-info}}
+              :handler (fn [{{{:keys [:find.spec/username
+                                      :find.spec/password]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            {:status 200
-                            :body {:ipfs-find.spec/username "hello"}}))}}]
+                            :body {:find.spec/username "hello"}}))}}]
 
      ["/user-info"
       {:post {:summary "get information about user by username"
-              :parameters {:body (s/keys :req [:ipfs-find.spec/username])}
-              :responses {200 {:body :ipfs-find.spec/user-info}}
-              :handler (fn [{{{:keys [:ipfs-find.spec/username]} :body} :parameters}]
+              :parameters {:body (s/keys :req [:find.spec/username])}
+              :responses {200 {:body :find.spec/user-info}}
+              :handler (fn [{{{:keys [:find.spec/username]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            {:status 200
-                            :body {:ipfs-find.spec/username "hello"}}))}}]
+                            :body {:find.spec/username "hello"}}))}}]
 
      ["/files"
       {:swagger {:tags ["files"]}}
@@ -264,7 +264,7 @@
                              ;; multipart
                            (reitit.http.interceptors.multipart/multipart-interceptor)
                              ;; cors
-                           (ipfs-find.app.cors-interceptor/cors-interceptor)]}})
+                           (find.app.cors-interceptor/cors-interceptor)]}})
    (reitit.ring/routes
     (reitit.swagger-ui/create-swagger-ui-handler
      {:path "/swagger-ui"
@@ -339,7 +339,7 @@
                              ;; multipart
                            (reitit.http.interceptors.multipart/multipart-interceptor)
                              ;; cors
-                           (ipfs-find.app.cors-interceptor/cors-interceptor)]}})
+                           (find.app.cors-interceptor/cors-interceptor)]}})
    (reitit.ring/routes
     (reitit.ring/redirect-trailing-slash-handler #_{:method :add})
     (fn handle-index

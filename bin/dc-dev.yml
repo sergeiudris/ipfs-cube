@@ -10,12 +10,12 @@ volumes:
 
 services:
   ui:
-    image: ipfs-find.ui
+    image: find.ui
     build:
       context: ./ui
       dockerfile: ./Dockerfile
       args:
-        workdir: /ctx/ipfs-find/bin/ui
+        workdir: /ctx/find/bin/ui
     command: tail -f /dev/null
     # command: bash f dev
     # expose:

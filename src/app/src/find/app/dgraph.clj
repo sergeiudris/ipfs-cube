@@ -1,4 +1,4 @@
-(ns ipfs-find.app.dgraph
+(ns find.app.dgraph
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -15,7 +15,7 @@
 
    [clj-http.client]
    [jsonista.core]
-   [ipfs-find.spec]))
+   [find.spec]))
 
 (def base-url "http://alpha:8080")
 
@@ -87,7 +87,7 @@
       response)))
 
 (defn query-user
-  [{:keys [:ipfs-find.spec/username] :as opts}]
+  [{:keys [:find.spec/username] :as opts}]
   (go
     (let [response
           (->

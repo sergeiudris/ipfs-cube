@@ -1,4 +1,4 @@
-(ns ipfs-find.app.system-tray
+(ns find.app.system-tray
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -26,7 +26,7 @@
 (defonce ^:private registry-ref (atom {}))
 
 (defn mount
-  [{:keys [::quit| ::id] :or {id "ipfs-find-system-tray"} :as opts}]
+  [{:keys [::quit| ::id] :or {id "find-system-tray"} :as opts}]
   (go
     (let [image (clojure.java.io/resource "logo/logo.png")
           _ (set! SystemTray/DEBUG true)
@@ -58,7 +58,7 @@
       (println ::created))))
 
 (defn unmount
-  [{:keys [::id] :or {id "ipfs-find-system-tray"} :as opts}]
+  [{:keys [::id] :or {id "find-system-tray"} :as opts}]
   (go
     (let [system-tray (get @registry-ref id)]
       (when system-tray

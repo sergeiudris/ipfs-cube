@@ -1,3 +1,3 @@
-module github.com/ipfs-shipyard/ipfs-find/ipfs-link
+module github.com/ipfs-shipyard/find/ipfs-link
 
 go 1.15

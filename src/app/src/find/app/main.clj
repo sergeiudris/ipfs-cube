@@ -1,4 +1,4 @@
-(ns ipfs-find.app.main
+(ns find.app.main
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -7,12 +7,12 @@
                                      pipeline pipeline-async]]
    [clojure.string]
 
-   [ipfs-find.app.spec :as app.spec]
+   [find.app.spec :as app.spec]
 
-   [ipfs-find.app.reitit :as app.reitit]
-   [ipfs-find.app.dgraph :as app.dgraph]
-   [ipfs-find.app.system-tray :as app.system-tray]
-   [ipfs-find.app.ipfs :as app.ipfs]))
+   [find.app.reitit :as app.reitit]
+   [find.app.dgraph :as app.dgraph]
+   [find.app.system-tray :as app.system-tray]
+   [find.app.ipfs :as app.ipfs]))
 
 (defonce ^:private registry-ref (atom {}))
 
@@ -20,8 +20,8 @@
   [{:keys [::id] :as opts}]
   {::id id
    ::app.spec/state* (atom {})
-   ::system-tray? (if (System/getenv "IPFSFIND_SYSTEM_TRAY")
-                    (read-string (System/getenv "IPFSFIND_SYSTEM_TRAY"))
+   ::system-tray? (if (System/getenv "FIND_SYSTEM_TRAY")
+                    (read-string (System/getenv "FIND_SYSTEM_TRAY"))
                     true)
    ::channels {::app.spec/system-exit| (chan 1)}
    ::port 4080})

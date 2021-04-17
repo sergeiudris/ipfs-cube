@@ -13,9 +13,9 @@ main(){
 uberjar(){
   clojure -X:depstar uberjar \
     :aot true \
-    :jar target/ipfs-find.jar \
+    :jar target/find.jar \
     :aliases '[:core :app]' \
-    :main-class ipfs-find.app.main
+    :main-class find.app.main
 }
 
 resources(){

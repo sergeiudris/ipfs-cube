@@ -1,5 +1,5 @@
-(ns ipfs-find.spec
-  #?(:cljs (:require-macros [ipfs-find.spec]))
+(ns find.spec
+  #?(:cljs (:require-macros [find.spec]))
   (:require
    [clojure.spec.alpha :as s]))
 
