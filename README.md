@@ -4,7 +4,7 @@ decentralized peer-to-peer app to search and download IPFS files
 ## goal
 
 - like torrent client, but for ipfs, with search
-- global decentralized peer-to-peer: app is entirely on users' (peers') machines - computers that have app currently running form the global app
+- global decentralized peer-to-peer: volunteer peer-to-peer self-forming cluster of server nodes for computation, user laptops just connect - 100 nodes, 10000 users
 - distributed automated index: every node crawles a part of ipfs network, forming a part of the index
 - query the whole index: nodes exchange index parts so that every node has almost the whoile index to query
 - index is just data in db: extracts file info and shows seeds (pins)
