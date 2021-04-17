@@ -19,10 +19,8 @@ uberjar(){
 }
 
 resources(){
-  cd resources && \
-  git clone https://github.com/sergeiudris/ipfs-find && \
-  rm -rf .git && \
-  cd ../
+  mkdir -p resources/repo/
+  cp -r ../../src resources/repo/
 }
 
 "$@"
