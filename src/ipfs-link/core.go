@@ -1,4 +1,4 @@
-package ipfsfind_ipfs_core
+package ipfsfind_ipfs_link_core
 
 import (
 	"fmt"
