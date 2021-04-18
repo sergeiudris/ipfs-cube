@@ -3,10 +3,12 @@
          :port #shadow/env ["SHADOWCLJS_NREPL_PORT" :as :int :default 8899]}
  :http {:port #shadow/env ["SHADOWCLJS_HTTP_PORT" :as :int :default 9630]
         :host "0.0.0.0"}
+ :dev-http {8000 {:roots ["/ctx/find/bin/ui/resources/public"]
+                  :host "0.0.0.0"}}
  :builds {:ipfs-link {:target #_:node-library :node-script
                       :main find.ipfs-link.main/main
                       :exports-var find.ipfs-link.main/exports
-                      :output-to "../ipfs-link/resources/out/main.js"
+                      :output-to "/ctx/find/bin/ipfs-link/resources/out/main.js"
                       :compiler-options {:optimizations :simple
                                          :infer-externs   false
                                          :stable-names true
@@ -20,11 +22,11 @@
                       :devtools {:repl-init-ns find.ipfs-link.main
                                  :repl-pprint true
                                  :autobuild true
-                                 :devtools-url "http://compiler:9630"
+                                 :devtools-url #shadow/env ["SHADOWCLJS_DEVTOOLS_URL" :default "http://compiler:9630"] 
                                  :after-load find.ipfs-link.main/reload}}
 
           :ui {:target :browser
-               :output-dir "../ui/resources/public/out"
+               :output-dir "/ctx/find/bin/ui/resources/public/out"
                :asset-path "./out"
                :module-loader true
                :modules {:main {:entries [find.ui.main]}}

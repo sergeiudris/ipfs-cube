@@ -1,6 +1,9 @@
 version: "3.8"
 
 networks:
+  dev-network:
+    driver: overlay
+    name: find-dev
   main-network:
     driver: overlay
     name: find-peer${FIND_PEER_INDEX}
@@ -137,6 +140,7 @@ services:
       - FOO=bar
     networks:
       main-network:
+      dev-network:
       # ipfs-network:
       #   aliases:
       #     - ipfs${FIND_PEER_INDEX}

@@ -1,5 +1,10 @@
 version: "3.8"
 
+networks:
+  dev-network:
+    driver: overlay
+    name: find-dev
+
 volumes:
   ctx:
     driver: local
@@ -9,13 +14,13 @@ volumes:
       o: bind
 
 services:
-  ui:
-    image: find.ui
+  compiler:
+    image: find.compiler
     build:
-      context: ./ui
+      context: ./compiler
       dockerfile: ./Dockerfile
       args:
-        workdir: /ctx/find/bin/ui
+        workdir: /ctx/find/bin/compiler
     command: tail -f /dev/null
     # command: bash f dev
     # expose:
@@ -24,9 +29,12 @@ services:
       - 9500:9500
       - 8899:8899
       - 9630:9630
+      - 8500:8000
     # user: 1000:1000
+    networks:
+      dev-network:
     volumes:
-      - ./ui/volumes/root:/root
+      - ./compiler/volumes/root:/root
       - type: volume
         source: ctx
         target: /ctx

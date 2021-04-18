@@ -45,14 +45,6 @@ RUN curl -O https://download.clojure.org/install/$CLOJURE_TOOLS && \
     sudo ./$CLOJURE_TOOLS && \
     clojure -Stree
 
-## leiningen
-ENV LEIN_VERSION=2.9.5
-ENV LEIN_DIR=/usr/local/bin/
-RUN curl -O https://raw.githubusercontent.com/technomancy/leiningen/${LEIN_VERSION}/bin/lein && \
-    mv lein ${LEIN_DIR} && \
-    chmod a+x ${LEIN_DIR}/lein && \
-    lein version
-
 ## node
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get install -y nodejs 

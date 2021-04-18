@@ -10,28 +10,21 @@ RUN apt-get update && \
             rlwrap  \
             software-properties-common  \
             unzip wget curl net-tools lsof \
+            zlib1g-dev gcc libc6-dev \
             build-essential
 
 WORKDIR /tmp
 
-##s openjdk
+## openjdk
 RUN apt-get update && \
-    apt-get install -y openjdk-14-jdk
+    apt-get install -y openjdk-11-jdk
 
 ## clojure
-ENV CLOJURE_TOOLS=linux-install-1.10.1.727.sh
+ENV CLOJURE_TOOLS=linux-install-1.10.2.774.sh
 RUN curl -O https://download.clojure.org/install/$CLOJURE_TOOLS && \
     chmod +x $CLOJURE_TOOLS && \
     sudo ./$CLOJURE_TOOLS && \
     clojure -Stree
-
-## leiningen
-ENV LEIN_VERSION=2.9.3
-ENV LEIN_DIR=/usr/local/bin/
-RUN curl -O https://raw.githubusercontent.com/technomancy/leiningen/${LEIN_VERSION}/bin/lein && \
-    mv lein ${LEIN_DIR} && \
-    chmod a+x ${LEIN_DIR}/lein && \
-    lein version
 
 ## node
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
