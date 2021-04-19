@@ -10,4 +10,5 @@ decentralized peer-to-peer app to search and download IPFS/torrent files
 - index is just data in db: extracts file info and shows seeds (pins)
 - live additions/removals over pubsub: when user adds a file to ipfs node, app sends msg over pubsub - so all nodes online instantly add file to index (or increment/decrement seeds/pins) - if file is popular (defined by how many seeds)
 - filters: peers can choose which filters to apply to the index they store
+- installation - docker, use - browser (on localhost:port)
 - just a program: simple, entirely free, open source, no barriers ratio-limits ads rewards economies etc. - just a program that does its thing, like transmission on linux
