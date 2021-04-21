@@ -12,16 +12,13 @@
    [goog.object]
    [cljs.reader :refer [read-string]]))
 
-(defonce fs (js/require "fs"))
-(defonce fsExtra (js/require "fs-extra"))
+(defonce fs (js/require "fs-extra"))
 (defonce path (js/require "path"))
 (defonce IpfsHttpClient (js/require "ipfs-http-client"))
 (when-not (.-create IpfsHttpClient)
   (set! (.-create IpfsHttpClient) IpfsHttpClient))
 (defonce IpfsdCtl (js/require "ipfsd-ctl"))
 (defonce GoIpfs (js/require "go-ipfs"))
-
-
 
 (defn start
   []
@@ -47,15 +44,23 @@
             (.init ipfsd)
             (.catch (fn [error]
                       (println ::error-init error)))))
+      (let [config-filepath (.join path config-dir "config")
+            config (js->clj (.readJsonSync fs config-filepath))
+            config (-> config
+                       (assoc-in ["Swarm" "ConnMgr" "LowWater"] 50)
+                       (assoc-in ["Swarm" "ConnMgr" "HighWater"] 300)
+                       (assoc-in ["Swarm" "ConnMgr" "GracePeriod"] "300s")
+                       (assoc-in ["Discovery" "MDNS" "Enabled"] true))]
+        (.writeJsonSync fs config-filepath (clj->js config) (clj->js {"spaces" 2})))
       (<p! (->
             (.start ipfsd)
             (.catch (fn [error]
-                      (.removeSync fsExtra  (.join path (.-path ipfsd) "api"))))))
+                      (.removeSync fs (.join path (.-path ipfsd) "api"))))))
       (<p! (->
             (.start ipfsd)
             (.catch (fn [error]
                       (println ::error-start error)))))
-      (println (<p! (.. ipfsd -api (id)))))))
+      #_(println (<p! (.. ipfsd -api (id)))))))
 
 
 (comment
