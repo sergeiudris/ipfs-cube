@@ -13,15 +13,25 @@
    [cljs.reader :refer [read-string]]))
 
 (defonce fs (js/require "fs"))
+(defonce fsExtra (js/require "fs-extra"))
 (defonce path (js/require "path"))
 (defonce IpfsHttpClient (js/require "ipfs-http-client"))
+(when-not (.-create IpfsHttpClient)
+  (set! (.-create IpfsHttpClient) IpfsHttpClient))
 (defonce IpfsdCtl (js/require "ipfsd-ctl"))
 (defonce GoIpfs (js/require "go-ipfs"))
+
+
 
 (defn start
   []
   (go
-    (let [ipfsd (<p! (->
+    (let [config-dir (.join path
+                            js/__dirname
+                            (str "../../volumes/ipfs" (or (.. js/process -env -FIND_PEER_INDEX) 0)))
+          _ (when-not (.existsSync fs config-dir)
+              (.mkdirSync fs config-dir (clj->js {"recursive" true})))
+          ipfsd (<p! (->
                       (.createController IpfsdCtl
                                          (clj->js
                                           {"ipfsHttpModule" IpfsHttpClient
@@ -30,15 +40,23 @@
                                            "test" false
                                            "ipfsBin" (.path GoIpfs)
                                            "args" ["--writable" "--enable-pubsub-experiment" "--migrate=true"]
-                                           "ipfsOptions" {"repo" (.join path js/__dirname (str "../../volumes/ipfs" (or (.. js/process -env -FIND_PEER_INDEX) 0)))}}))
+                                           "ipfsOptions" {"repo" config-dir}}))
                       #_(.catch (fn [error]
-                                  (println ::error error)))))
-          _ (<p! (->
-                  (.init ipfsd)
-                  (.catch (fn [error]
-                            (println ::error error)))) )
-          id (<p! (.. ipfsd -api (id)))]
-      (println id))))
+                                  (println ::error error)))))]
+      (<p! (->
+            (.init ipfsd)
+            (.catch (fn [error]
+                      (println ::error-init error)))))
+      (<p! (->
+            (.start ipfsd)
+            (.catch (fn [error]
+                      (.removeSync fsExtra  (.join path (.-path ipfsd) "api"))))))
+      (<p! (->
+            (.start ipfsd)
+            (.catch (fn [error]
+                      (println ::error-start error)))))
+      (println (<p! (.. ipfsd -api (id)))))))
+
 
 (comment
 
