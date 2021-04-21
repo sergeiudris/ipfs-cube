@@ -11,6 +11,7 @@
 		"ipfs": "0.54.4",
 		"ipfs-http-client": "49.0.4",
 		"ipfsd-ctl": "8.0.2",
+		"orbit-db": "0.26.1",
 		"react": "17.0.1",
 		"react-dom": "17.0.1"
 	},

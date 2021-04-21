@@ -13,11 +13,14 @@
    [cljs.reader :refer [read-string]]
    [find.app.http :as app.http]
    [find.app.ipfs :as app.ipfs]
-   [find.app.electron :as app.electron]))
+   [find.app.electron :as app.electron]
+   [find.app.orbitdb :as app.orbitdb]))
 
 (defonce fs (js/require "fs"))
 (defonce path (js/require "path"))
 (defonce axios (.-default (js/require "axios")))
+
+(def FIND_PEER_INDEX (or (.. js/process -env -FIND_PEER_INDEX) 1))
 
 (declare)
 
@@ -26,7 +29,9 @@
   (go
     (<! (app.http/start))
     (<! (app.electron/start))
-    (<! (app.ipfs/start))))
+    (let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX}))]
+      (<! (app.orbitdb/start {:ipfsd ipfsd
+                              :peer-index FIND_PEER_INDEX})))))
 
 (def exports #js {:main main})
 

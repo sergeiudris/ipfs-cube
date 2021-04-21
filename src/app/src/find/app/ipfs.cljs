@@ -20,14 +20,12 @@
 (defonce IpfsdCtl (js/require "ipfsd-ctl"))
 (defonce GoIpfs (js/require "go-ipfs"))
 
-(def FIND_PEER_INDEX (or (.. js/process -env -FIND_PEER_INDEX) 1))
-
 (defn start
-  []
+  [{:keys [:peer-index] :as opts}]
   (go
     (let [config-dir (.join path
                             js/__dirname
-                            (str "../../volumes/ipfs" FIND_PEER_INDEX))
+                            (format "../../volumes/peer%s/ipfs" peer-index))
           _ (when-not (.existsSync fs config-dir)
               (.mkdirSync fs config-dir (clj->js {"recursive" true})))
           ipfsd (<p! (->
@@ -43,8 +41,6 @@
                       #_(.catch (fn [error]
                                   (println ::error error)))))]
 
-
-
       (<p! (->
             (.init ipfsd)
             (.catch (fn [error]
@@ -52,7 +48,7 @@
 
       (let [config-filepath (.join path config-dir "config")
             config (js->clj (.readJsonSync fs config-filepath))
-            swarm-port (+ 4000 FIND_PEER_INDEX)
+            swarm-port (+ 4000 peer-index)
             config (-> config
                        (assoc-in ["Swarm" "ConnMgr" "LowWater"] 50)
                        (assoc-in ["Swarm" "ConnMgr" "HighWater"] 300)
@@ -73,34 +69,32 @@
               (.start ipfsd)
               (.catch (fn [error]
                         (println ::error-start error)))))
-        #_(println (.-id (<p! (.. ipfsd -api (id))))))
+        (println ::peer-id (.-id (<p! (.. ipfsd -api (id))))))
 
-      
-      (let [id (.-id (<p! (.. ipfsd -api (id))))
-            decoder (js/TextDecoder.)]
-        (.. ipfsd -api -pubsub
-            (subscribe
-             "github-foo-find"
-             (fn [msg]
-               (when-not (= id (. msg -from))
-                 (do
-                   #_(println (format "id: %s" id))
-                   (println (format "from: %s" (. msg -from)))
-                   (println (format "data: %s" (.decode decoder (. msg -data))))
-                   #_(println (format "topicIDs: %s" msg.topicIDs)))
-                 #_(put! pubsub| msg))))))
-
-      (let [id (.-id (<p! (.. ipfsd -api (id))))
-            counter (volatile! (rand-int 100))
-            encoder (js/TextEncoder.)]
-        (go (loop []
-              (<! (timeout (* 2000 (+ 1 (rand-int 2)))))
-              (vswap! counter inc)
-              (.. ipfsd -api -pubsub
-                  (publish
-                   "github-foo-find"
-                   (.encode encoder (str {::count @counter}))))
-              (recur)))))))
+      #_(let [id (.-id (<p! (.. ipfsd -api (id))))
+              encoder (js/TextEncoder.)
+              decoder (js/TextDecoder.)
+              counterV (volatile! (rand-int 100))]
+          (.. ipfsd -api -pubsub
+              (subscribe
+               "github-foo-find"
+               (fn [msg]
+                 (when-not (= id (. msg -from))
+                   (do
+                     #_(println (format "id: %s" id))
+                     (println (format "from: %s" (. msg -from)))
+                     (println (format "data: %s" (.decode decoder (. msg -data))))
+                     #_(println (format "topicIDs: %s" msg.topicIDs)))
+                   #_(put! pubsub| msg)))))
+          (go (loop []
+                (<! (timeout (* 2000 (+ 1 (rand-int 2)))))
+                (vswap! counterV inc)
+                (.. ipfsd -api -pubsub
+                    (publish
+                     "github-foo-find"
+                     (.encode encoder (str {::count @counterV}))))
+                (recur))))
+      ipfsd)))
 
 
 
