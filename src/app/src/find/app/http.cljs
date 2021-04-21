@@ -1,4 +1,4 @@
-(ns find.ipfs-link.main
+(ns find.app.http
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -15,14 +15,15 @@
 (defonce fs (js/require "fs"))
 (defonce path (js/require "path"))
 (defonce axios (.-default (js/require "axios")))
-(defonce IpfsClient (js/require "ipfs-http-client"))
 (defonce http (js/require "http"))
 (defonce Url (js/require "url"))
 (defonce express (js/require "express"))
 (defonce cors (js/require "cors"))
 (defonce bodyParser (js/require "body-parser"))
 
-(def HTTP_PORT 8000)
+(declare)
+
+(def HTTP_PORT 8400)
 
 (defonce app (express))
 (defonce server (.createServer http app))
@@ -37,29 +38,8 @@
           (<! (timeout 2000))
           (.send response "hello world"))))
 
-
-(comment
-
-  (js/Object.keys ipfs)
-  (js/Object.keys ipfs.pubsub)
-
+(defn start
+  []
   (go
-    (let [id (<p! (daemon._ipfs.id))]
-      (println (js-keys id))
-      (println (.-id id))
-      (println (format "id is %s" id))))
-
-  ;;
-  )
-
-(declare)
-
-
-(defn main [& args]
-  (println ::main)
-  (.listen server HTTP_PORT))
-
-(def exports #js {:main main})
-
-(when (exists? js/module)
-  (set! js/module.exports exports))
+    (println (format "starting http server on %s" HTTP_PORT))
+    (.listen server HTTP_PORT)))

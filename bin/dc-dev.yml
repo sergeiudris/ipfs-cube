@@ -14,13 +14,13 @@ volumes:
       o: bind
 
 services:
-  compiler:
-    image: find.compiler
+  app:
+    image: find.app
     build:
-      context: ./compiler
+      context: ./app
       dockerfile: ./Dockerfile
       args:
-        workdir: /ctx/find/bin/compiler
+        workdir: /ctx/find/bin/app
     command: tail -f /dev/null
     # command: bash f dev
     # expose:
@@ -34,7 +34,7 @@ services:
     networks:
       dev-network:
     volumes:
-      - ./compiler/volumes/root:/root
+      - ./app/volumes/root:/root
       - type: volume
         source: ctx
         target: /ctx

@@ -1,4 +1,4 @@
-{:paths []
+{:paths ["src" "resources"]
 
  :deps {}
 
@@ -12,34 +12,28 @@
                               :tag "0.4.31-alpha"}}}
 
   :app
-  {:extra-deps {org.clojure/clojure {:mvn/version "1.10.3"}
-                ring/ring-jetty-adapter {:mvn/version "1.8.1"}
-                metosin/reitit  {:mvn/version "0.5.12"}
-                clj-http/clj-http {:mvn/version "3.12.1"}
-                ring-cors/ring-cors {:mvn/version "0.1.13"}
-                com.dorkbox/SystemTray {:mvn/version "3.17"}
-                com.dorkbox/Utilities {:mvn/version "1.8.3"}
-                tick/tick {}
+  {:extra-deps {org.clojure/clojurescript {:mvn/version "1.10.758"}
                 github.find/spec {:local/root "../../src/spec"}
-                github.find/aoo {:local/root "../../src/app"}}
-   :extra-paths ["resources" "../ui/resources"]
-   :main-opts ["-m" "find.app.main"]}
+                github.find/app {:local/root "../../src/app"}}}
 
-  :repl
-  {:extra-deps {github.cljctools/deps-repl {:git/url "https://github.com/cljctools/deps-repl"
-                                            :sha "08283d3841c5948b0b9d36a977ebfdad111cdb2f"
-                                            :tag "v2.0.1"}
-                nrepl/nrepl {:mvn/version "0.8.3"}
-                cider/cider-nrepl {:mvn/version "0.25.5"}}
-   :main-opts ["-m" "lambdaisland.nrepl.main"
-               "--init-ns" "find.app.main"
-               "--port" "7788"
-               "--bind" "0.0.0.0"
-               "--middleware" "cider.nrepl/cider-middleware"]}
+  :ui
+  {:extra-deps {org.clojure/clojurescript {:mvn/version "1.10.758"}
+                reagent/reagent {:mvn/version "1.0.0-rc1"
+                                 :exclusions [cljsjs/react cljsjs/react-dom]}
 
-  :depstar
-  {:replace-deps {com.github.seancorfield/depstar {:git/url "https://github.com/seancorfield/depstar"
-                                                   :sha "89d6557a868ff475063558e0199485f28fba403b"
-                                                   :tag "2.0.211"}}
-   :ns-default hf.depstar
-   :exec-args {}}}}
+                metosin/reitit {:mvn/version "0.5.12"}
+                metosin/reitit-spec {:mvn/version "0.5.12"}
+                metosin/reitit-frontend {:mvn/version "0.5.12"}
+                github.find/spec {:local/root "../../src/spec"}
+                github.find/ui {:local/root "../../src/ui"}}}
+
+  :shadow
+  {:extra-deps {thheller/shadow-cljs {:mvn/version "2.11.7"
+                                      :exclusions [nrepl/nrepl
+                                                   cider/piggieback
+                                                   org.clojure/clojure
+                                                   org.clojure/clojurescript
+                                                   org.clojure/core.async]}
+                nrepl/nrepl {:mvn/version "0.6.0"}
+                cider/cider-nrepl {:mvn/version "0.24.0"}
+                cider/piggieback {:mvn/version "0.4.2"}}}}}

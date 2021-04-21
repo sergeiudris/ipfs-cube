@@ -18,8 +18,6 @@ volumes:
       type: none
       device: ../../
       o: bind
-  dgraph-volume:
-    name: find-dgraph-peer${FIND_PEER_INDEX}
   ipfs-volume:
     name: find-ipfs-peer${FIND_PEER_INDEX}
 
@@ -55,38 +53,6 @@ services:
         limits:
           cpus: '4'
           memory: 4096M
-
-  zero:
-    image: dgraph/dgraph:v20.11.2
-    volumes:
-      - dgraph-volume:/dgraph
-    networks:
-      main-network:
-    # ports:
-    #   - 5080:5080
-    #   - 6080:6080
-    restart: on-failure
-    command: dgraph zero --my=zero:5080
-  
-  alpha:
-    image: dgraph/dgraph:v20.11.2
-    volumes:
-      - dgraph-volume:/dgraph
-    networks:
-      main-network:
-    # ports:
-    #   - 8080:8080
-    #   - 9080:9080
-    restart: on-failure
-    command: dgraph alpha --my=alpha:7080 --zero=zero:5080 --whitelist "0.0.0.0/0"
-  
-  ratel:
-    image: dgraph/dgraph:v20.11.2
-    networks:
-      main-network:
-    ports:
-      - 804${FIND_PEER_INDEX}:8000
-    command: dgraph-ratel
 
   ipfs:
     image: find.ipfs
@@ -125,36 +91,3 @@ services:
       #   target: /data/ipfs
       #   volume:
       #     nocopy: true
-
-  ipfs-link:
-    image: find.ipfs-link
-    build:
-      context: ./ipfs-link
-      dockerfile: ./Dockerfile
-      args:
-        workdir:  /ctx/find/bin/ipfs-link
-    command: tail -f /dev/null
-    ports:
-      - 844${FIND_PEER_INDEX}:8000
-    environment:
-      - FOO=bar
-    networks:
-      main-network:
-      dev-network:
-      # ipfs-network:
-      #   aliases:
-      #     - ipfs${FIND_PEER_INDEX}
-    volumes:
-      - ./ipfs-link/volumes/root${FIND_PEER_INDEX}:/root
-      - type: volume
-        source: ctx
-        target: /ctx
-        volume:
-          nocopy: true
-    stdin_open: true
-    tty: true
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 4096M

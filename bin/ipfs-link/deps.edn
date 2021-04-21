@@ -1,2 +1,0 @@
-{:paths ["resources"]
- :deps {github.find/ipfs-link {:local/root "/ctx/find/src/ipfs-link"}}}
