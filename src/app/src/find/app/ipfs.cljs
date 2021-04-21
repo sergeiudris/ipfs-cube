@@ -14,7 +14,31 @@
 
 (defonce fs (js/require "fs"))
 (defonce path (js/require "path"))
-(defonce IpfsClient (js/require "ipfs-http-client"))
+(defonce IpfsHttpClient (js/require "ipfs-http-client"))
+(defonce IpfsdCtl (js/require "ipfsd-ctl"))
+(defonce GoIpfs (js/require "go-ipfs"))
+
+(defn start
+  []
+  (go
+    (let [ipfsd (<p! (->
+                      (.createController IpfsdCtl
+                                         (clj->js
+                                          {"ipfsHttpModule" IpfsHttpClient
+                                           "remote" false
+                                           "disposable" false
+                                           "test" false
+                                           "ipfsBin" (.path GoIpfs)
+                                           "args" ["--writable" "--enable-pubsub-experiment" "--migrate=true"]
+                                           "ipfsOptions" {"repo" (.join path js/__dirname (str "../../volumes/ipfs" (or (.. js/process -env -FIND_PEER_INDEX) 0)))}}))
+                      #_(.catch (fn [error]
+                                  (println ::error error)))))
+          _ (<p! (->
+                  (.init ipfsd)
+                  (.catch (fn [error]
+                            (println ::error error)))) )
+          id (<p! (.. ipfsd -api (id)))]
+      (println id))))
 
 (comment
 

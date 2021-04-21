@@ -25,7 +25,8 @@
   (println ::main)
   (go
     (<! (app.http/start))
-    (<! (app.electron/start))))
+    (<! (app.electron/start))
+    (<! (app.ipfs/start))))
 
 (def exports #js {:main main})
 
