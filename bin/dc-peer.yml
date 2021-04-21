@@ -34,7 +34,12 @@ services:
     # command: bash f dev
     ports:
       - 840${FIND_PEER_INDEX}:8400
+      - 400${FIND_PEER_INDEX}:400${FIND_PEER_INDEX}
+      - 500${FIND_PEER_INDEX}:5001
+      - 880${FIND_PEER_INDEX}:8080
+      - 881${FIND_PEER_INDEX}:8081
     environment:
+      - FIND_PEER_INDEX=${FIND_PEER_INDEX}
       - DISPLAY=$DISPLAY
     networks:
       main-network:

@@ -15,10 +15,6 @@ peer(){
   "${@:2}"
 }
 
-peer1(){
-  peer 1 "$@"
-}
-
 peer2(){
   peer 2 "$@"
 }
@@ -28,7 +24,6 @@ peer3(){
 }
 
 peers(){
-  peer1 "$@"
   peer2 "$@"
   peer3  "$@"
   peer4  "$@"
