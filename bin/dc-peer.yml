@@ -33,12 +33,13 @@ services:
     command: tail -f /dev/null
     # command: bash f dev
     ports:
-      - ${FIND_REPL_PORT}:7781
-      - ${FIND_HTTP_PORT}:4080
+      - 840${FIND_PEER_INDEX}:8400
     environment:
-      - FIND_SYSTEM_TRAY=false
+      - DISPLAY=$DISPLAY
     networks:
       main-network:
+      ipfs-network:
+      dev-network:
     volumes:
       - ./app/volumes/root${FIND_PEER_INDEX}:/root
       - type: volume
@@ -46,6 +47,7 @@ services:
         target: /ctx
         volume:
           nocopy: true
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
     stdin_open: true
     tty: true
     deploy:
@@ -53,41 +55,3 @@ services:
         limits:
           cpus: '4'
           memory: 4096M
-
-  ipfs:
-    image: find.ipfs
-    build:
-      context: ./ipfs
-      dockerfile: ./Dockerfile
-    ports:
-      - 440${FIND_PEER_INDEX}:4001
-      - 540${FIND_PEER_INDEX}:5001
-      - 840${FIND_PEER_INDEX}:8080
-      - 848${FIND_PEER_INDEX}:8081
-      # - 4001:4001
-    #   - 127.0.0.1:5001:5001
-    #   # - 127.0.0.1:8080:8080
-    #   # - 127.0.0.1:8081:8081
-    environment:
-      # - FOO=bar
-      # - IPFS_PROFILE=server
-      # - IPFS_PROFILE=local-discovery
-      # - IPFS_PATH=/data/ipfs
-      - IPFS_PATH=/data/ipfs
-    networks:
-      main-network:
-      ipfs-network:
-        aliases:
-          - ipfs${FIND_PEER_INDEX}
-    volumes:
-      - ./ipfs/volumes/ipfs${FIND_PEER_INDEX}:/data/ipfs
-      - type: volume
-        source: ctx
-        target: /ctx
-        volume:
-          nocopy: true
-      # - type: volume
-      #   source: ipfs-volume
-      #   target: /data/ipfs
-      #   volume:
-      #     nocopy: true

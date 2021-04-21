@@ -10,7 +10,7 @@ dev(){
 }
 
 main(){
-  ./node_modules/.bin/electron resources/out/main.js
+  ./node_modules/.bin/electron --no-sandbox resources/out/main.js
 }
 
 server(){

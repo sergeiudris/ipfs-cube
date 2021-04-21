@@ -14,8 +14,8 @@ volumes:
       o: bind
 
 services:
-  app:
-    image: find.app
+  compiler:
+    image: find.compiler
     build:
       context: ./app
       dockerfile: ./Dockerfile

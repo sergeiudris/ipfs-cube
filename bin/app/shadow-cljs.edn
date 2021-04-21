@@ -22,7 +22,7 @@
                 :devtools {:repl-init-ns find.app.main
                            :repl-pprint true
                            :autobuild true
-                           :devtools-url #shadow/env ["SHADOWCLJS_DEVTOOLS_URL" :default "http://compiler:9630"]
+                           :devtools-url #shadow/env ["SHADOWCLJS_DEVTOOLS_URL" :default "http://localhost:9630"]
                            :after-load find.app.main/reload}}
 
           :ui {:target :browser

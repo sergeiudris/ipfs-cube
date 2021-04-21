@@ -31,10 +31,9 @@
                                          "height" 600
                                          "icon" (.join path
                                                        js/__dirname
-                                                       "../../../../"
+                                                       "../"
                                                        "logo"
-                                                       "svg"
-                                                       "logo_bottom_right-colors-green-4-728-square.png")
+                                                       "logo.png")
                                          "webPreferences" {}}))]
               (.loadFile main-window (.join path js/__dirname "../public/index.html"))))]
       (create-window)

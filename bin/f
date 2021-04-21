@@ -5,6 +5,7 @@
 # peer1 exec ipfs ipfs pubsub pub 123 qwe
 
 peer(){
+  xhost +
   export FIND_PEER_INDEX=$1
   export COMPOSE_PROJECT_NAME="find-peer${FIND_PEER_INDEX}"
   export FIND_HTTP_PORT="408${FIND_PEER_INDEX}"
