@@ -54,16 +54,16 @@
                 #_(let [value (read-string (.-value (.-payload entry)))]
                     (put! ops| value)))))
 
-      (let [peer-id (.-id (<p! (.. ipfsd -api (id))))
-            counterV (volatile! (rand-int 100))]
-        (go
-          (loop []
-            (<! (timeout 2000))
-            (<p! (.add eventlog
-                       (pr-str {:peer-id peer-id
-                                :counter @counterV})))
-            (vswap! counterV inc)
-            (recur))))
+      #_(let [peer-id (.-id (<p! (.. ipfsd -api (id))))
+              counterV (volatile! (rand-int 100))]
+          (go
+            (loop []
+              (<! (timeout 2000))
+              (<p! (.add eventlog
+                         (pr-str {:peer-id peer-id
+                                  :counter @counterV})))
+              (vswap! counterV inc)
+              (recur))))
 
       #_(.on (.-events app-eventlog)
              "write"

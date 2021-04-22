@@ -2,6 +2,7 @@
 	"dependencies": {
 		"antd": "4.9.2",
 		"axios": "0.21.0",
+		"bep9-metadata-dl": "0.3.1",
 		"bittorrent-dht": "10.0.0",
 		"body-parser": "1.19.0",
 		"cors": "2.8.5",
@@ -15,7 +16,8 @@
 		"magnet-uri": "6.1.1",
 		"orbit-db": "0.26.1",
 		"react": "17.0.1",
-		"react-dom": "17.0.1"
+		"react-dom": "17.0.1",
+		"webtorrent": "0.118.0"
 	},
 	"devDependencies": {
 		"shadow-cljs": "2.11.7"
