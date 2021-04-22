@@ -14,7 +14,8 @@
    [find.app.http :as app.http]
    [find.app.ipfs :as app.ipfs]
    [find.app.electron :as app.electron]
-   [find.app.orbitdb :as app.orbitdb]))
+   [find.app.orbitdb :as app.orbitdb]
+   [find.app.bittorrent :as app.bittorrent]))
 
 (defonce fs (js/require "fs"))
 (defonce path (js/require "path"))
@@ -29,6 +30,7 @@
   (go
     (<! (app.http/start))
     (<! (app.electron/start))
+    (<! (app.bittorrent/start {:peer-index FIND_PEER_INDEX}))
     (let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX}))]
       (<! (app.orbitdb/start {:ipfsd ipfsd
                               :peer-index FIND_PEER_INDEX})))))

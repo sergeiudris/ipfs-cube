@@ -2,6 +2,7 @@
 	"dependencies": {
 		"antd": "4.9.2",
 		"axios": "0.21.0",
+		"bittorrent-dht": "10.0.0",
 		"body-parser": "1.19.0",
 		"cors": "2.8.5",
 		"electron": "11.1.0",
@@ -11,6 +12,7 @@
 		"ipfs": "0.54.4",
 		"ipfs-http-client": "49.0.4",
 		"ipfsd-ctl": "8.0.2",
+		"magnet-uri": "6.1.1",
 		"orbit-db": "0.26.1",
 		"react": "17.0.1",
 		"react-dom": "17.0.1"
