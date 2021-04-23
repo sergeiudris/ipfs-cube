@@ -1,6 +1,7 @@
 {
 	"dependencies": {
 		"antd": "4.9.2",
+		"async-exit-hook": "2.0.1",
 		"axios": "0.21.0",
 		"bep9-metadata-dl": "0.3.1",
 		"bittorrent-dht": "10.0.0",
@@ -10,13 +11,16 @@
 		"express": "5.0.0-alpha.8",
 		"fs-extra": "9.1.0",
 		"go-ipfs": "0.8.0",
+		"install": "0.13.0",
 		"ipfs": "0.54.4",
 		"ipfs-http-client": "49.0.4",
 		"ipfsd-ctl": "8.0.2",
 		"magnet-uri": "6.1.1",
+		"npm": "7.10.0",
 		"orbit-db": "0.26.1",
 		"react": "17.0.1",
 		"react-dom": "17.0.1",
+		"sqlite3": "5.0.2",
 		"webtorrent": "0.118.0"
 	},
 	"devDependencies": {

@@ -21,7 +21,7 @@
 (declare)
 
 (defn start
-  []
+  [{:keys [:on-close]}]
   (go
     (let [_ (<p! (.whenReady ElectronApp))
           create-window
@@ -43,5 +43,8 @@
                (create-window))))
       (.on ElectronApp "window-all-closed"
            (fn []
-             (when (not= js/global.process.platform "darwin")
-               (.quit ElectronApp)))))))
+             (go
+               (when (not= js/global.process.platform "darwin")
+                 (<! (on-close))
+                 #_(.exit ElectronApp 0)
+                 (.quit ElectronApp))))))))

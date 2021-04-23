@@ -15,25 +15,44 @@
    [find.app.ipfs :as app.ipfs]
    [find.app.electron :as app.electron]
    [find.app.orbitdb :as app.orbitdb]
+   [find.app.sqlitedb :as app.sqlitedb]
+   
    [find.app.bittorrent :as app.bittorrent]))
 
 (defonce fs (js/require "fs"))
 (defonce path (js/require "path"))
 (defonce axios (.-default (js/require "axios")))
+(defonce async-exit-hook (js/require "async-exit-hook"))
+
 
 (def FIND_PEER_INDEX (or (.. js/process -env -FIND_PEER_INDEX) 1))
 
 (declare)
 
+(defn stop
+  []
+  (go
+    (<! (app.sqlitedb/stop {}))
+    (println :exited-gracefully)))
+
+
 (defn main [& args]
   (println ::main)
   (go
-    (<! (app.http/start))
-    (<! (app.electron/start))
-    (<! (app.bittorrent/start {:peer-index FIND_PEER_INDEX}))
-    (let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX}))]
-      (<! (app.orbitdb/start {:ipfsd ipfsd
-                              :peer-index FIND_PEER_INDEX})))))
+    #_(<! (app.http/start))
+    (app.electron/start {:on-close stop})
+    (app.bittorrent/start {:peer-index FIND_PEER_INDEX})
+    (app.sqlitedb/start {:peer-index FIND_PEER_INDEX})
+    #_(let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX}))]
+        (<! (app.orbitdb/start {:ipfsd ipfsd
+                                :peer-index FIND_PEER_INDEX})))
+    (async-exit-hook
+     (fn [callback]
+       (when (ifn? callback)
+         (take! (stop)
+                (fn [_]
+                  (callback))))))))
+
 
 (def exports #js {:main main})
 
