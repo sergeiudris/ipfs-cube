@@ -35,7 +35,7 @@
 
       (.serialize db
                   (fn []
-                    (.run db "CREATE TABLE IF NOT EXISTS torrents (infohash TEXT)")
+                    (.run db "CREATE TABLE IF NOT EXISTS torrents (infohash TEXT PRIMARY KEY)")
                     #_(let [statement (.prepare db "INSERT INTO lorem VALUES (?)")]
                         (doseq [i (range 0 10)]
                           (.run statement (str "Ipsum " i)))
@@ -62,7 +62,7 @@
 
             (cond
 
-              (= (count batch) 10)
+              (= (count batch) 500)
               (do
                 (put! transact| (persistent! batch))
                 (recur (transient [])))
@@ -76,7 +76,7 @@
             (.serialize db
                         (fn []
                           (.run db "BEGIN TRANSACTION")
-                          (let [statement (.prepare db "INSERT INTO torrents VALUES (?)")]
+                          (let [statement (.prepare db "INSERT INTO torrents(infohash) VALUES (?) ON CONFLICT DO NOTHING")]
                             (doseq [{:keys [infohash]} batch]
                               (.run statement infohash))
                             (.finalize statement))
