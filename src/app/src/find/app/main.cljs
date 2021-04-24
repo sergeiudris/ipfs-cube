@@ -41,8 +41,12 @@
   (go
     #_(<! (app.http/start))
     (app.electron/start {:on-close stop})
-    (app.bittorrent/start {:peer-index FIND_PEER_INDEX})
-    (app.sqlitedb/start {:peer-index FIND_PEER_INDEX})
+    (let [[sqlitedbA bittorrentA]
+          (<! (a/map vector
+                     [(app.sqlitedb/start {:peer-index FIND_PEER_INDEX})
+                      (app.bittorrent/start {:peer-index FIND_PEER_INDEX})]))]
+      (pipe (:torrent| @bittorrentA) (:torrent| @sqlitedbA)))
+
     #_(let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX}))]
         (<! (app.orbitdb/start {:ipfsd ipfsd
                                 :peer-index FIND_PEER_INDEX})))

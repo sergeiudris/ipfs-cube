@@ -6,6 +6,7 @@
                                      pipeline pipeline-async]]
    [clojure.core.async.impl.protocols :refer [closed?]]
    [clojure.string]
+   [clojure.pprint :refer [pprint]]
    [cljs.core.async.interop :refer-macros [<p!]]
    [goog.string.format :as format]
    [goog.string :refer [format]]
@@ -24,30 +25,74 @@
     :or {id :main}
     :as opts}]
   (go
-    (let [db-filename (.join path
+    (let [stateA (atom nil)
+          db-filename (.join path
                              js/__dirname
                              (format "../../volumes/peer%s/db.sqlite3" peer-index))
-          db (Sqlite3.Database. db-filename)]
+          db (Sqlite3.Database. db-filename)
+          transact| (chan (sliding-buffer 100))
+          torrent| (chan (sliding-buffer 100))]
+
       (.serialize db
                   (fn []
-                    (.run db "CREATE TABLE IF NOT EXISTS lorem (info TEXT)")
+                    (.run db "CREATE TABLE IF NOT EXISTS torrents (infohash TEXT)")
                     #_(let [statement (.prepare db "INSERT INTO lorem VALUES (?)")]
                         (doseq [i (range 0 10)]
                           (.run statement (str "Ipsum " i)))
                         (.finalize statement))
 
-                    (.each db "SELECT rowid AS id, info FROM lorem"
-                           (fn [error row]
-                             (println (str (. row -id) ":" (. row -info)))))))
-      (swap! registryA assoc id db)
-      db)))
+                    (.get db "SELECT COUNT(rowid) FROM torrents"
+                          (fn [error row]
+                            (pprint (js->clj row))))
+                    #_(.each db "SELECT rowid AS id, info FROM lorem"
+                             (fn [error row]
+                               (println (str (. row -id) ":" (. row -info)))))))
+
+      (go
+        (loop []
+          (<! (timeout 10000))
+          (.get db "SELECT COUNT(rowid) FROM torrents"
+                (fn [error row]
+                  (pprint (js->clj row))))
+          (recur)))
+
+      (go
+        (loop [batch (transient [])]
+          (when-let [value (<! torrent|)]
+
+            (cond
+
+              (= (count batch) 10)
+              (do
+                (put! transact| (persistent! batch))
+                (recur (transient [])))
+
+              :else
+              (recur (conj! batch value))))))
+
+      (go
+        (loop []
+          (when-let [batch (<! transact|)]
+            (.serialize db
+                        (fn []
+                          (.run db "BEGIN TRANSACTION")
+                          (let [statement (.prepare db "INSERT INTO torrents VALUES (?)")]
+                            (doseq [{:keys [infohash]} batch]
+                              (.run statement infohash))
+                            (.finalize statement))
+                          (.run db "COMMIT")))
+            (recur))))
+      (reset! stateA {:db db
+                      :torrent| torrent|})
+      (swap! registryA assoc id stateA)
+      stateA)))
 
 (defn stop
   [{:keys [:id]
     :or {id :main}}]
-  (when-let [db (get @registryA id)]
+  (when-let [stateA (get @registryA id)]
     (let [result| (chan 1)]
-      (.close db
+      (.close (:db @stateA)
               (fn [error]
                 (if error
                   (println ::db-close-error error)
