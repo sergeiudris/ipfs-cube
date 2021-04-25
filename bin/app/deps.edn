@@ -13,6 +13,7 @@
 
   :app
   {:extra-deps {org.clojure/clojurescript {:mvn/version "1.10.758"}
+                com.cognitect/transit-cljs {:mvn/version "0.8.264"}
                 github.find/spec {:local/root "../../src/spec"}
                 github.find/app {:local/root "../../src/app"}}}
 

@@ -21,13 +21,16 @@
 
 
 (defn start
-  [{:keys [:ipfsd :peer-index] :as opts}]
+  [{:keys [:ipfsd
+           :peer-index
+           :data-dir] 
+    :as opts}]
   (go
     (let [orbitdb (<p! (.createInstance OrbitDB
                                         (.-api ipfsd)
                                         (clj->js {"directory" (.join path
-                                                                     js/__dirname
-                                                                     (format "../../volumes/peer%s/orbitdb" peer-index))})))
+                                                                     data-dir
+                                                                     "orbitdb")})))
           eventlog (<p! (.eventlog orbitdb
                                    "github.find/main-eventlog"
                                    (clj->js {"accessController"

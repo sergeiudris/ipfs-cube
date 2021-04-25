@@ -26,8 +26,6 @@
     (let [config-dir (.join path
                             js/__dirname
                             (format "../../volumes/peer%s/ipfs" peer-index))
-          _ (when-not (.existsSync fs config-dir)
-              (.mkdirSync fs config-dir (clj->js {"recursive" true})))
           ipfsd (<p! (->
                       (.createController IpfsdCtl
                                          (clj->js
@@ -41,6 +39,8 @@
                       #_(.catch (fn [error]
                                   (println ::error error)))))]
 
+      (.ensureDirSync fs config-dir)
+      
       (<p! (->
             (.init ipfsd)
             (.catch (fn [error]

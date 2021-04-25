@@ -19,7 +19,7 @@
    
    [find.app.bittorrent :as app.bittorrent]))
 
-(defonce fs (js/require "fs"))
+(defonce fs (js/require "fs-extra"))
 (defonce path (js/require "path"))
 (defonce axios (.-default (js/require "axios")))
 (defonce async-exit-hook (js/require "async-exit-hook"))
@@ -39,23 +39,30 @@
 (defn main [& args]
   (println ::main)
   (go
-    #_(<! (app.http/start))
-    (app.electron/start {:on-close stop})
-    (let [[sqlitedbA bittorrentA]
-          (<! (a/map vector
-                     [(app.sqlitedb/start {:peer-index FIND_PEER_INDEX})
-                      (app.bittorrent/start {:peer-index FIND_PEER_INDEX})]))]
-      (pipe (:torrent| @bittorrentA) (:torrent| @sqlitedbA)))
+    (let [data-dir (.join path
+                          js/__dirname
+                          (format "../../volumes/peer%s" FIND_PEER_INDEX))]
+      #_(<! (app.http/start))
+      (app.electron/start {:on-close stop})
+      (let [[sqlitedbA bittorrentA]
+            (<! (a/map vector
+                       [(app.sqlitedb/start {:peer-index FIND_PEER_INDEX
+                                             :data-dir data-dir})
+                        (app.bittorrent/start {:data-dir data-dir
+                                               :peer-index FIND_PEER_INDEX})]))]
+        (pipe (:torrent| @bittorrentA) (:torrent| @sqlitedbA)))
 
-    #_(let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX}))]
-        (<! (app.orbitdb/start {:ipfsd ipfsd
-                                :peer-index FIND_PEER_INDEX})))
-    (async-exit-hook
-     (fn [callback]
-       (when (ifn? callback)
-         (take! (stop)
-                (fn [_]
-                  (callback))))))))
+      #_(let [ipfsd (<! (app.ipfs/start {:data-dir data-dir
+                                         :peer-index FIND_PEER_INDEX}))]
+          (<! (app.orbitdb/start {:ipfsd ipfsd
+                                  :peer-index FIND_PEER_INDEX
+                                  :data-dir data-dir})))
+      (async-exit-hook
+       (fn [callback]
+         (when (ifn? callback)
+           (take! (stop)
+                  (fn [_]
+                    (callback)))))))))
 
 
 (def exports #js {:main main})

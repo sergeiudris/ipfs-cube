@@ -21,14 +21,13 @@
 
 (defn start
   [{:keys [:peer-index
+           :data-dir
            :id]
     :or {id :main}
     :as opts}]
   (go
     (let [stateA (atom nil)
-          db-filename (.join path
-                             js/__dirname
-                             (format "../../volumes/peer%s/db.sqlite3" peer-index))
+          db-filename (.join path data-dir "db.sqlite3")
           db (Sqlite3.Database. db-filename)
           transact| (chan (sliding-buffer 100))
           torrent| (chan (sliding-buffer 100))]
