@@ -61,7 +61,7 @@
 
             (cond
 
-              (= (count batch) 500)
+              (= (count batch) 10)
               (do
                 (put! transact| (persistent! batch))
                 (recur (transient [])))
