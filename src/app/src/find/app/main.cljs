@@ -57,6 +57,19 @@
           (<! (app.orbitdb/start {:ipfsd ipfsd
                                   :peer-index FIND_PEER_INDEX
                                   :data-dir data-dir})))
+      (doto js/process
+        (.on "unhandledRejection"
+             (fn [reason promise]
+               (println "unhandledRejection:")
+               (js/console.log reason)
+               (.exit js/process 1)))
+
+        (.on "uncaughtException"
+             (fn [error]
+               (println "uncaughtException:")
+               (js/console.log error)
+               (.exit js/process 1))))
+      
       (async-exit-hook
        (fn [callback]
          (when (ifn? callback)
