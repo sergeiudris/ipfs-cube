@@ -50,7 +50,7 @@
                                              :data-dir data-dir})
                         (app.bittorrent/start {:data-dir data-dir
                                                :peer-index FIND_PEER_INDEX})]))]
-        (pipe (:torrent| @bittorrentA) (:torrent| @sqlitedbA)))
+        #_(pipe (:torrent| @bittorrentA) (:torrent| @sqlitedbA)))
 
       #_(let [ipfsd (<! (app.ipfs/start {:data-dir data-dir
                                          :peer-index FIND_PEER_INDEX}))]
