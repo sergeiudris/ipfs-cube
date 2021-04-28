@@ -43,7 +43,7 @@
                           js/__dirname
                           (format "../../volumes/peer%s" FIND_PEER_INDEX))]
       #_(<! (app.http/start))
-      (app.electron/start {:on-close stop})
+      #_(app.electron/start {:on-close stop})
       (let [[sqlitedbA bittorrentA]
             (<! (a/map vector
                        [(app.sqlitedb/start {:peer-index FIND_PEER_INDEX
@@ -69,7 +69,7 @@
                (println "uncaughtException:")
                (js/console.log error)
                (.exit js/process 1))))
-      
+
       (async-exit-hook
        (fn [callback]
          (when (ifn? callback)
