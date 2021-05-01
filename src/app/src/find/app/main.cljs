@@ -16,8 +16,7 @@
    [find.app.electron :as app.electron]
    [find.app.orbitdb :as app.orbitdb]
    [find.app.sqlitedb :as app.sqlitedb]
-   
-   [find.app.bittorrent :as app.bittorrent]))
+   [find.bittorrent.crawl :as bittorrent.crawl]))
 
 (defonce fs (js/require "fs-extra"))
 (defonce path (js/require "path"))
@@ -48,8 +47,8 @@
             (<! (a/map vector
                        [(app.sqlitedb/start {:peer-index FIND_PEER_INDEX
                                              :data-dir data-dir})
-                        (app.bittorrent/start {:data-dir data-dir
-                                               :peer-index FIND_PEER_INDEX})]))]
+                        (bittorrent.crawl/start {:data-dir data-dir
+                                                 :peer-index FIND_PEER_INDEX})]))]
         #_(pipe (:torrent| @bittorrentA) (:torrent| @sqlitedbA)))
 
       #_(let [ipfsd (<! (app.ipfs/start {:data-dir data-dir
