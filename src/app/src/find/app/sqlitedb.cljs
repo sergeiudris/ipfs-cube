@@ -47,13 +47,13 @@
                              (fn [error row]
                                (println (str (. row -id) ":" (. row -info)))))))
 
-      (go
-        (loop []
-          (<! (timeout 10000))
-          (.get db "SELECT COUNT(rowid) FROM torrents"
-                (fn [error row]
-                  (pprint (js->clj row))))
-          (recur)))
+      #_(go
+          (loop []
+            (<! (timeout 10000))
+            (.get db "SELECT COUNT(rowid) FROM torrents"
+                  (fn [error row]
+                    (pprint (js->clj row))))
+            (recur)))
 
       (go
         (loop [batch (transient [])]
