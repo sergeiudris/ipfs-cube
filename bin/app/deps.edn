@@ -17,7 +17,7 @@
                 github.find/spec {:local/root "../../src/spec"}
                 github.find/app {:local/root "../../src/app"}
                 github.find/bittorrent {:local/root "../../src/bittorrent"}
-                github.find/peerdb {:local/root "../../src/peerdb"}}}
+                github.cljctools/peerdb {:local/root "../../../peerdb"}}}
 
   :ui
   {:extra-deps {reagent/reagent {:mvn/version "1.0.0-rc1"
