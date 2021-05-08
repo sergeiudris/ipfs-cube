@@ -14,8 +14,6 @@
    [find.app.http :as app.http]
    [find.app.ipfs :as app.ipfs]
    [find.app.electron :as app.electron]
-   [find.app.orbitdb :as app.orbitdb]
-   [find.app.sqlitedb :as app.sqlitedb]
    [find.bittorrent.crawl :as bittorrent.crawl]))
 
 (defonce fs (js/require "fs-extra"))
@@ -31,7 +29,7 @@
 (defn stop
   []
   (go
-    (<! (app.sqlitedb/stop {}))
+    
     (println :exited-gracefully)))
 
 
@@ -43,19 +41,14 @@
                           (format "../../volumes/peer%s" FIND_PEER_INDEX))]
       #_(<! (app.http/start))
       #_(app.electron/start {:on-close stop})
-      (let [[sqlitedbA bittorrentA]
-            (<! (a/map vector
-                       [(app.sqlitedb/start {:peer-index FIND_PEER_INDEX
-                                             :data-dir data-dir})
-                        (bittorrent.crawl/start {:data-dir data-dir
-                                                 :peer-index FIND_PEER_INDEX})]))]
-        #_(pipe (:torrent| @bittorrentA) (:torrent| @sqlitedbA)))
+      #_(let [[peerdbA bittorrentA]
+              (<! (a/map vector
+                         [#_(bittorrent.crawl/start {:data-dir data-dir
+                                                     :peer-index FIND_PEER_INDEX})]))]
+          #_(pipe (:torrent| @bittorrentA) (:torrent| @peerdbA)))
 
-      #_(let [ipfsd (<! (app.ipfs/start {:data-dir data-dir
-                                         :peer-index FIND_PEER_INDEX}))]
-          (<! (app.orbitdb/start {:ipfsd ipfsd
-                                  :peer-index FIND_PEER_INDEX
-                                  :data-dir data-dir})))
+      (let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX
+                                       :data-dir data-dir}))])
       (doto js/process
         (.on "unhandledRejection"
              (fn [reason promise]

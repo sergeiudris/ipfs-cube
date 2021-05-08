@@ -21,11 +21,10 @@
 (defonce GoIpfs (js/require "go-ipfs"))
 
 (defn start
-  [{:keys [:peer-index] :as opts}]
+  [{:keys [peer-index
+           :data-dir] :as opts}]
   (go
-    (let [config-dir (.join path
-                            js/__dirname
-                            (format "../../volumes/peer%s/ipfs" peer-index))
+    (let [config-dir (.join path data-dir "ipfs")
           ipfsd (<p! (->
                       (.createController IpfsdCtl
                                          (clj->js
@@ -40,7 +39,7 @@
                                   (println ::error error)))))]
 
       (.ensureDirSync fs config-dir)
-      
+
       (<p! (->
             (.init ipfsd)
             (.catch (fn [error]
@@ -77,7 +76,7 @@
               counterV (volatile! (rand-int 100))]
           (.. ipfsd -api -pubsub
               (subscribe
-               "github-foo-find"
+               "github-foo-find-ping"
                (fn [msg]
                  (when-not (= id (. msg -from))
                    (do
@@ -91,7 +90,7 @@
                 (vswap! counterV inc)
                 (.. ipfsd -api -pubsub
                     (publish
-                     "github-foo-find"
+                     "github-foo-find-ping"
                      (.encode encoder (str {::count @counterV}))))
                 (recur))))
       ipfsd)))
