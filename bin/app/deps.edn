@@ -16,7 +16,8 @@
                            :tag "0.4.31-alpha"}
                 github.find/spec {:local/root "../../src/spec"}
                 github.find/app {:local/root "../../src/app"}
-                github.find/bittorrent {:local/root "../../src/bittorrent"}}}
+                github.find/bittorrent {:local/root "../../src/bittorrent"}
+                github.find/peerdb {:local/root "../../src/peerdb"}}}
 
   :ui
   {:extra-deps {reagent/reagent {:mvn/version "1.0.0-rc1"
