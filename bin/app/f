@@ -1,25 +1,36 @@
 #!/bin/bash
 
-repl(){
-    clj -A:core:app:repl
+shadow(){
+    ./node_modules/.bin/shadow-cljs "$@"
+}
+
+dev(){
+  npm i
+  shadow -A:shadow:core:ui:app watch :ui :app
 }
 
 main(){
-  clojure -A:core:app
+  ./node_modules/.bin/electron --no-sandbox resources/out/main.js
 }
 
-
-uberjar(){
-  clojure -X:depstar uberjar \
-    :aot true \
-    :jar target/find.jar \
-    :aliases '[:core :app]' \
-    :main-class find.app.main
+server(){
+    shadow -A:shadow:core:ui:app server
+    # yarn server
 }
 
-resources(){
-  mkdir -p resources/repo/
-  cp -r ../../src resources/repo/
+compile(){
+    npm i
+    shadow -A:shadow:core:ui:app compile :ui :app
+}
+
+release(){
+    npm i
+    shadow -A:shadow:core:ui:app release :ui :app
+}
+
+cljs_compile(){
+    clj -A:dev -m cljs.main -co cljs-build.edn -c
+    #  clj -A:dev -m cljs.main -co cljs-build.edn -v -c # -r
 }
 
 "$@"
