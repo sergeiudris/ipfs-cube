@@ -10,8 +10,7 @@
    [find.spec]
    [find.app.http :as app.http]
    [find.app.system-tray :as app.system-tray]
-   [find.app.ipfs :as app.ipfs]
-   [find.app.cljfx :as app.cljfx]))
+   [find.app.ipfs :as app.ipfs]))
 
 (defn stop
   [{:keys [::app.http/port] :as opts}]
@@ -42,6 +41,5 @@
                        (System/exit 0)))))))
 
            (<! (app.http/start http-opts))
-           (app.cljfx/start)
            (when system-tray?
              (app.system-tray/mount {::app.system-tray/quit| system-exit|}))))))
