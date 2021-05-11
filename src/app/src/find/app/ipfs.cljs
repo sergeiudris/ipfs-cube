@@ -34,7 +34,8 @@
                                            "test" false
                                            "ipfsBin" (.path GoIpfs)
                                            "args" ["--writable" "--enable-pubsub-experiment" "--migrate=true"]
-                                           "ipfsOptions" {"repo" config-dir}}))
+                                           "ipfsOptions" {"repo" config-dir
+                                                          "init" {"profiles" #_[] ["badgerds"]}}}))
                       #_(.catch (fn [error]
                                   (println ::error error)))))]
 
