@@ -12,10 +12,10 @@
    [goog.object]
    [cljs.reader :refer [read-string]]
    [find.app.http :as app.http]
-   [find.app.ipfs :as app.ipfs]
    [find.app.electron :as app.electron]
+   [find.app.orbitdb :as app.orbitdb]
    [find.bittorrent.crawl :as bittorrent.crawl]
-   [find.peerdb.core :as peerdb.core]))
+   [cljctools.peerdb.core :as peerdb.core]))
 
 (defonce fs (js/require "fs-extra"))
 (defonce path (js/require "path"))
@@ -42,14 +42,14 @@
                           (format "../../volumes/peer%s" FIND_PEER_INDEX))]
       #_(<! (app.http/start))
       #_(app.electron/start {:on-close stop})
+      (<! (app.orbitdb/start {:peer-index FIND_PEER_INDEX
+                              :data-dir data-dir}))
       #_(let [[peerdbA bittorrentA]
               (<! (a/map vector
                          [#_(bittorrent.crawl/start {:data-dir data-dir
                                                      :peer-index FIND_PEER_INDEX})]))]
           #_(pipe (:torrent| @bittorrentA) (:torrent| @peerdbA)))
-
-      #_(let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX
-                                         :data-dir data-dir}))])
+      
       (doto js/process
         (.on "unhandledRejection"
              (fn [reason promise]
