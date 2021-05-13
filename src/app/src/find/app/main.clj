@@ -6,12 +6,14 @@
                                      timeout to-chan  sliding-buffer dropping-buffer
                                      pipeline pipeline-async]]
    [clojure.string]
-
+   [clojure.java.io :as io]
    [find.spec]
    [find.app.http :as app.http]
    [find.app.system-tray :as app.system-tray]
    [find.app.ipfs :as app.ipfs]
-   [find.app.cljfx :as app.cljfx]))
+   [find.app.cljfx :as app.cljfx]
+
+   [cljctools.bittorrent.dht-crawl]))
 
 (defn stop
   [{:keys [::app.http/port] :as opts}]
@@ -26,7 +28,8 @@
                system-tray? (if (System/getenv "FIND_SYSTEM_TRAY")
                               (read-string (System/getenv "FIND_SYSTEM_TRAY"))
                               false)
-               peer-index (System/getenv "FIND_PEER_INDEX")
+               peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
+               data-dir (io/file (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
                http-opts {::app.http/port 4080}]
            (go
              (loop []
@@ -45,3 +48,15 @@
            (app.cljfx/start)
            (when system-tray?
              (app.system-tray/mount {::app.system-tray/quit| system-exit|}))))))
+
+
+(comment
+
+  (let [peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
+        data-dir (io/file (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))]
+    (println data-dir)
+    (println (.getCanonicalFile data-dir))
+    (println (.getAbsolutePath data-dir)))
+
+  ;;
+  )
