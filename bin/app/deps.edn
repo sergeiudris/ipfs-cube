@@ -16,6 +16,7 @@
                 ring-cors/ring-cors {:mvn/version "0.1.13"}
                 com.dorkbox/SystemTray {:mvn/version "3.17"}
                 com.dorkbox/Utilities {:mvn/version "1.8.3"}
+                github.cljfx/cljfx {:git/url "https://github.com/cljfx/cljfx" :sha "ec3c34e619b2408026b9f2e2ff8665bebf70bf56"}
                 tick/tick {:git/url "https://github.com/juxt/tick"
                            :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                            :tag "0.4.31-alpha"}
