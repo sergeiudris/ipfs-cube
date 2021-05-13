@@ -14,7 +14,7 @@
    [find.app.http :as app.http]
    [find.app.ipfs :as app.ipfs]
    [find.app.electron :as app.electron]
-   [find.app.sqlitedb :as app.sqlitedb]
+   [find.app.orbitdb :as app.orbitdb]
    [find.bittorrent.crawl :as bittorrent.crawl]
    [cljctools.peerdb.core :as peerdb.core]))
 
@@ -49,9 +49,10 @@
                                                      :peer-index FIND_PEER_INDEX})]))]
           #_(pipe (:torrent| @bittorrentA) (:torrent| @peerdbA)))
 
-      #_(let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX
-                                         :data-dir data-dir}))])
-      (<! (app.sqlitedb/start {:data-dir data-dir}))
+      (let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX
+                                       :data-dir data-dir}))]
+        (<! (app.orbitdb/start {:ipfsd ipfsd
+                                :data-dir data-dir})))
       (doto js/process
         (.on "unhandledRejection"
              (fn [reason promise]
