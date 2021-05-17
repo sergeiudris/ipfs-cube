@@ -8,10 +8,12 @@
    [clojure.pprint :refer [pprint]]
    [clojure.spec.alpha :as s]
    [clojure.java.io :as io]
-   [clj-http.client :as clj-http.client]
+
+   [byte-streams]
+   [aleph.http]
    [jsonista.core]))
 
-(def base-url "http://ipfs:5001")
+(def base-url "http://localhost:5001")
 
 (s/def ::pubsub-topic string?)
 
@@ -20,81 +22,82 @@
   (go
     (let [response
           (->
-           (clj-http.client/request
-            {:url (str base-url "/api/v0/version")
-             :method :post
-             :headers {:content-type "application/json"}})
+           @(aleph.http/request
+             {:url (str base-url "/api/v0/version")
+              :request-method :post
+              :headers {:content-type "application/json"}})
            :body
+           byte-streams/to-string
            (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
       response)))
 
-(defn api-pubsub-sub
-  [{:keys [::pubsub-topic] :or {pubsub-topic "123"}}]
-  (go
-    (with-open [stream (->
-                        (clj-http.client/request
-                         {:url (str base-url "/api/v0/pubsub/sub")
-                          :method :post
-                          :as :stream
-                          :query-params {"arg" pubsub-topic}})
-                        :body)]
-      (let [lines (-> stream io/reader line-seq)]
-        (doseq [line lines]
-          (println :line
-                   (jsonista.core/read-value line jsonista.core/keyword-keys-object-mapper)))))))
+#_(defn api-pubsub-sub
+    [{:keys [::pubsub-topic] :or {pubsub-topic "123"}}]
+    (go
+      (with-open [stream (->
+                          (clj-http.client/request
+                           {:url (str base-url "/api/v0/pubsub/sub")
+                            :method :post
+                            :as :stream
+                            :query-params {"arg" pubsub-topic}})
+                          :body)]
+        (let [lines (-> stream io/reader line-seq)]
+          (doseq [line lines]
+            (println :line
+                     (jsonista.core/read-value line jsonista.core/keyword-keys-object-mapper)))))))
 
-(defn api-swarm-peers
-  []
-  (go
-    (let [response
-          (->
-           (clj-http.client/request
-            {:url (str base-url "/api/v0/swarm/peers")
-             :method :post
-             :headers {:content-type "application/json"}
-             :query-params {"verbose" true
-                            "streams" true
-                            "latency" true
-                            "direction" true}})
-           :body
-           (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
-      (->>
-       response
-       :Peers
-       #_(map :Peer)
-       rand-nth
-       #_count
-       #_pprint))))
+#_(defn api-swarm-peers
+    []
+    (go
+      (let [response
+            (->
+             (clj-http.client/request
+              {:url (str base-url "/api/v0/swarm/peers")
+               :method :post
+               :headers {:content-type "application/json"}
+               :query-params {"verbose" true
+                              "streams" true
+                              "latency" true
+                              "direction" true}})
+             :body
+             (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
+        (->>
+         response
+         :Peers
+         #_(map :Peer)
+         rand-nth
+         #_count
+         #_pprint))))
 
-(defn api-find-peer
-  []
-  (go
-    (let [peer-id (:Peer (<! (api-swarm-peers)))
-          response
-          (->
-           (clj-http.client/request
-            {:url (str base-url "/api/v0/dht/findpeer")
-             :method :post
-             :headers {:content-type "application/json"}
-             :query-params {"arg" peer-id
-                            "verbose" true}})
-           :body
-           (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
-      response)))
+#_(defn api-find-peer
+    []
+    (go
+      (let [peer-id (:Peer (<! (api-swarm-peers)))
+            response
+            (->
+             (clj-http.client/request
+              {:url (str base-url "/api/v0/dht/findpeer")
+               :method :post
+               :headers {:content-type "application/json"}
+               :query-params {"arg" peer-id
+                              "verbose" true}})
+             :body
+             (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
+        response)))
 
-(defn api-name-resolve
-  []
-  (go
-    (let [peer-id (:Peer (<! (api-swarm-peers)))
-          response
-          (->
-           (clj-http.client/request
-            {:url (str base-url "/api/v0/name/resolve")
-             :method :post
-             :headers {:content-type "application/json"}
-             :query-params {"arg" peer-id
-                            "dht-record-count" 10
-                            "dht-timeout" "30s"}})
-           :body
-           (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
-      response)))
+#_(defn api-name-resolve
+    []
+    (go
+      (let [peer-id (:Peer (<! (api-swarm-peers)))
+            response
+            (->
+             (clj-http.client/request
+              {:url (str base-url "/api/v0/name/resolve")
+               :method :post
+               :headers {:content-type "application/json"}
+               :query-params {"arg" peer-id
+                              "dht-record-count" 10
+                              "dht-timeout" "30s"}})
+             :body
+             (jsonista.core/read-value jsonista.core/keyword-keys-object-mapper))]
+        response)))

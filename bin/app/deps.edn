@@ -10,21 +10,23 @@
    :override-deps {org.clojure/test.check {:mvn/version "1.0.0"}}}
 
   :app
-  {:extra-deps {ring/ring-jetty-adapter {:mvn/version "1.8.1"}
-                metosin/reitit  {:mvn/version "0.5.12"}
-                clj-http/clj-http {:mvn/version "3.12.1"}
-                ring-cors/ring-cors {:mvn/version "0.1.13"}
-                com.dorkbox/SystemTray {:mvn/version "3.17"}
-                com.dorkbox/Utilities {:mvn/version "1.8.3"}
-                github.cljfx/cljfx {:git/url "https://github.com/cljfx/cljfx" :sha "ec3c34e619b2408026b9f2e2ff8665bebf70bf56"}
+  {:extra-deps {metosin/reitit  {:mvn/version "0.5.12"}
+                aleph/aleph {:mvn/version "0.4.7-alpha5"}
+                byte-streams/byte-streams {:mvn/version "0.2.5-alpha2"}
+                manifold/manifold {:mvn/version "0.1.9-alpha3"}
+                github.cljfx/cljfx {:git/url "https://github.com/cljfx/cljfx"
+                                    :sha "ec3c34e619b2408026b9f2e2ff8665bebf70bf56"}
                 tick/tick {:git/url "https://github.com/juxt/tick"
                            :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                            :tag "0.4.31-alpha"}
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
                 github.find/spec {:local/root "../../src/spec"}
                 github.find/app {:local/root "../../src/app"}
-                github.find/bittorrent {:local/root "../../src/bittorrent"}
-                github.cljctools/peerdb {:local/root "../../../peerdb"}}
+                github.cljctools.bittorrent/dht-crawl {:local/root "../../../bittorrent/src/dht-crawl"}
+                github.cljctools/peerdb {:local/root "../../../peerdb"}
+                github.cljctools.cljctools/system-tray {:local/root "../../../cljctools/src/system-tray"}
+                github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/src/reitit-cors-interceptor"}
+                javax.servlet/servlet-api {:mvn/version "2.5"}}
    :extra-paths ["resources" "../ui/resources"]
    :main-opts ["-m" "find.app.main"]}
 

@@ -9,11 +9,11 @@
    [clojure.java.io :as io]
    [find.spec]
    [find.app.http :as app.http]
-   [find.app.system-tray :as app.system-tray]
+   [cljctools.system-tray.core :as system-tray.core]
    [find.app.ipfs :as app.ipfs]
    [find.app.cljfx :as app.cljfx]
 
-   [cljctools.bittorrent.dht-crawl]))
+   #_[cljctools.bittorrent.dht-crawl.core]))
 
 (defn stop
   [{:keys [::app.http/port] :as opts}]
@@ -47,7 +47,8 @@
            (<! (app.http/start http-opts))
            (app.cljfx/start)
            (when system-tray?
-             (app.system-tray/mount {::app.system-tray/quit| system-exit|}))))))
+             (system-tray.core/create {:on-quit (fn [] (close! system-exit|))
+                                       :image (clojure.java.io/resource "logo/logo.png")}))))))
 
 
 (comment

@@ -9,15 +9,15 @@
    [clojure.spec.alpha :as s]
    [clojure.java.io]
 
-   [clojure.spec.gen.alpha :as sgen]
-   #_[clojure.spec.test.alpha :as stest]
-   [clojure.test.check.generators :as gen]
-   [clojure.test.check.properties :as prop]
+   [byte-streams :as bs]
+   [aleph.http]
+   [manifold.deferred :as d]
 
    ;; reitit
    [reitit.http]
    [reitit.ring]
    [sieppari.async.core-async] ;; needed for core.async
+   #_[sieppari.async.manifold]   ;; needed for manifold
    [muuntaja.interceptor]
    [reitit.coercion.spec]
    [reitit.swagger]
@@ -30,19 +30,16 @@
    [reitit.http.interceptors.exception]
    [reitit.http.interceptors.multipart]
    [ring.util.response]
-   #_[ring.middleware.cors :refer [wrap-cors]]
+   [cljctools.reitit-cors-interceptor.core]
   ;; Uncomment to use
   ; [reitit.ring.middleware.dev :as dev]
   ; [reitit.ring.spec :as spec]
   ; [spec-tools.spell :as spell]
-   [ring.adapter.jetty]
    [muuntaja.core]
    [spec-tools.core]
 
-   [clj-http.client :as hc]
-
    ;;
-   [find.app.cors-interceptor]
+
    [find.spec]))
 
 (defonce ^:private registry-ref (atom {}))
@@ -168,7 +165,7 @@
                          {:status 200
                           :headers {"Content-Type" "image/png"}
                           :body (clojure.java.io/input-stream
-                                 (clojure.java.io/resource "reitit.png"))})}}]]
+                                 (clojure.java.io/resource "logo/logo.png"))})}}]]
 
      ["/random-user"
       {:get {:swagger {:tags ["random-user"]}
@@ -178,16 +175,16 @@
              :handler (fn [{{{:keys [seed results]} :query} :parameters}]
                         (go
                           (<! (timeout 1000))
-                          (let [data (->
-                                      (hc/request
-                                       {:url "https://randomuser.me/api/"
-                                        :method :get
-                                        :query-params {:seed seed, :results results}})
-                                      :body
-                                      (as-> body (muuntaja.core/decode "application/json" body))
-                                      :results)]
-                            {:status 200
-                             :body data})))}}]
+                          @(d/chain
+                            (aleph.http/get
+                             "https://randomuser.me/api/"
+                             {:query-params {:seed seed, :results results}})
+                            :body
+                            (partial muuntaja.core/decode "application/json")
+                            :results
+                            (fn [results]
+                              {:status 200
+                               :body results}))))}}]
 
      ["/async2"
       {:interceptors [(interceptor <async> :async)]
@@ -264,7 +261,7 @@
                              ;; multipart
                            (reitit.http.interceptors.multipart/multipart-interceptor)
                              ;; cors
-                           (find.app.cors-interceptor/cors-interceptor)]}})
+                           (cljctools.reitit-cors-interceptor.core/cors-interceptor)]}})
    (reitit.ring/routes
     (reitit.swagger-ui/create-swagger-ui-handler
      {:path "/swagger-ui"
@@ -291,10 +288,9 @@
   (go
     (when-not (get @registry-ref port)
       (let [server
-            (ring.adapter.jetty/run-jetty
-             #_#'app
-             (app opts)
-             {:port port :host "0.0.0.0" :join? false :async? true})]
+            (aleph.http/start-server
+             (aleph.http/wrap-ring-async-handler (app opts)  #_#'app)
+             {:port port :host "0.0.0.0"})]
         (swap! registry-ref assoc port server)
         (println (format "started server on port %d" port))))))
 
@@ -304,78 +300,6 @@
   (go
     (let [server (get @registry-ref port)]
       (when server
-        #_(.close server)
-        (.stop server)
-        (swap! registry-ref dissoc port)
-        (println (format "stopped server on port %d" port))))))
-
-(defn app-static
-  []
-  (reitit.http/ring-handler
-   (reitit.http/router
-    []
-    {;;:reitit.middleware/transform dev/print-request-diffs ;; pretty diffs
-       ;;:validate spec/validate ;; enable spec validation for route data
-       ;;:reitit.spec/wrap spell/closed ;; strict top-level validation
-     :exception reitit.dev.pretty/exception
-     :data {:coercion reitit.coercion.spec/coercion
-            :access-control {:access-control-allow-origin [#".*"]
-                             :access-control-allow-methods #{:get :put :post :delete}}
-            :muuntaja muuntaja.core/instance
-            :interceptors [;; swagger feature
-                           reitit.swagger/swagger-feature
-                             ;; query-params & form-params
-                           (reitit.http.interceptors.parameters/parameters-interceptor)
-                             ;; content-negotiation
-                           (reitit.http.interceptors.muuntaja/format-negotiate-interceptor)
-                             ;; encoding response body
-                           (reitit.http.interceptors.muuntaja/format-response-interceptor)
-                             ;; exception handling
-                           (reitit.http.interceptors.exception/exception-interceptor)
-                             ;; decoding request body
-                           (reitit.http.interceptors.muuntaja/format-request-interceptor)
-                             ;; coercing response bodys
-                           (reitit.http.coercion/coerce-response-interceptor)
-                             ;; coercing request parameters
-                           (reitit.http.coercion/coerce-request-interceptor)
-                             ;; multipart
-                           (reitit.http.interceptors.multipart/multipart-interceptor)
-                             ;; cors
-                           (find.app.cors-interceptor/cors-interceptor)]}})
-   (reitit.ring/routes
-    (reitit.ring/redirect-trailing-slash-handler #_{:method :add})
-    (fn handle-index
-      ([request]
-       (when (= (:uri request) "/")
-         (->
-          (ring.util.response/resource-response "index.html" {:root "public"})
-          (ring.util.response/content-type "text/html"))))
-      ([request respond raise]
-       (respond (handle-index request))))
-    (reitit.ring/create-resource-handler {:path "/"
-                                          :root "public"
-                                          :index-files ["index.html"]})
-    (reitit.ring/create-default-handler))
-   {:executor reitit.interceptor.sieppari/executor}))
-
-(defn start-static
-  [{:keys [::port] :or {port 4081} :as opts}]
-  (go
-    (when-not (get @registry-ref port)
-      (let [server
-            (ring.adapter.jetty/run-jetty
-             #_#'app
-             (app-static)
-             {:port port :host "0.0.0.0" :join? false :async? true})]
-        (swap! registry-ref assoc port server)
-        (println (format "server running in port %d" port))))))
-
-(defn stop-static
-  [{:keys [::port] :or {port 4081} :as opts}]
-  (go
-    (let [server (get @registry-ref port)]
-      (when server
-        #_(.close server)
-        (.stop server)
+        (.close server)
         (swap! registry-ref dissoc port)
         (println (format "stopped server on port %d" port))))))
