@@ -22,10 +22,22 @@
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
                 github.find/spec {:local/root "../../src/spec"}
                 github.find/app {:local/root "../../src/app"}
-                github.cljctools.bittorrent/dht-crawl {:local/root "../../../bittorrent/src/dht-crawl"}
-                github.cljctools/peerdb {:local/root "../../../peerdb"}
+
+                github.cljctools.cljctools/core-jvm {:local/root "../../../cljctools/src/core-jvm"}
+                github.cljctools.cljctools/bytes-jvm {:local/root "../../../cljctools/src/bytes-jvm"}
+                github.cljctools.cljctools/codec-jvm {:local/root "../../../cljctools/src/codec-jvm"}
+                github.cljctools.cljctools/socket-jvm {:local/root "../../../cljctools/src/socket-jvm"}
+                github.cljctools.cljctools/fs-jvm {:local/root "../../../cljctools/src/fs-jvm"}
+                github.cljctools.cljctools/transit-jvm {:local/root "../../../cljctools/src/transit-jvm"}
+                github.cljctools.cljctools/datagram-socket-jvm {:local/root "../../../cljctools/src/datagram-socket-jvm"}
                 github.cljctools.cljctools/system-tray {:local/root "../../../cljctools/src/system-tray"}
                 github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/src/reitit-cors-interceptor"}
+
+                github.cljctools.bittorrent/bencode {:local/root "../../../bittorrent/src/bencode"}
+                github.cljctools.bittorrent/wire-protocol {:local/root "../../../bittorrent/src/wire-protocol"}
+                github.cljctools.bittorrent/dht-crawl {:local/root "../../../bittorrent/src/dht-crawl"}
+                github.cljctools/peerdb {:local/root "../../../peerdb"}
+
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
    :extra-paths ["resources" "../ui/resources"]
    :main-opts ["-m" "find.app.main"]}

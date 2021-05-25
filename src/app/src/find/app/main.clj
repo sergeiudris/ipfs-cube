@@ -12,8 +12,7 @@
    [cljctools.system-tray.core :as system-tray.core]
    [find.app.ipfs :as app.ipfs]
    [find.app.cljfx :as app.cljfx]
-
-   #_[cljctools.bittorrent.dht-crawl.core]))
+   [cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]))
 
 (defn stop
   [{:keys [::app.http/port] :as opts}]
@@ -29,26 +28,33 @@
                               (read-string (System/getenv "FIND_SYSTEM_TRAY"))
                               false)
                peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
-               data-dir (io/file (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
+               data-dir (->
+                         (io/file (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
+                         (.getCanonicalPath))
+               state-dir (->
+                          (io/file data-dir "state")
+                          (.getCanonicalPath))
                http-opts {::app.http/port 4080}]
            (go
-             (loop []
-               (when-let [[value port] (alts! [system-exit|])]
-                 (condp = port
+             (<! system-exit|)
+             (println ::exit|)
+             (<! (stop http-opts))
+             (println ::exiting)
+             (System/exit 0))
 
-                   system-exit|
-                   (do
-                     (let []
-                       (println ::exit|)
-                       (<! (stop http-opts))
-                       (println ::exiting)
-                       (System/exit 0)))))))
+           #_(<! (app.http/start http-opts))
+           (<! (dht-crawl.core/start {:data-dir state-dir}))
+           #_(app.cljfx/start)
+           #_(when system-tray?
+               (system-tray.core/create {:on-quit (fn [] (close! system-exit|))
+                                         :image (clojure.java.io/resource "logo/logo.png")}))))))
 
-           (<! (app.http/start http-opts))
-           (app.cljfx/start)
-           (when system-tray?
-             (system-tray.core/create {:on-quit (fn [] (close! system-exit|))
-                                       :image (clojure.java.io/resource "logo/logo.png")}))))))
+(comment
+
+  (require '[cljctools.bytes.core :as bytes.core])
+
+  ;
+  )
 
 
 (comment
