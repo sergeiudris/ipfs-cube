@@ -19,6 +19,8 @@
   (go
     (<! (app.http/stop {::app.http/port port}))))
 
+(println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
+
 (defn -main [& args]
   (println ::-main)
   (<!! (go
