@@ -16,9 +16,9 @@
                 manifold/manifold {:mvn/version "0.1.9-alpha3"}
                 github.cljfx/cljfx {:git/url "https://github.com/cljfx/cljfx"
                                     :sha "ec3c34e619b2408026b9f2e2ff8665bebf70bf56"}
-                tick/tick {:git/url "https://github.com/juxt/tick"
-                           :sha "4438103d96e00927f777229bc22576bf4fd6c901"
-                           :tag "0.4.31-alpha"}
+                #_tick/tick #_{:git/url "https://github.com/juxt/tick"
+                               :sha "4438103d96e00927f777229bc22576bf4fd6c901"
+                               :tag "0.4.31-alpha"}
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
                 github.find/spec {:local/root "../../src/spec"}
                 github.find/app {:local/root "../../src/app"}
@@ -39,8 +39,8 @@
                 github.cljctools/peerdb {:local/root "../../../peerdb"}
 
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
-   :extra-paths ["resources" "../ui/resources"]
-   :jvm-opts ["-Dclojure.core.async.pool-size=1"]
+   :extra-paths ["resources" #_"../ui/resources"]
+   :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
    :main-opts ["-m" "find.app.main"]}
 
   :repl
@@ -57,7 +57,7 @@
 
   :depstar
   {:replace-deps {com.github.seancorfield/depstar {:git/url "https://github.com/seancorfield/depstar"
-                                                   :sha "89d6557a868ff475063558e0199485f28fba403b"
-                                                   :tag "2.0.211"}}
+                                                   :sha "19aa2a828e9adfeb72f302ca1011c9064fa863ce"
+                                                   :tag "2.0.216 + 9"}}
    :ns-default hf.depstar
    :exec-args {}}}}

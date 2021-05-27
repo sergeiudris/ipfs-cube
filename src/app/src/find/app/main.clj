@@ -20,6 +20,7 @@
     (<! (app.http/stop {::app.http/port port}))))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
+(println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))
 
 (defn -main [& args]
   (println ::-main)

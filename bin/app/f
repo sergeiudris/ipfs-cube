@@ -14,7 +14,13 @@ uberjar(){
     :aot true \
     :jar target/find.jar \
     :aliases '[:core :app]' \
+    :verbose true \
     :main-class find.app.main
+}
+
+lein-uberjar(){
+  lein with-profiles +prod uberjar 
+  #  java -Dclojure.core.async.pool-size=1 -jar target/find-standalone.jar
 }
 
 resources(){
