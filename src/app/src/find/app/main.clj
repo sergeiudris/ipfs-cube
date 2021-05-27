@@ -21,6 +21,7 @@
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
 (println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))
+(clojure.spec.alpha/check-asserts true)
 
 (defn -main [& args]
   (println ::-main)
