@@ -40,7 +40,7 @@
 
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
    :extra-paths ["resources" #_"../ui/resources"]
-   :jvm-opts ["-Dclojure.core.async.pool-size=4" "-Dclojure.compiler.direct-linking=true"]
+   :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
    :main-opts ["-m" "find.app.main"]}
 
   :repl

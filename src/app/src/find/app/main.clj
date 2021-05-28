@@ -14,14 +14,15 @@
    [find.app.cljfx :as app.cljfx]
    [cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]))
 
+(println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
+(println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))
+(clojure.spec.alpha/check-asserts true)
+(set! *warn-on-reflection* true)
+
 (defn stop
   [{:keys [::app.http/port] :as opts}]
   (go
     (<! (app.http/stop {::app.http/port port}))))
-
-(println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
-(println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))
-(clojure.spec.alpha/check-asserts true)
 
 (defn -main [& args]
   (println ::-main)

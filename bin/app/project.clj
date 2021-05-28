@@ -22,6 +22,10 @@
   :lein-tools-deps/config {:config-files [:install :user :project]
                            :aliases [:core :app]}
 
+  :global-vars {*warn-on-reflection* true
+                *unchecked-math* true
+                #_*assert* #_false}
+  
   :repl-options {:init-ns          ~MAIN
                  :main             ~MAIN
                  :init ~(macroexpand  `(init-fn ~MAIN ~*command-line-args*))
