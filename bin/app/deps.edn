@@ -36,6 +36,7 @@
                 github.cljctools.bittorrent/bencode {:local/root "../../../bittorrent/src/bencode"}
                 github.cljctools.bittorrent/wire-protocol {:local/root "../../../bittorrent/src/wire-protocol"}
                 github.cljctools.bittorrent/dht-crawl {:local/root "../../../bittorrent/src/dht-crawl"}
+                github.cljctools.ipfs/ipfs-node {:local/root "../../../ipfs/src/ipfs-node"}
                 github.cljctools/peerdb {:local/root "../../../peerdb"}
 
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
