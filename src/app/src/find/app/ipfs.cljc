@@ -9,4 +9,4 @@
    [clojure.spec.alpha :as s]
    #?(:clj [jsonista.core])
    [cljctools.ipfs.spec :as ipfs.spec]
-   [cljctools.ipfs.ipfs-node.core :as ipfs-node.core]))
+   [cljctools.ipfs.dht.core :as dht.core]))
