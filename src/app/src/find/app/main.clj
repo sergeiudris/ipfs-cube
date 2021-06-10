@@ -56,7 +56,11 @@
 
 (comment
 
-  (require '[cljctools.bytes.core :as bytes.core])
+  (require
+   '[cljctools.bytes.core :as bytes.core]
+   '[cljctools.ipfs.dht.core :as dht.core]
+   '[cljctools.ipfs.dht.impl :as dht.impl]
+   :reload)
 
   ;
   )
