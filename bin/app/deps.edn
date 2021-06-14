@@ -34,6 +34,7 @@
                 github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
                 github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
                 github.cljctools.cljctools/protobuf {:local/root "../../../cljctools/protobuf"}
+                github.cljctools.cljctools/crypto-jvm {:local/root "../../../cljctools/crypto-jvm"}
 
                 github.cljctools.bittorrent/bencode {:local/root "../../../bittorrent/bencode"}
                 github.cljctools.bittorrent/wire-protocol {:local/root "../../../bittorrent/wire-protocol"}
