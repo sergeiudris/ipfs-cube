@@ -1,5 +1,7 @@
 {:paths []
-
+ :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
+             "clojars" {:url "https://clojars.org/repo"}
+             "scijava" {:url "http://maven.scijava.org/content/repositories/public/"}}
  :deps {}
 
  :aliases
@@ -34,12 +36,12 @@
                 github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
                 github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
                 github.cljctools.cljctools/protobuf {:local/root "../../../cljctools/protobuf"}
-                github.cljctools.cljctools/crypto-jvm {:local/root "../../../cljctools/crypto-jvm"}
 
                 github.cljctools.bittorrent/bencode {:local/root "../../../bittorrent/bencode"}
                 github.cljctools.bittorrent/wire-protocol {:local/root "../../../bittorrent/wire-protocol"}
                 github.cljctools.bittorrent/dht-crawl {:local/root "../../../bittorrent/dht-crawl"}
                 github.cljctools.ipfs/dht {:local/root "../../../ipfs/dht"}
+                github.cljctools.ipfs/core-jvm {:local/root "../../../ipfs/core-jvm"}
                 github.cljctools/peerdb {:local/root "../../../peerdb"}
 
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
