@@ -34,8 +34,6 @@
                 github.cljctools.cljctools/datagram-socket-jvm {:local/root "../../../cljctools/datagram-socket-jvm"}
                 github.cljctools.cljctools/system-tray {:local/root "../../../cljctools/system-tray"}
                 github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
-                github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
-                github.cljctools.cljctools/protobuf {:local/root "../../../cljctools/protobuf"}
 
                 github.cljctools.bittorrent/bencode {:local/root "../../../bittorrent/bencode"}
                 github.cljctools.bittorrent/wire-protocol {:local/root "../../../bittorrent/wire-protocol"}
@@ -45,7 +43,7 @@
                 github.cljctools/peerdb {:local/root "../../../peerdb"}
 
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
-   :extra-paths ["resources" #_"../ui/resources"]
+   :extra-paths ["target/classes" "resources" #_"../ui/resources"]
    :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
    :main-opts ["-m" "find.app.main"]}
 

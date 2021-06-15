@@ -10,7 +10,8 @@
 
   :repositories [["central" {:url "https://repo1.maven.org/maven2/"}]
                  ["clojars" {:url "https://clojars.org/repo/"}]
-                 ["conjars" {:url "https://conjars.org/repo"}]]
+                 ["conjars" {:url "https://conjars.org/repo"}]
+                 ["scijava" {:url "http://maven.scijava.org/content/repositories/public/"}]]
 
   :min-lein-version "2.9.3"
 
@@ -64,8 +65,7 @@
   :main ^{:skip-aot false} ~MAIN
   :jvm-opts ["-Xms768m" "-Xmx11998m" "-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
 
-  :source-paths ["src"]
-  :java-source-paths ["src"]
-  :test-paths [] #_["test"]
+  :source-paths []
+  :java-source-paths ["../../../ipfs/core-jvm/src"]
   :resource-paths [] #_["resources" "config"]
   :auto-clean false)

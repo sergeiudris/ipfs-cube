@@ -1,7 +1,11 @@
 #!/bin/bash
 
 repl(){
-    clj -A:core:app:repl
+  clj -A:core:app:repl
+}
+
+compile-java(){
+  lein javac
 }
 
 main(){
