@@ -66,6 +66,6 @@
   :jvm-opts ["-Xms768m" "-Xmx11998m" "-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
 
   :source-paths []
-  :java-source-paths ["../../../ipfs/core-jvm/src"]
+  :java-source-paths ["target/proto"]
   :resource-paths [] #_["resources" "config"]
   :auto-clean false)

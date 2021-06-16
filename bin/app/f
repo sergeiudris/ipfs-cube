@@ -8,6 +8,13 @@ compile-java(){
   lein javac
 }
 
+gen-proto(){
+  OUT=target/proto
+  mkdir -p $OUT
+  SRC=$(cd ../../../ && pwd)/ipfs/core-jvm/src
+  protoc --java_out=${OUT} --proto_path ${SRC}/cljctools/ipfs/runtime dht_proto.proto
+}
+
 main(){
   clojure -A:core:app
 }
