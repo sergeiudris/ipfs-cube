@@ -11,7 +11,8 @@
   :repositories [["central" {:url "https://repo1.maven.org/maven2/"}]
                  ["clojars" {:url "https://clojars.org/repo/"}]
                  ["conjars" {:url "https://conjars.org/repo"}]
-                 ["scijava" {:url "http://maven.scijava.org/content/repositories/public/"}]]
+                 ["scijava" {:url "http://maven.scijava.org/content/repositories/public/"}]
+                 ["jitpack" {:url "https://jitpack.io"}]]
 
   :min-lein-version "2.9.3"
 
@@ -26,7 +27,7 @@
   :global-vars {*warn-on-reflection* true
                 *unchecked-math* true
                 #_*assert* #_false}
-  
+
   :repl-options {:init-ns          ~MAIN
                  :main             ~MAIN
                  :init ~(macroexpand  `(init-fn ~MAIN ~*command-line-args*))
@@ -66,6 +67,6 @@
   :jvm-opts ["-Xms768m" "-Xmx11998m" "-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
 
   :source-paths []
-  :java-source-paths ["target/proto"]
+  :java-source-paths ["target/proto" "../../../../.gitlibs/libs/github.ipld/java-cid/d6b6a7017b5b90cf761e6ec04ceb3d1b2e3aaae9/src/main/java"]
   :resource-paths [] #_["resources" "config"]
   :auto-clean false)

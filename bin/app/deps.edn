@@ -1,7 +1,8 @@
 {:paths []
  :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
              "clojars" {:url "https://clojars.org/repo"}
-             "scijava" {:url "http://maven.scijava.org/content/repositories/public/"}}
+             "scijava" {:url "http://maven.scijava.org/content/repositories/public/"}
+             "jitpack" {:url "https://jitpack.io"}}
  :deps {}
 
  :aliases
