@@ -12,7 +12,8 @@
                  ["clojars" {:url "https://clojars.org/repo/"}]
                  ["conjars" {:url "https://conjars.org/repo"}]
                  ["scijava" {:url "http://maven.scijava.org/content/repositories/public/"}]
-                 ["jitpack" {:url "https://jitpack.io"}]]
+                 ["jitpack" {:url "https://jitpack.io"}]
+                 ["cloudsmith-jvm-libp2p" {:url "https://dl.cloudsmith.io/public/libp2p/jvm-libp2p/maven/"}]]
 
   :min-lein-version "2.9.3"
 
