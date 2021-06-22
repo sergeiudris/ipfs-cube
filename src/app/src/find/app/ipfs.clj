@@ -9,4 +9,4 @@
    [clojure.spec.alpha :as s]
    [jsonista.core]
    [cljctools.ipfs.spec :as ipfs.spec]
-   [cljctools.ipfs.runtime.dht :as ipfs.runtime.dht]))
+   [cljctools.ipfs.runtime.node :as ipfs.runtime.node]))
