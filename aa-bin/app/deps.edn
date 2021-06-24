@@ -24,8 +24,8 @@
                                :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                                :tag "0.4.31-alpha"}
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
-                github.find/spec {:local/root "../../src/spec"}
-                github.find/app {:local/root "../../src/app"}
+                github.find/spec {:local/root "../../spec"}
+                github.find/app {:local/root "../../app"}
 
                 github.cljctools.cljctools/core-jvm {:local/root "../../../cljctools/core-jvm"}
                 github.cljctools.cljctools/bytes-jvm {:local/root "../../../cljctools/bytes-jvm"}
