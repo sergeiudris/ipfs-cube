@@ -1,4 +1,4 @@
-(ns ipfs.find.app.main
+(ns ipfs-shipyard.find.app.main
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close! onto-chan!
@@ -11,10 +11,10 @@
    [cljctools.system-tray.core :as system-tray.core]
    [cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]
 
-   [ipfs.find.spec :as find.spec]
-   [ipfs.find.app.http :as find.app.http]
-   [ipfs.find.app.ipfs :as find.app.ipfs]
-   [ipfs.find.app.cljfx :as find.app.cljfx]))
+   [ipfs-shipyard.find.spec :as find.spec]
+   [ipfs-shipyard.find.app.http :as find.app.http]
+   [ipfs-shipyard.find.app.ipfs :as find.app.ipfs]
+   [ipfs-shipyard.find.app.cljfx :as find.app.cljfx]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
 (println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))

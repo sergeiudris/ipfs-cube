@@ -11,7 +11,7 @@ compile-java(){
 gen-proto(){
   OUT=target/proto
   mkdir -p $OUT
-  SRC=$(cd ../../../ && pwd)/ipfs/core-jvm/src
+  SRC=$(cd ../../../ && pwd)/ipfs/ipfs-jvm/src
   protoc --java_out=${OUT} --proto_path ${SRC}/cljctools/ipfs/runtime node_proto.proto
 }
 
@@ -26,7 +26,7 @@ uberjar(){
     :jar target/find.jar \
     :aliases '[:core :app]' \
     :verbose true \
-    :main-class ipfs.find.app.main
+    :main-class ipfs-shipyard.find.app.main
 }
 
 lein-uberjar(){

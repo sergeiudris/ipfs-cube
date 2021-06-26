@@ -47,7 +47,7 @@
    ["@ant-design/icons/SyncOutlined" :default AntIconSyncOutlined]
    ["@ant-design/icons/ReloadOutlined" :default AntIconReloadOutlined]
 
-   [ipfs.find.spec :as find.spec]))
+   [ipfs-shipyard.find.spec :as find.spec]))
 
 (goog-define BAR_PORT 0)
 (goog-define FOO_ORIGIN "")
