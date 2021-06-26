@@ -24,8 +24,8 @@
                                :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                                :tag "0.4.31-alpha"}
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
-                github.find/spec {:local/root "../../spec"}
-                github.find/app {:local/root "../../app"}
+                github.ipfs.find/find {:local/root "../../find"}
+                github.ipfs.find/app {:local/root "../../app"}
 
                 github.cljctools.cljctools/cljctools-jvm {:local/root "../../../cljctools/cljctools-jvm"}
                 github.cljctools.cljctools/bytes-jvm {:local/root "../../../cljctools/bytes-jvm"}
@@ -47,7 +47,7 @@
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
    :extra-paths ["target/classes" "resources" #_"../ui/resources"]
    :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
-   :main-opts ["-m" "find.app.main"]}
+   :main-opts ["-m" "ipfs.find.app.main"]}
 
   :repl
   {:extra-deps {github.cljctools/deps-repl {:git/url "https://github.com/cljctools/deps-repl"
@@ -56,7 +56,7 @@
                 nrepl/nrepl {:mvn/version "0.8.3"}
                 cider/cider-nrepl {:mvn/version "0.25.5"}}
    :main-opts ["-m" "lambdaisland.nrepl.main"
-               "--init-ns" "find.app.main"
+               "--init-ns" "ipfs.find.app.main"
                "--port" "7788"
                "--bind" "0.0.0.0"
                "--middleware" "cider.nrepl/cider-middleware"]}
