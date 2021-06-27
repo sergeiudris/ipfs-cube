@@ -26,6 +26,7 @@
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
                 github.ipfs.find/find {:local/root "../../find"}
                 github.ipfs.find/app {:local/root "../../app"}
+                github.ipfs.find/bittorrent-dht-crawl {:local/root "../../bittorrent-dht-crawl"}
 
                 github.cljctools.cljctools/cljctools-jvm {:local/root "../../../cljctools/cljctools-jvm"}
                 github.cljctools.cljctools/bytes-jvm {:local/root "../../../cljctools/bytes-jvm"}
@@ -38,9 +39,8 @@
                 github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
                 github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
 
-                github.cljctools.bittorrent/bencode {:local/root "../../../bittorrent/bencode"}
-                github.cljctools.bittorrent/wire-protocol {:local/root "../../../bittorrent/wire-protocol"}
-                github.cljctools.bittorrent/dht-crawl {:local/root "../../../bittorrent/dht-crawl"}
+                github.cljctools.cljctools/bencode-jvm {:local/root "../../../cljctools/bencode-jvm"}
+                github.cljctools.cljctools/bittorrent-jvm {:local/root "../../../cljctools/bittorrent-jvm"}
                 github.cljctools.ipfs/ipfs-jvm {:local/root "../../../ipfs/ipfs-jvm"}
                 github.cljctools/peerdb {:local/root "../../../peerdb"}
 

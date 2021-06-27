@@ -9,7 +9,7 @@
    [clojure.java.io :as io]
 
    [cljctools.system-tray.core :as system-tray.core]
-   [cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]
+   [ipfs-shipyard.find.bittorrent-dht-crawl.core :as bittorrent-dht-crawl.core]
 
    [ipfs-shipyard.find.spec :as find.spec]
    [ipfs-shipyard.find.app.http :as find.app.http]
@@ -50,7 +50,7 @@
              (System/exit 0))
 
            #_(<! (find.app.http/start http-opts))
-           (<! (dht-crawl.core/start {:data-dir state-dir}))
+           (<! (bittorrent-dht-crawl.core/start {:data-dir state-dir}))
            #_(find.app.cljfx/start)
            #_(when system-tray?
                (system-tray.core/create {:on-quit (fn [] (close! system-exit|))
