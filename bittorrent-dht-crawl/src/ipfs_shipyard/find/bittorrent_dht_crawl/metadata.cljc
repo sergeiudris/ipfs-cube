@@ -16,7 +16,7 @@
    [cljctools.socket.spec :as socket.spec]
    [cljctools.socket.protocols :as socket.protocols]
    [cljctools.bencode.core :as bencode.core]
-   [cljctools.bittorrent.wire-protocol :as bittorrent.wire-protocol]
+   [cljctools.bittorrent.ut-metadata :as bittorrent.ut-metadata]
    [cljctools.bittorrent.spec :as bittorrent.spec]
    [ipfs-shipyard.find.bittorrent-dht-crawl.impl :refer [hash-key-distance-comparator-fn
                                                          decode-nodes
@@ -63,7 +63,7 @@
                     (close! evt|)
                     (close! recv|))]
 
-      (bittorrent.wire-protocol/create
+      (bittorrent.ut-metadata/create
        {::bittorrent.spec/send| send|
         ::bittorrent.spec/recv| recv|
         ::bittorrent.spec/metadata| result|
