@@ -39,8 +39,8 @@
                 github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
                 github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
 
-                github.cljctools.cljctools/bencode-jvm {:local/root "../../../cljctools/bencode-jvm"}
-                github.cljctools.cljctools/bittorrent-jvm {:local/root "../../../cljctools/bittorrent-jvm"}
+                github.cljctools.cljctools/bencode {:local/root "../../../cljctools/bencode"}
+                github.cljctools.cljctools/bittorrent {:local/root "../../../cljctools/bittorrent"}
                 github.cljctools.cljctools/ipfs-jvm {:local/root "../../../cljctools/ipfs-jvm"}
                 github.cljctools/peerdb {:local/root "../../../peerdb"}
 
