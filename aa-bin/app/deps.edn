@@ -24,8 +24,7 @@
                                :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                                :tag "0.4.31-alpha"}
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
-                github.ipfs.find/find {:local/root "../../find"}
-                github.ipfs.find/app {:local/root "../../app"}
+                javax.servlet/servlet-api {:mvn/version "2.5"}
 
                 github.cljctools.cljctools/cljctools-jvm {:local/root "../../../cljctools/cljctools-jvm"}
                 github.cljctools.cljctools/bytes-jvm {:local/root "../../../cljctools/bytes-jvm"}
@@ -37,14 +36,14 @@
                 github.cljctools.cljctools/system-tray {:local/root "../../../cljctools/system-tray"}
                 github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
                 github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
-
                 github.cljctools.cljctools/bencode {:local/root "../../../cljctools/bencode"}
                 github.cljctools.cljctools/bittorrent {:local/root "../../../cljctools/bittorrent"}
                 github.cljctools.cljctools/bittorrent-dht-crawl {:local/root "../../../cljctools/bittorrent-dht-crawl"}
                 github.cljctools.cljctools/ipfs-jvm {:local/root "../../../cljctools/ipfs-jvm"}
                 github.cljctools.cljctools/peerdb {:local/root "../../../cljctools/peerdb"}
 
-                javax.servlet/servlet-api {:mvn/version "2.5"}}
+                github.ipfs-shipyard.find/find {:local/root "../../find"}
+                github.ipfs-shipyard.find/app {:local/root "../../app"}}
    :extra-paths ["target/classes" "resources" #_"../ui/resources"]
    :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
    :main-opts ["-m" "ipfs-shipyard.find.app.main"]}
