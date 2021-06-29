@@ -42,7 +42,7 @@
                 github.cljctools.cljctools/bittorrent {:local/root "../../../cljctools/bittorrent"}
                 github.cljctools.cljctools/bittorrent-dht-crawl {:local/root "../../../cljctools/bittorrent-dht-crawl"}
                 github.cljctools.cljctools/ipfs-jvm {:local/root "../../../cljctools/ipfs-jvm"}
-                github.cljctools/peerdb {:local/root "../../../peerdb"}
+                github.cljctools.cljctools/peerdb {:local/root "../../../cljctools/peerdb"}
 
                 javax.servlet/servlet-api {:mvn/version "2.5"}}
    :extra-paths ["target/classes" "resources" #_"../ui/resources"]
