@@ -14,7 +14,8 @@
    [ipfs-shipyard.find.spec :as find.spec]
    [ipfs-shipyard.find.app.http :as find.app.http]
    [ipfs-shipyard.find.app.ipfs :as find.app.ipfs]
-   [ipfs-shipyard.find.app.cljfx :as find.app.cljfx]))
+   [ipfs-shipyard.find.app.cljfx :as find.app.cljfx]
+   [ipfs-shipyard.find.app.db :as find.app.db]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
 (println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))

@@ -25,6 +25,7 @@
                                :tag "0.4.31-alpha"}
                 com.cognitect/transit-clj {:mvn/version "1.0.324"}
                 javax.servlet/servlet-api {:mvn/version "2.5"}
+                io.replikativ/datahike {:mvn/version "0.3.6"}
 
                 github.cljctools.cljctools/cljctools-jvm {:local/root "../../../cljctools/cljctools-jvm"}
                 github.cljctools.cljctools/bytes-jvm {:local/root "../../../cljctools/bytes-jvm"}
