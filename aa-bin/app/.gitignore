@@ -2,5 +2,4 @@
 target/
 volumes/
 .nrepl-port
-resources/
 .lein-repl-history
