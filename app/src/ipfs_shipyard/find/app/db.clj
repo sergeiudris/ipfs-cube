@@ -95,7 +95,7 @@
                                 :db/cardinality :db.cardinality/many}])
 
   (time
-   (dotimes [n 1000]
+   (dotimes [n 50]
      (when (zero? (mod n 10))
        (println :n n))
      (datahike.api/transact conn (map
@@ -114,6 +114,9 @@
                      [?e ::bittorrent.spec/infohash ?infohash]]
                    @conn)
    (count))
+  
+  ; 5 txn by 1000 items "Elapsed time: 93662.345254 msecs"
+  ; 50 txn by 100 items "Elapsed time: 106989.965732 msecs"
 
 
 
