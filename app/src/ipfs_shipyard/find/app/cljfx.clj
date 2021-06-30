@@ -11,7 +11,10 @@
    [cljfx.prop :as fx.prop]
    [cljfx.mutator :as fx.mutator]
    [cljfx.lifecycle :as fx.lifecycle])
-  (:import [javafx.scene.web WebView]))
+  (:import
+   (javafx.scene.web WebView)))
+
+(set! *warn-on-reflection* true)
 
 (def web-view-with-ext-props
   (fx/make-ext-with-props
@@ -25,6 +28,7 @@
    (fx/create-component
     {:fx/type :stage
      :showing true
+     :icons ["logo/logo.png"]
      :scene {:fx/type :scene
              :root {:fx/type web-view-with-ext-props
                     :desc {:fx/type :web-view
