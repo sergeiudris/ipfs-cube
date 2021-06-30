@@ -45,7 +45,7 @@
 
                 github.ipfs-shipyard.find/find {:local/root "../../find"}
                 github.ipfs-shipyard.find/app {:local/root "../../app"}}
-   :extra-paths ["target/classes" "resources" #_"../ui/resources"]
+   :extra-paths ["target/classes" "resources" "../ui/resources"]
    :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
    :main-opts ["-m" "ipfs-shipyard.find.app.main"]}
 

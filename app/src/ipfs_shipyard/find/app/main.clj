@@ -50,9 +50,9 @@
              (println ::exiting)
              (System/exit 0))
 
-           #_(<! (find.app.http/start http-opts))
-           (<! (dht-crawl.core/start {:data-dir state-dir}))
-           #_(find.app.cljfx/start)
+           (<! (find.app.http/start http-opts))
+           #_(<! (dht-crawl.core/start {:data-dir state-dir}))
+           (find.app.cljfx/start)
            #_(when system-tray?
                (system-tray.core/create {:on-quit (fn [] (close! system-exit|))
                                          :image (clojure.java.io/resource "logo/logo.png")}))))))
