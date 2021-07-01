@@ -18,19 +18,8 @@
         com.cognitect/transit-clj {:mvn/version "1.0.324"}
         io.replikativ/datahike {:mvn/version "0.3.6"}
 
-        github.cljctools.cljctools/cljctools-jvm {:local/root "../cljctools/cljctools-jvm"}
-        github.cljctools.cljctools/bytes-jvm {:local/root "../cljctools/bytes-jvm"}
-        github.cljctools.cljctools/codec-jvm {:local/root "../cljctools/codec-jvm"}
-        github.cljctools.cljctools/socket-jvm {:local/root "../cljctools/socket-jvm"}
-        github.cljctools.cljctools/fs-jvm {:local/root "../cljctools/fs-jvm"}
-        github.cljctools.cljctools/transit-jvm {:local/root "../cljctools/transit-jvm"}
-        github.cljctools.cljctools/datagram-socket-jvm {:local/root "../cljctools/datagram-socket-jvm"}
-        github.cljctools.cljctools/varint {:local/root "../cljctools/varint"}
-        github.cljctools.cljctools/bencode {:local/root "../cljctools/bencode"}
-        github.cljctools.cljctools/bittorrent {:local/root "../cljctools/bittorrent"}
-        github.cljctools.cljctools/bittorrent-dht-crawl {:local/root "../cljctools/bittorrent-dht-crawl"}
-        github.cljctools.cljctools/ipfs-jvm {:local/root "../cljctools/ipfs-jvm"}
-        github.cljctools.cljctools/peerdb {:local/root "../cljctools/peerdb"}}
+        github.cljctools.cljctools/bittorrent-dht-crawl-jvm {:local/root "../cljctools/bittorrent-dht-crawl-jvm"}
+        github.cljctools.cljctools/ipfs-jvm {:local/root "../cljctools/ipfs-jvm"}}
 
  :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
  :main-opts ["-m" "ipfs-shipyard.find.main"]
