@@ -1,5 +1,4 @@
 (ns ipfs-shipyard.find.spec
-  #?(:cljs (:require-macros [ipfs-shipyard.find.spec :as find.spec]))
   (:require
    [clojure.spec.alpha :as s]))
 
