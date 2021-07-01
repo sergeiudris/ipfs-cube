@@ -68,6 +68,6 @@
   :jvm-opts ["-Xms768m" "-Xmx11998m" "-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
 
   :source-paths []
-  :java-source-paths ["target/proto" "../../../../.gitlibs/libs/github.ipld/java-cid/d6b6a7017b5b90cf761e6ec04ceb3d1b2e3aaae9/src/main/java"]
+  :java-source-paths ["target/proto" "../../.gitlibs/libs/github.ipld/java-cid/d6b6a7017b5b90cf761e6ec04ceb3d1b2e3aaae9/src/main/java"]
   :resource-paths [] #_["resources" "config"]
   :auto-clean false)
