@@ -8,7 +8,6 @@
    [clojure.string]
    [clojure.java.io :as io]
 
-   [cljctools.system-tray.core :as system-tray.core]
    [cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]
 
    [ipfs-shipyard.find.spec :as find.spec]
@@ -30,9 +29,6 @@
   (<!! (go
          (let [stateA (atom {})
                system-exit| (chan 1)
-               system-tray? (if (System/getenv "FIND_SYSTEM_TRAY")
-                              (read-string (System/getenv "FIND_SYSTEM_TRAY"))
-                              false)
                peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
                data-dir (->
                          (io/file (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
@@ -47,10 +43,7 @@
              (System/exit 0))
 
            #_(<! (dht-crawl.core/start {:data-dir state-dir}))
-           (find.cljfx/start)
-           #_(when system-tray?
-               (system-tray.core/create {:on-quit (fn [] (close! system-exit|))
-                                         :image (clojure.java.io/resource "logo/logo.png")}))))))
+           (find.cljfx/start)))))
 
 (comment
 

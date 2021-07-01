@@ -7,7 +7,6 @@
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}
         org.clojure/core.async {:mvn/version "1.3.618"}
         org.clojure/spec.alpha {:mvn/version "0.2.187"}
-        metosin/reitit  {:mvn/version "0.5.12"}
         aleph/aleph {:mvn/version "0.4.7-alpha5"}
         byte-streams/byte-streams {:mvn/version "0.2.5-alpha2"}
         manifold/manifold {:mvn/version "0.1.9-alpha3"}
@@ -17,7 +16,6 @@
                        :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                        :tag "0.4.31-alpha"}
         com.cognitect/transit-clj {:mvn/version "1.0.324"}
-        javax.servlet/servlet-api {:mvn/version "2.5"}
         io.replikativ/datahike {:mvn/version "0.3.6"}
 
         github.cljctools.cljctools/cljctools-jvm {:local/root "../../../cljctools/cljctools-jvm"}
@@ -27,8 +25,6 @@
         github.cljctools.cljctools/fs-jvm {:local/root "../../../cljctools/fs-jvm"}
         github.cljctools.cljctools/transit-jvm {:local/root "../../../cljctools/transit-jvm"}
         github.cljctools.cljctools/datagram-socket-jvm {:local/root "../../../cljctools/datagram-socket-jvm"}
-        github.cljctools.cljctools/system-tray {:local/root "../../../cljctools/system-tray"}
-        github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
         github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
         github.cljctools.cljctools/bencode {:local/root "../../../cljctools/bencode"}
         github.cljctools.cljctools/bittorrent {:local/root "../../../cljctools/bittorrent"}
