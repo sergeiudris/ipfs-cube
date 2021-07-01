@@ -4,19 +4,19 @@
 SHELL := /bin/bash
 
 main:
-	@ clojure
+	clojure
 
 repl:
-	@ clj -A:repl
+	clj -A:repl
 
 compile-java:
-	@ lein javac
+	lein javac
 
 .ONESHELL:
 gen-proto:	
 	OUT=target/proto
 	mkdir -p $${OUT}
-	SRC=$$(cd ../../../ && pwd)/cljctools/ipfs-jvm/src
+	SRC=$$(cd ../ && pwd)/cljctools/ipfs-jvm/src
 	protoc --java_out=$${OUT} --proto_path $${SRC}/cljctools/ipfs/runtime node_proto.proto
 
 depstar-uberjar:
