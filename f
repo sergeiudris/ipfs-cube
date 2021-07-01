@@ -26,7 +26,7 @@ uberjar(){
     :jar target/find.jar \
     :aliases '[:core :app]' \
     :verbose true \
-    :main-class ipfs-shipyard.find.app.main
+    :main-class ipfs-shipyard.find.main
 }
 
 lein-uberjar(){

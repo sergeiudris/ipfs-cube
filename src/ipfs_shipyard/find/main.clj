@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.app.main
+(ns ipfs-shipyard.find.main
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close! onto-chan!
@@ -12,9 +12,9 @@
    [cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]
 
    [ipfs-shipyard.find.spec :as find.spec]
-   [ipfs-shipyard.find.app.ipfs :as find.app.ipfs]
-   [ipfs-shipyard.find.app.cljfx :as find.app.cljfx]
-   [ipfs-shipyard.find.app.db :as find.app.db]))
+   [ipfs-shipyard.find.ipfs :as find.ipfs]
+   [ipfs-shipyard.find.cljfx :as find.cljfx]
+   [ipfs-shipyard.find.db :as find.db]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
 (println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))
@@ -47,7 +47,7 @@
              (System/exit 0))
 
            #_(<! (dht-crawl.core/start {:data-dir state-dir}))
-           (find.app.cljfx/start)
+           (find.cljfx/start)
            #_(when system-tray?
                (system-tray.core/create {:on-quit (fn [] (close! system-exit|))
                                          :image (clojure.java.io/resource "logo/logo.png")}))))))
