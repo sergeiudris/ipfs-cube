@@ -7,7 +7,7 @@ main:
 	clojure
 
 repl:
-	clj -A:repl
+	clj -M:repl
 
 compile-java:
 	lein javac
