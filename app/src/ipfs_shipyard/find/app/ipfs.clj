@@ -7,6 +7,5 @@
    [clojure.string]
    [clojure.pprint :refer [pprint]]
    [clojure.spec.alpha :as s]
-   [jsonista.core]
    [cljctools.ipfs.spec :as ipfs.spec]
    [cljctools.ipfs.runtime.node :as ipfs.runtime.node]))

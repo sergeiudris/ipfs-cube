@@ -12,7 +12,6 @@
    [cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]
 
    [ipfs-shipyard.find.spec :as find.spec]
-   [ipfs-shipyard.find.app.http :as find.app.http]
    [ipfs-shipyard.find.app.ipfs :as find.app.ipfs]
    [ipfs-shipyard.find.app.cljfx :as find.app.cljfx]
    [ipfs-shipyard.find.app.db :as find.app.db]))
@@ -23,9 +22,8 @@
 (set! *warn-on-reflection* true)
 
 (defn stop
-  [{:keys [::find.app.http/port] :as opts}]
-  (go
-    (<! (find.app.http/stop {::find.app.http/port port}))))
+  [{:keys [] :as opts}]
+  (go))
 
 (defn -main [& args]
   (println ::-main)
@@ -41,16 +39,13 @@
                          (.getCanonicalPath))
                state-dir (->
                           (io/file data-dir "state")
-                          (.getCanonicalPath))
-               http-opts {::find.app.http/port 4080}]
+                          (.getCanonicalPath))]
            (go
              (<! system-exit|)
              (println ::exit|)
-             (<! (stop http-opts))
              (println ::exiting)
              (System/exit 0))
 
-           (<! (find.app.http/start http-opts))
            #_(<! (dht-crawl.core/start {:data-dir state-dir}))
            (find.app.cljfx/start)
            #_(when system-tray?
