@@ -5,7 +5,7 @@
 main:
 	@ clojure
 
-dev:
+repl:
 	@ clj -A:repl
 
 compile-java:
