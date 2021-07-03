@@ -1,16 +1,16 @@
 # find
-<s>decentralized peer-to-peer</s> program to search and download IPFS/torrent files
+decentralized peer-to-peer program to search and download IPFS/torrent files
 
 ## goal
 
 - like torrent client, but for ipfs/torrent, with search
-- <s>global decentralized peer-to-peer: app is entirely on users' (peers') machines - computers that have app currently running form the global app</s>
-- <s>distributed</s> automated index: program crawles ipfs/torrent network, forming the index of files
-- query the whole index: programs exchange indexes <s>parts so that</s> every program has the whole index to query
+- global decentralized peer-to-peer: app is entirely on users' (peers') machines - computers that have app currently running form the global app
+- distributed automated index: every node crawles a part of ipfs/torrent network, forming a part of the index
+- query the whole index: nodes exchange index parts so that every node has almost the whoile index to query
 - index is just data in db: extracts file info and shows seeds (pins)
-- <s>live additions/removals over pubsub: when user adds a file to ipfs node, app sends msg over pubsub - so all nodes online instantly add file to index (or increment/decrement seeds/pins) - if file is popular (defined by how many seeds)</s>
+- live additions/removals over pubsub: when user adds a file to ipfs node, app sends msg over pubsub - so all nodes online instantly add file to index (or increment/decrement seeds/pins) - if file is popular (defined by how many seeds)
 - filters: peers can choose which filters to apply to the index they store
-- installation: desktop program
+- installation: desktop app
 - binaries: distributed separately from source code repo, readme has "build from source", build is done with Makefile, like linux, tor browser
 - build: should happen without docker, on OS, all binaries needed for build should be downloaded into aa-bin
 - repository: should be at github.com/ipfs-shipyard/find
