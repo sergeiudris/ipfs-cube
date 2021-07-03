@@ -14,5 +14,4 @@
 - binaries: distributed separately from source code repo, readme has "build from source", build is done with Makefile, like linux, tor browser
 - build: should happen without docker, on OS, all binaries needed for build should be downloaded into aa-bin
 - repository: should be at github.com/ipfs-shipyard/find
-- no docs: program and readme with two sections - goal and build from source
 - just a program: simple, entirely free, open source, no barriers ratio-limits ads rewards economies etc. - just a program that does its thing, like transmission on linux
