@@ -1,5 +1,5 @@
 # find
-decentralized peer-to-peer program to search and download IPFS/torrent files
+decentralized peer-to-peer app to search and download IPFS/torrent files
 
 ## goal
 
