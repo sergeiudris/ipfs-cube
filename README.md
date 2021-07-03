@@ -13,6 +13,8 @@
 - installation - desktop program
 - binaries - distributed separately from source code repo, readme has "build from source", build is done with Makefile, like linux, tor browser
 - runtime - program runs on JVM, will not be GraalVM compiled
+- interface - cljfx
+- database - datahike
 - build - should happen without docker, on OS, all binaries needed for build should be downloaded into aa-bin
 - repository - should be at github.com/ipfs-shipyard/find
 - docs - no : only program and readme with two sections - goal and build from source
