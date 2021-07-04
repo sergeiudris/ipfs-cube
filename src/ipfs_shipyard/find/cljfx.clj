@@ -7,16 +7,23 @@
                                      pipeline pipeline-async]]
    [clojure.string]
    [clojure.java.io :as io]
-   [cljfx.api]))
+   [cljfx.api])
+  (:import
+   (javafx.event Event EventHandler)
+   (javafx.stage WindowEvent)
+   (javafx.scene.control DialogEvent Dialog ButtonType ButtonBar$ButtonData)))
 
 (set! *warn-on-reflection* true)
 
-(defonce stateA (atom {::searchS "asd"}))
+(defonce stateA (atom {::searchS ""}))
 
 (defn root
   [{:keys [::searchS]}]
   {:fx/type :stage
    :showing true
+   :on-close-request (fn [^WindowEvent event]
+                       (println :on-close-request)
+                       #_(.consume event))
    :width 1024
    :height 768
    :icons ["logo/logo.png"]
@@ -29,33 +36,27 @@
 (def renderer (cljfx.api/create-renderer))
 
 (defn render
-  []
-  (renderer (merge
-             {:fx/type root}
-             @stateA)))
+  ([]
+   (render @stateA))
+  ([new-state]
+   (renderer (merge
+              {:fx/type root #_(var-get #'root)}
+              new-state))))
 
-(defonce _ (add-watch stateA :a-key (fn [k stateA old-state new-state]
-                                      (renderer (merge
-                                                 {:fx/type root #_(var-get #'root)}
-                                                 new-state)))))
+(defonce _ (add-watch stateA :a-key (fn [k stateA old-state new-state] (render new-state))))
 
 (defn start
   []
+  (render)
   #_(cljfx.api/mount-renderer stateA render))
-
 
 (comment
 
   (in-ns 'ipfs-shipyard.find.cljfx)
 
-  (require
-   '[cljfx.api]
-   :reload)
-
   (render)
 
   (swap! stateA assoc ::searchS "123")
-
-
+  
   ;
   )
