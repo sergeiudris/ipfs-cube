@@ -18,5 +18,10 @@
    (fx/create-component
     {:fx/type :stage
      :showing true
+     :width 1024
+     :height 768
      :icons ["logo/logo.png"]
-     :scene {:fx/type :scene}})))
+     :scene {:fx/type :scene
+             :root {:fx/type :h-box
+                    :children [{:fx/type :label :text "find"}
+                               {:fx/type :text-field}]}}})))
