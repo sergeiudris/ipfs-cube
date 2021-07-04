@@ -7,21 +7,55 @@
                                      pipeline pipeline-async]]
    [clojure.string]
    [clojure.java.io :as io]
-   [cljfx.api :as fx]))
+   [cljfx.api]))
 
 (set! *warn-on-reflection* true)
 
+(defonce stateA (atom {::searchS "asd"}))
+
+(defn root
+  [{:keys [::searchS]}]
+  {:fx/type :stage
+   :showing true
+   :width 1024
+   :height 768
+   :icons ["logo/logo.png"]
+   :scene {:fx/type :scene
+           :root {:fx/type :h-box
+                  :children [{:fx/type :label :text "find"}
+                             {:fx/type :text-field
+                              :text searchS}]}}})
+
+(def renderer (cljfx.api/create-renderer))
+
+(defn render
+  []
+  (renderer (merge
+             {:fx/type root}
+             @stateA)))
+
+(defonce _ (add-watch stateA :a-key (fn [k stateA old-state new-state]
+                                      (renderer (merge
+                                                 {:fx/type root #_(var-get #'root)}
+                                                 new-state)))))
 
 (defn start
   []
-  (fx/on-fx-thread
-   (fx/create-component
-    {:fx/type :stage
-     :showing true
-     :width 1024
-     :height 768
-     :icons ["logo/logo.png"]
-     :scene {:fx/type :scene
-             :root {:fx/type :h-box
-                    :children [{:fx/type :label :text "find"}
-                               {:fx/type :text-field}]}}})))
+  #_(cljfx.api/mount-renderer stateA render))
+
+
+(comment
+
+  (in-ns 'ipfs-shipyard.find.cljfx)
+
+  (require
+   '[cljfx.api]
+   :reload)
+
+  (render)
+
+  (swap! stateA assoc ::searchS "123")
+
+
+  ;
+  )
