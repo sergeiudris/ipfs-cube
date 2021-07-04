@@ -20,12 +20,13 @@
 
         github.cljctools.cljctools/bittorrent-dht-crawl-jvm {:local/root "../cljctools/bittorrent-dht-crawl-jvm"}
         github.cljctools.cljctools/ipfs-jvm {:local/root "../cljctools/ipfs-jvm"}}
-
- :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
- :main-opts ["-m" "ipfs-shipyard.find.main"]
-
+ 
  :aliases
- {:repl
+ {:main
+  {:jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
+   :main-opts ["-m" "ipfs-shipyard.find.main"]}
+
+  :repl
   {:extra-deps {github.cljctools/deps-repl {:git/url "https://github.com/cljctools/deps-repl"
                                             :sha "08283d3841c5948b0b9d36a977ebfdad111cdb2f"
                                             :tag "v2.0.1"}

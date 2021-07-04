@@ -4,7 +4,7 @@
 SHELL := /bin/bash
 
 main:
-	clojure
+	clojure -M:main
 
 repl:
 	clj -M:repl
