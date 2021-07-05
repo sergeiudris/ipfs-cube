@@ -1,14 +1,15 @@
 # find
-<s>decentralized peer-to-peer</s> program to search and download IPFS/torrent files
+decentralized peer-to-peer program to search and download IPFS/torrent files
 
 ## program
 
 - like torrent client, but for ipfs/torrent, with search
-- <s>global decentralized peer-to-peer - app is entirely on users' (peers') machines : computers that have app currently running form the global app</s>
+- <s>global</s> decentralized peer-to-peer - program is entirely on users' (peers') machines <s>: computers that have app currently running form the global app</s>
 - <s>distributed</s> automated index - program crawles ipfs/torrent network, forming the index of files
 - query the whole index - programs exchange indexes <s>parts so that</s> every program has the whole index to query
 - index is just data in db - extracts file info and shows seeds (pins)
 - <s>live additions/removals over pubsub: when user adds a file to ipfs node, app sends msg over pubsub - so all nodes online instantly add file to index (or increment/decrement seeds/pins) - if file is popular (defined by how many seeds)</s>
+- DHT - program uses existing DHT, not pubsub, to find other programs to share index
 - filters - peers can choose which filters to apply to the index they store
 - installation - desktop program
 - binaries - distributed separately from source code repo, readme has "build from source", build is done with Makefile, like linux, tor browser
