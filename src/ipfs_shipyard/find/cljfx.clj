@@ -26,7 +26,7 @@
                        #_(.consume event))
    :width 1024
    :height 768
-   :icons ["logo/logo.png"]
+  ;;  :icons ["logo/logo.png"]
    :scene {:fx/type :scene
            :root {:fx/type :h-box
                   :children [{:fx/type :label :text "find"}
