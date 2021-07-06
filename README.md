@@ -15,7 +15,7 @@ torrent and IPFS client, with search
 - can download files - it's a torrent client and IPFS client
 - installation - desktop program
 - binaries - distributed separately from source code repo, readme has "build from source", build is done with Makefile, like linux, tor browser
-- runtime - program runs on JVM, will not be GraalVM compiled
+- runtime - program runs on JVM, will not be GraalVM compiled, it's not on Jesus level
 - interface - <s>cljfx</s> will use existing programs as base
 - database - datahike
 - build - should happen without docker, on OS, all binaries needed for build should be downloaded into aa-bin
