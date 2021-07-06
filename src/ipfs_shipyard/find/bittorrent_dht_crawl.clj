@@ -1,4 +1,4 @@
-(ns cljctools.bittorrent.dht-crawl.core
+(ns ipfs-shipyard.find.bittorrent-dht-crawl
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -8,39 +8,37 @@
    [clojure.pprint :refer [pprint]]
    [clojure.string]
    [clojure.walk]
-   #?@(:cljs
-       [[goog.string.format :as format]
-        [goog.string :refer [format]]
-        [goog.object]
-        [cljs.reader :refer [read-string]]])
+
+   [manifold.deferred :as d]
+   [manifold.stream :as sm]
+   [aleph.udp]
 
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
-   [cljctools.fs.runtime.core :as fs.runtime.core]
-   [cljctools.fs.protocols :as fs.protocols]
-   [cljctools.datagram-socket.runtime.core :as datagram-socket.runtime.core]
-   [cljctools.datagram-socket.protocols :as datagram-socket.protocols]
-   [cljctools.datagram-socket.spec :as datagram-socket.spec]
 
    [cljctools.bencode.core :as bencode.core]
-   [cljctools.bittorrent.dht-crawl.impl :refer [hash-key-distance-comparator-fn
-                                                send-krpc-request-fn
-                                                encode-nodes
-                                                decode-nodes
-                                                sorted-map-buffer
-                                                read-state-file
-                                                write-state-file
-                                                now
-                                                fixed-buf-size
-                                                chan-buf]]
+   [ipfs-shipyard.find.impl :refer [hash-key-distance-comparator-fn
+                                    send-krpc-request-fn
+                                    encode-nodes
+                                    decode-nodes
+                                    sorted-map-buffer
+                                    read-state-file
+                                    write-state-file
+                                    now
+                                    fixed-buf-size
+                                    chan-buf]]
 
-   [cljctools.bittorrent.dht-crawl.dht]
-   [cljctools.bittorrent.dht-crawl.find-nodes]
-   [cljctools.bittorrent.dht-crawl.metadata]
-   [cljctools.bittorrent.dht-crawl.sybil]
-   [cljctools.bittorrent.dht-crawl.sample-infohashes]))
+   [ipfs-shipyard.find.bittorrent-dht :as find.bittorrent-dht]
+   [ipfs-shipyard.find.bittorrent-find-nodes :as find.bittorrent-find-nodes]
+   [ipfs-shipyard.find.bittorrent-metadata :as find.bittorrent-metadata]
+   [ipfs-shipyard.find.bittorrent-sybil :as find.bittorrent-sybil]
+   [ipfs-shipyard.find.bittorrent-sample-infohashes :as find.bittorrent-sample-infohashes])
+  (:import
+   (java.net InetSocketAddress InetAddress)
+   (io.netty.bootstrap Bootstrap)
+   (io.netty.channel ChannelPipeline)))
 
-#?(:clj (do (set! *warn-on-reflection* true) (set! *unchecked-math* true)))
+(do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
 
 (declare
  process-socket
@@ -52,7 +50,7 @@
   [{:as opts
     :keys [data-dir]}]
   (go
-    (let [state-filepath (fs.runtime.core/path-join data-dir "cljctools.bittorrent.dht-crawl.core.json")
+    (let [state-filepath (-> (io/file data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.json")  (.getCanonicalPath))
           stateA (atom
                   (merge
                    (let [self-idBA  (codec.runtime.core/hex-to-bytes "a8fb5c14469fc7c46e91679c493160ed3d13be3d") #_(bytes.runtime.core/random-bytes 20)]
@@ -81,7 +79,7 @@
                                        (clojure.walk/keywordize-keys))
                                 :host host
                                 :port port}
-                               (catch #?(:clj Exception :cljs :default) ex nil)))))
+                               (catch Exception ex nil)))))
 
           msg|mult (mult msg|)
 
@@ -201,11 +199,11 @@
 
       (println ::self-id self-id)
 
-      (cljctools.bittorrent.dht-crawl.dht/start-routing-table
+      (find.bittorrent-dht/start-routing-table
        (merge ctx {:routing-table-max-size 128}))
 
 
-      (cljctools.bittorrent.dht-crawl.dht/start-dht-keyspace
+      (find.bittorrent-dht/start-dht-keyspace
        (merge ctx {:routing-table-max-size 128}))
 
       (<! (onto-chan! nodes-to-sample|
@@ -234,7 +232,7 @@
 
       ; save state to file periodically
       (go
-        (when-not (fs.runtime.core/path-exists? state-filepath)
+        (when-not (.exists (io/file state-filepath))
           (<! (write-state-file state-filepath @stateA)))
         (loop []
           (<! (timeout (* 4.5 1000)))
@@ -276,19 +274,19 @@
       ; very rarely ask bootstrap servers for nodes
       (let [stop| (chan 1)]
         (swap! procsA conj stop|)
-        (cljctools.bittorrent.dht-crawl.find-nodes/start-bootstrap-query
+        (find.bittorrent-find-nodes/start-bootstrap-query
          (merge ctx {:stop| stop|})))
 
       ; periodicaly ask nodes for new nodes
       (let [stop| (chan 1)]
         (swap! procsA conj stop|)
-        (cljctools.bittorrent.dht-crawl.find-nodes/start-dht-query
+        (find.bittorrent-find-nodes/start-dht-query
          (merge ctx {:stop| stop|})))
 
       ; start sybil
       #_(let [stop| (chan 1)]
           (swap! procsA conj stop|)
-          (cljctools.bittorrent.dht-crawl.sybil/start
+          (find.bittorrent-sybil/start
            {:stateA stateA
             :nodes-bootstrap nodes-bootstrap
             :sybils| sybils|
@@ -308,11 +306,11 @@
             (recur))))
 
       ; ask peers directly, politely for infohashes
-      (cljctools.bittorrent.dht-crawl.sample-infohashes/start-sampling
+      (find.bittorrent-sample-infohashes/start-sampling
        ctx)
 
       ; discovery
-      (cljctools.bittorrent.dht-crawl.metadata/start-discovery
+      (find.bittorrent-metadata/start-discovery
        (merge ctx
               {:infohashes-from-sampling| (tap infohashes-from-sampling|mult (chan (sliding-buffer 100000)))
                :infohashes-from-listening| (tap infohashes-from-listening|mult (chan (sliding-buffer 100000)))
@@ -332,28 +330,51 @@
            port]}]
   (let [ex| (chan 1)
         evt| (chan (sliding-buffer 10))
-        socket (datagram-socket.runtime.core/create
-                {::datagram-socket.spec/host host
-                 ::datagram-socket.spec/port port
-                 ::datagram-socket.spec/evt| evt|
-                 ::datagram-socket.spec/msg| msg|
-                 ::datagram-socket.spec/ex| ex|})
+
+        streamV  (volatile! nil)
         release (fn []
-                  (datagram-socket.protocols/close* socket))]
+                  (some-> @streamV (sm/close!)))]
+
     (go
-      (datagram-socket.protocols/listen* socket)
+
+      (->
+       (d/chain
+        (aleph.udp/socket {:socket-address (InetSocketAddress. ^String host ^int port)
+                           :insecure? true})
+        (fn [stream]
+          (vreset! streamV stream)
+          (put! evt| {:op :listening})
+          stream)
+        (fn [stream]
+          (d/loop []
+            (->
+             (sm/take! stream ::none)
+             (d/chain
+              (fn [msg]
+                (when-not (identical? msg ::none)
+                  (let [^InetSocketAddress inet-socket-address (:sender msg)]
+                    #_[^InetAddress inet-address (.getAddress inet-socket-address)]
+                    #_(.getHostAddress inet-address)
+                    (put! msg| {:msgBA (:message msg)
+                                :host (.getHostString inet-socket-address)
+                                :port (.getPort inet-socket-address)}))
+                  (d/recur))))
+             (d/catch Exception (fn [ex]
+                                  (put! ex| ex)))))))
+       (d/catch Exception (fn [ex]
+                            (put! ex| ex))))
       (<! evt|)
       (println (format "listening on %s:%s" host port))
+
+
       (loop []
         (alt!
           send|
           ([{:keys [msg host port] :as value}]
            (when value
-             (datagram-socket.protocols/send*
-              socket
-              (bencode.core/encode msg)
-              {:host host
-               :port port})
+             (sm/put! @streamV {:host host
+                                :port port
+                                :message (bencode.core/encode msg)})
              (recur)))
 
           #_evt|
@@ -389,13 +410,13 @@
            count-torrentsA
            count-messages-sybilA]}]
   (let [started-at (now)
-        filepath (fs.runtime.core/path-join data-dir "cljctools.bittorrent.crawl-log.edn")
-        _ (fs.runtime.core/remove filepath)
-        _ (fs.runtime.core/make-parents filepath)
-        writer (fs.runtime.core/writer filepath :append true)
+        filepath (-> (io/file data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.log.edn")  (.getCanonicalPath))
+        _ (io/delete-file filepath true)
+        _ (io/make-parents filepath)
+        writer (io/writer filepath :append true)
         countA (atom 0)
         release (fn []
-                  (fs.protocols/close* writer))]
+                  (.close writer))]
     (go
       (loop []
         (alt!
@@ -411,10 +432,10 @@
                        [:discovery [:total @count-discoveryA
                                     :active @count-discovery-activeA]]
                        [:torrents @count-torrentsA]
-                       [:nodes-to-sample| (count (chan-buf nodes-to-sample|) )
+                       [:nodes-to-sample| (count (chan-buf nodes-to-sample|))
                         :nodes-from-sampling| (count (chan-buf nodes-from-sampling|))]
                        [:messages [:dht @count-messagesA :sybil @count-messages-sybilA]]
-                       [:sockets @cljctools.bittorrent.dht-crawl.metadata/count-socketsA]
+                       [:sockets @ipfs-shipyard.find.bittorrent-metadata/count-socketsA]
                        [:routing-table (count (:routing-table state))]
                        [:dht-keyspace (map (fn [[id routing-table]] (count routing-table)) (:dht-keyspace state))]
                        [:routing-table-find-noded  (count (:routing-table-find-noded state))]
@@ -422,8 +443,8 @@
                        [:sybils| (str (- (fixed-buf-size sybils|) (count (chan-buf sybils|))) "/" (fixed-buf-size sybils|))]
                        [:time (str (int (/ (- (now) started-at) 1000 60)) "min")]]]
              (pprint info)
-             (fs.protocols/write* writer (with-out-str (pprint info)))
-             (fs.protocols/write* writer "\n"))
+             (.write writer (with-out-str (pprint info)))
+             (.write writer "\n"))
            (recur))
 
           stop|
@@ -567,7 +588,6 @@
               :else
               (do nil)))
 
-
           (recur))))))
 
 
@@ -586,9 +606,7 @@
                       github.cljctools.bittorrent/spec {:local/root "./bittorrent/spec"}
                       github.cljctools.bittorrent/bencode {:local/root "./bittorrent/bencode"}
                       github.cljctools.bittorrent/wire-protocol {:local/root "./bittorrent/wire-protocol"}
-                      github.cljctools.bittorrent/dht-crawl {:local/root "./bittorrent/dht-crawl"}}}'
-
-  (require '[cljctools.bittorrent.dht-crawl.core :as dht-crawl.core] :reload-all)
+                      github.cljctools.bittorrent/dht-crawl {:local/root "./bittorrent/dht-crawl"}}} '(require '[cljctools.bittorrent.dht-crawl.core :as dht-crawl.core] :reload-all)
 
   clj -Sdeps '{:deps {org.clojure/clojurescript {:mvn/version "1.10.844"}
                       org.clojure/core.async {:mvn/version "1.3.618"}
@@ -605,7 +623,7 @@
                       github.cljctools.bittorrent/spec {:local/root "./bittorrent/spec"}
                       github.cljctools.bittorrent/bencode {:local/root "./bittorrent/bencode"}
                       github.cljctools.bittorrent/wire-protocol {:local/root "./bittorrent/wire-protocol"}
-                      github.cljctools.bittorrent/dht-crawl {:local/root "./bittorrent/dht-crawl"}}}' \
+                      github.cljctools.bittorrent/dht-crawl {:local/root "./bittorrent/dht-crawl"}}} '\
   -M -m cljs.main \
   -co '{:npm-deps {"randombytes" "2.1.0"
                    "bitfield" "4.0.0"
@@ -613,9 +631,9 @@
         :install-deps true
         :analyze-path "./bittorrent/dht-crawl"
         :repl-requires [[cljs.repl :refer-macros [source doc find-doc apropos dir pst]]
-                        [cljs.pprint :refer [pprint] :refer-macros [pp]]]}' \
+                        [cljs.pprint :refer [pprint] :refer-macros [pp]]]} '\
   -ro '{:host "0.0.0.0"
-        :port 8899}' \
+        :port 8899} '\
   --repl-env node --compile cljctools.bittorrent.dht-crawl.core --repl
 
   (require
@@ -632,13 +650,13 @@
    '[cljctools.bencode.core :as bencode.core]
    '[cljctools.bittorrent.dht-crawl.core :as dht-crawl.core]
    :reload #_:reload-all)
-                   
-    (dht-crawl.core/start
-     {:data-dir (fs.runtime.core/path-join "./dht-crawl")})
-                                                                                                         
-    
-                                                                                                         
-                                                                                                         
+
+  (dht-crawl.core/start
+   {:data-dir (fs.runtime.core/path-join "./dht-crawl")})
+
+  
+
+
   ;
   )
 

@@ -15,13 +15,15 @@
         #_tick/tick #_{:git/url "https://github.com/juxt/tick"
                        :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                        :tag "0.4.31-alpha"}
-        com.cognitect/transit-clj {:mvn/version "1.0.324"}
         io.replikativ/datahike {:mvn/version "0.3.6"}
         com.github.atomashpolskiy/bt-core {:mvn/version "1.9"}
+        aleph/aleph {:mvn/version "0.4.7-alpha5"}
+        manifold/manifold {:mvn/version "0.1.9-alpha3"}
 
-        github.cljctools.cljctools/bittorrent-dht-crawl-jvm {:local/root "../cljctools/bittorrent-dht-crawl-jvm"}
-        github.cljctools.cljctools/ipfs-jvm {:local/root "../cljctools/ipfs-jvm"}}
- 
+        github.cljctools.cljctools/bytes-jvm {:local/root "../cljctools/bytes-jvm"}
+        github.cljctools.cljctools/codec-jvm {:local/root "../cljctools/codec-jvm"}
+        github.cljctools.cljctools/transit-jvm {:local/root "../cljctools/transit-jvm"}}
+
  :aliases
  {:main
   {:jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]

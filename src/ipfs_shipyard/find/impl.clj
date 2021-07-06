@@ -14,7 +14,9 @@
 
 (do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
 
-#_(System/currentTimeMillis)
+(defn now
+  []
+  (System/currentTimeMillis))
 
 (defn gen-neighbor-id
   [target-idBA node-idBA]
