@@ -8,7 +8,9 @@
 
    [cljctools.ipfs.spec :as ipfs.spec]
    [cljctools.ipfs.protocols :as ipfs.protocols]
-   [cljctools.ipfs.runtime.core :as ipfs.runtime.core])
+   [cljctools.ipfs.runtime.core :as ipfs.runtime.core]
+   
+   [ipfs-shipyard.find.spec :as find.spec])
   (:import
    (io.libp2p.core Connection Host PeerId Stream)
    (io.libp2p.core.dsl HostBuilder)
@@ -26,6 +28,29 @@
 
 (do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
 
+(defprotocol Release
+  (release* [_]))
+
+(defprotocol Connect
+  (connect* [_] [_ a] [_ a b]))
+
+(defprotocol Disconnect
+  (disconnect* [_] [_ a] [_ a b]))
+
+(defprotocol Send
+  (send* [_ msg] [_ multiaddr msg]))
+
+(defprotocol Dht
+  (get-peer-id* [_])
+  (get-listen-multiaddrs* [_])
+  (ping* [_ multiaddr])
+  (find-node* [_ multiaddr])
+  #_Release
+  #_IDeref)
+
+(s/def ::dht #(and
+               (satisfies? Dht %)))
+
 (defn start-find-nodes
   [{:as opts
     :keys [dht
@@ -37,7 +62,7 @@
         ([_]
          (->>
           (Multiaddr/fromString "/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ")
-          (ipfs.protocols/find-node* dht))
+          (find-node* dht))
          (recur (timeout (* 3 60 1000))))
 
         stop|
@@ -100,12 +125,12 @@
                  :peersA peersA})
 
         dht
-        ^{:type ::ipfs.spec/dht}
+        ^{:type ::dht}
         (reify
-          ipfs.protocols/Connect
+          Connect
           (connect*
             [t multiaddr]
-            (ipfs.protocols/connect* t (.getFirst (.toPeerIdAndAddr ^Multiaddr multiaddr)) [(.getSecond (.toPeerIdAndAddr ^Multiaddr multiaddr))]))
+            (connect* t (.getFirst (.toPeerIdAndAddr ^Multiaddr multiaddr)) [(.getSecond (.toPeerIdAndAddr ^Multiaddr multiaddr))]))
           (connect*
             [_ peer-id multiaddrs]
             (let [peer-id-string (.toString ^PeerId peer-id)
@@ -123,13 +148,13 @@
                           (put! out| connection))
                         (close! out|))))
               out|))
-          ipfs.protocols/Disconnect
+          Disconnect
           (disconnect*
             [_ multiaddr]
             (let [peer-id-string (-> ^Multiaddr multiaddr (.toPeerIdAndAddr) (.getFirst) (.toString))]
               (when-let [^Connection connection (get @connectionsA peer-id-string)]
                 (.close connection))))
-          ipfs.protocols/Dht
+          Dht
           (get-peer-id*
             [_]
             (.getPeerId host))
@@ -139,14 +164,14 @@
           (ping*
             [t multiaddr]
             (go
-              (when (<! (ipfs.protocols/connect* t multiaddr))
+              (when (<! (connect* t multiaddr))
                 (let [^PingController pinger (-> ping-protocol (.dial host ^Multiaddr multiaddr) (.getController) (.get 5 TimeUnit/SECONDS))]
                   (dotimes [i 1]
                     (let [latency (-> pinger (.ping) (.get 2 TimeUnit/SECONDS))]
                       (println latency)))))))
           (find-node*
             [t multiaddr]
-            (ipfs.protocols/send*
+            (send*
              t
              multiaddr
              (-> (DhtProto$DhtMessage/newBuilder)
@@ -157,14 +182,14 @@
                            (.toBytes)
                            (ByteString/copyFrom)))
                  (.build))))
-          ipfs.protocols/Send
+          Send
           (send*
             [t multiaddr msg]
             (go
-              (when (<! (ipfs.protocols/connect* t multiaddr))
+              (when (<! (connect* t multiaddr))
                 (let [dht-controller (-> dht-protocol (.dial host ^Multiaddr multiaddr) (.getController) (.get 2 TimeUnit/SECONDS))]
-                  (ipfs.runtime.core/send* dht-controller msg)))))
-          ipfs.protocols/Release
+                  (ipfs.protocols/send* dht-controller msg)))))
+          Release
           (release*
             [_]
             (doseq [stop| @stop-channelsA]
@@ -190,7 +215,7 @@
               (->>
                peers
                (map (fn [[peer-idS {:keys [peer-id multiaddrs]}]]
-                      (ipfs.protocols/connect* dht peer-id multiaddrs)))
+                      (connect* dht peer-id multiaddrs)))
                (a/map identity)
                (<!))
               (println :total-connections (-> host (.getNetwork) (.getConnections) (vec) (count)))))
