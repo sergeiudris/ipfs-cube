@@ -1,22 +1,20 @@
-(ns cljctools.bittorrent.dht-crawl.impl
+(ns ipfs-shipyard.find.impl
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
                                      timeout to-chan  sliding-buffer dropping-buffer
                                      pipeline pipeline-async]]
    [clojure.core.async.impl.protocols :refer [closed?]]
-   [cljctools.transit.runtime.core :as transit.runtime.core]
-   [cognitect.transit :as transit]
+   [clojure.java.io :as io]
+
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
-   [cljctools.fs.runtime.core :as fs.runtime.core]))
+   [cljctools.transit.runtime.core :as transit.runtime.core]
+   [cognitect.transit :as transit]))
 
-#?(:clj (do (set! *warn-on-reflection* true) (set! *unchecked-math* true)))
+(do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
 
-(defn now
-  []
-  #?(:clj (System/currentTimeMillis))
-  #?(:cljs (js/Date.now)))
+#_(System/currentTimeMillis)
 
 (defn gen-neighbor-id
   [target-idBA node-idBA]
@@ -33,7 +31,7 @@
                [(:idBA node)
                 (->>
                  (clojure.string/split (:host node) #"\.")
-                 (map #?(:clj #(Integer/parseInt %) :cljs js/Number.parseInt))
+                 (map Integer/parseInt)
                  (bytes.runtime.core/byte-array))
                 (->
                  (doto
@@ -48,15 +46,15 @@
   (try
     (let [nodesBB (bytes.runtime.core/buffer-wrap nodesBA)]
       (for [i (range 0 (bytes.runtime.core/alength nodesBA) 26)]
-        (let [idBA (bytes.runtime.core/copy-byte-array nodesBA i (#?(:clj unchecked-add :cljs +) i 20))]
+        (let [idBA (bytes.runtime.core/copy-byte-array nodesBA i (unchecked-add i 20))]
           {:id (codec.runtime.core/hex-to-string idBA)
            :idBA idBA
-           :host (str (bytes.runtime.core/get-uint8 nodesBB (#?(:clj unchecked-add :cljs +) i 20)) "."
-                      (bytes.runtime.core/get-uint8 nodesBB (#?(:clj unchecked-add :cljs +) i 21)) "."
-                      (bytes.runtime.core/get-uint8 nodesBB (#?(:clj unchecked-add :cljs +) i 22)) "."
-                      (bytes.runtime.core/get-uint8 nodesBB (#?(:clj unchecked-add :cljs +) i 23)))
-           :port (bytes.runtime.core/get-uint16 nodesBB (#?(:clj unchecked-add :cljs +) i 24))})))
-    (catch #?(:clj Exception :cljs :default) ex nil)))
+           :host (str (bytes.runtime.core/get-uint8 nodesBB (unchecked-add i 20)) "."
+                      (bytes.runtime.core/get-uint8 nodesBB (unchecked-add i 21)) "."
+                      (bytes.runtime.core/get-uint8 nodesBB (unchecked-add i 22)) "."
+                      (bytes.runtime.core/get-uint8 nodesBB (unchecked-add i 23)))
+           :port (bytes.runtime.core/get-uint16 nodesBB (unchecked-add i 24))})))
+    (catch Exception ex nil)))
 
 
 (defn decode-values
@@ -78,7 +76,7 @@
 (defn decode-samples
   [samplesBA]
   (for [i (range 0 (bytes.runtime.core/alength samplesBA) 20)]
-    (bytes.runtime.core/copy-byte-array samplesBA i (#?(:clj unchecked-add :cljs +) i 20))))
+    (bytes.runtime.core/copy-byte-array samplesBA i (unchecked-add i 20))))
 
 (defn xor-distance
   [xBA yBA]
@@ -131,47 +129,29 @@
           (swap! collA dissoc (key (last @collA))))
         this)
       (close-buf! [this])
-      #?@(:clj
-          [clojure.lang.Counted
-           (count [this] (count @collA))]
-          :cljs
-          [cljs.core/ICounted
-           (-count [this] (count @collA))]))))
+      clojure.lang.Counted
+      (count [this] (count @collA)))))
 
 
 (def transit-write
-  (let [handlers #?(:clj {bytes.runtime.core/ByteArray
-                          (transit/write-handler
-                           (fn [byte-arr] "::bytes.runtime.core/byte-array")
-                           (fn [byte-arr] (codec.runtime.core/hex-to-string byte-arr)))
-                          clojure.core.async.impl.channels.ManyToManyChannel
-                          (transit/write-handler
-                           (fn [c|] "ManyToManyChannel")
-                           (fn [c|] nil))}
-                    :cljs {bytes.runtime.core/Buffer
-                           (transit/write-handler
-                            (fn [buffer] "::bytes.runtime.core/byte-array")
-                            (fn [buffer] (codec.runtime.core/hex-to-string buffer)))
-                           cljs.core.async.impl.channels/ManyToManyChannel
-                           (transit/write-handler
-                            (fn [c|] "ManyToManyChannel")
-                            (fn [c|] nil))})]
+  (let [handlers {bytes.runtime.core/ByteArray
+                  (transit/write-handler
+                   (fn [byte-arr] "::bytes.runtime.core/byte-array")
+                   (fn [byte-arr] (codec.runtime.core/hex-to-string byte-arr)))
+                  clojure.core.async.impl.channels.ManyToManyChannel
+                  (transit/write-handler
+                   (fn [c|] "ManyToManyChannel")
+                   (fn [c|] nil))}]
     (fn [data]
       (transit.runtime.core/write-to-string data :json-verbose {:handlers handlers}))))
 
 (def transit-read
-  (let [handlers #?(:clj {"::bytes.runtime.core/byte-array"
-                          (transit/read-handler
-                           (fn [string] (codec.runtime.core/hex-to-bytes string)))
-                          "ManyToManyChannel"
-                          (transit/read-handler
-                           (fn [string] nil))}
-                    :cljs {"::bytes.runtime.core/byte-array"
-                           (transit/read-handler
-                            (fn [string] (codec.runtime.core/hex-to-bytes string)))
-                           "ManyToManyChannel"
-                           (transit/read-handler
-                            (fn [string] nil))})]
+  (let [handlers {"::bytes.runtime.core/byte-array"
+                  (transit/read-handler
+                   (fn [string] (codec.runtime.core/hex-to-bytes string)))
+                  "ManyToManyChannel"
+                  (transit/read-handler
+                   (fn [string] nil))}]
     (fn [data-string]
       (transit.runtime.core/read-string data-string :json-verbose {:handlers handlers}))))
 
@@ -179,19 +159,19 @@
   [filepath]
   (go
     (try
-      (when (fs.runtime.core/path-exists? filepath)
-        (let [data-string (bytes.runtime.core/to-string (fs.runtime.core/read-file filepath))]
+      (when (.exists (io/file filepath))
+        (let [data-string (bytes.runtime.core/to-string (slurp filepath))]
           (transit-read data-string)))
-      (catch #?(:clj Exception :cljs :default) ex (println ::read-state-file ex)))))
+      (catch Exception ex (println ::read-state-file ex)))))
 
 (defn write-state-file
   [filepath data]
   (go
     (try
       (let [data-string (transit-write data)]
-        (fs.runtime.core/make-parents filepath)
-        (fs.runtime.core/write-file filepath data-string))
-      (catch #?(:clj Exception :cljs :default) ex (println ::write-state-file ex)))))
+        (io/make-parents filepath)
+        (spit filepath data-string))
+      (catch Exception ex (println ::write-state-file ex)))))
 
 (defn send-krpc-request-fn
   [{:as opts
@@ -224,23 +204,13 @@
                              (swap! requestsA dissoc txn-id))))
          response|)))))
 
+(defn chan-buf
+  [^clojure.core.async.impl.channels.ManyToManyChannel c|]
+  (.-buf c|))
 
-#?(:clj (do
-          (defn chan-buf
-            [^clojure.core.async.impl.channels.ManyToManyChannel c|]
-            (.-buf c|))
-
-          (defn fixed-buf-size
-            [^clojure.core.async.impl.channels.ManyToManyChannel c|]
-            (.-n ^clojure.core.async.impl.buffers.FixedBuffer (.-buf c|))))
-   :cljs (do
-           (defn chan-buf
-             [c|]
-             (.-buf c|))
-
-           (defn fixed-buf-size
-             [c|]
-             (.-n (.-buf c|)))))
+(defn fixed-buf-size
+  [^clojure.core.async.impl.channels.ManyToManyChannel c|]
+  (.-n ^clojure.core.async.impl.buffers.FixedBuffer (.-buf c|)))
 
 
 (comment
