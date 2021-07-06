@@ -17,7 +17,7 @@ gen-proto:
 	OUT=target/proto
 	mkdir -p $${OUT}
 	SRC=$$(cd ../ && pwd)/cljctools/ipfs-jvm/src
-	protoc --java_out=$${OUT} --proto_path $${SRC}/cljctools/ipfs/runtime node_proto.proto
+	protoc --java_out=$${OUT} --proto_path $${SRC}/cljctools/ipfs/runtime dht_proto.proto
 
 depstar-uberjar:
 	clojure -X:depstar uberjar \
