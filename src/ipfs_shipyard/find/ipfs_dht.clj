@@ -188,7 +188,7 @@
             (go
               (when (<! (connect* t multiaddr))
                 (let [dht-controller (-> dht-protocol (.dial host ^Multiaddr multiaddr) (.getController) (.get 2 TimeUnit/SECONDS))]
-                  (ipfs.protocols/send* dht-controller msg)))))
+                  (ipfs.runtime.core/send* dht-controller msg)))))
           Release
           (release*
             [_]
