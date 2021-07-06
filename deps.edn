@@ -21,9 +21,10 @@
         github.cljctools.cljctools/bytes-jvm {:local/root "../cljctools/bytes-jvm"}
         github.cljctools.cljctools/codec-jvm {:local/root "../cljctools/codec-jvm"}
         github.cljctools.cljctools/transit-jvm {:local/root "../cljctools/transit-jvm"}
-        github.cljctools.cljctools/bittorrent-jvm {:local/root "../cljctools/bittorrent-jvm"}
         github.cljctools.cljctools/datagram-socket-jvm {:local/root "../cljctools/datagram-socket-jvm"}
-        github.cljctools.cljctools/socket-jvm {:local/root "../cljctools/socket-jvm"}}
+        github.cljctools.cljctools/socket-jvm {:local/root "../cljctools/socket-jvm"}
+        github.cljctools.cljctools/bencode-jvm {:local/root "../bencode-jvm"}
+        github.cljctools.cljctools/bittorrent-jvm {:local/root "../cljctools/bittorrent-jvm"}}
 
  :aliases
  {:main

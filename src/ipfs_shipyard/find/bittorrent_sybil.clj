@@ -1,4 +1,4 @@
-(ns cljctools.bittorrent.dht-crawl.sybil
+(ns ipfs-shipyard.find.bittorrent-sybil
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -8,10 +8,6 @@
    [cljs.core.async.interop :refer-macros [<p!]]
    [clojure.pprint :refer [pprint]]
    [clojure.string]
-   #?@(:cljs [[goog.string.format :as format]
-              [goog.string :refer [format]]
-              [goog.object]
-              [cljs.reader :refer [read-string]]])
 
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
@@ -19,13 +15,13 @@
    [cljctools.datagram-socket.protocols :as datagram-socket.protocols]
    [cljctools.datagram-socket.spec :as datagram-socket.spec]
    [cljctools.bencode.core :as bencode.core]
-   [cljctools.bittorrent.dht-crawl.impl :refer [decode-nodes
-                                                gen-neighbor-id
-                                                encode-nodes
-                                                send-krpc-request-fn
-                                                fixed-buf-size]]))
+   [ipfs-shipyard.find.impl :refer [decode-nodes
+                                    gen-neighbor-id
+                                    encode-nodes
+                                    send-krpc-request-fn
+                                    fixed-buf-size]]))
 
-#?(:clj (do (set! *warn-on-reflection* true) (set! *unchecked-math* true)))
+(do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
 
 (declare process-socket)
 
@@ -60,7 +56,7 @@
                              {:msg (bencode.core/decode msgBA)
                               :host host
                               :port port}
-                             (catch #?(:clj Exception :cljs :default) ex nil)))))
+                             (catch Exception ex nil)))))
         msg|mult (mult msg|)
 
         send| (chan 100)

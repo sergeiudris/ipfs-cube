@@ -8,7 +8,7 @@
    [clojure.string]
    [clojure.java.io :as io]
 
-   [cljctools.bittorrent.dht-crawl.core :as bittorrent.dht-crawl.core]
+   [ipfs-shipyard.find.bittorrent-dht-crawl :as find.bittorrent-dht-crawl]
    [cljctools.ipfs.runtime.dht :as ipfs.runtime.dht]
 
    [ipfs-shipyard.find.spec :as find.spec]
@@ -43,7 +43,7 @@
              (println ::exiting)
              (System/exit 0))
 
-           #_(<! (bittorrent.dht-crawl.core/start {:data-dir state-dir}))
+           #_(<! (find.bittorrent-dht-crawl/start {:data-dir state-dir}))
            (find.cljfx/start)))))
 
 (comment

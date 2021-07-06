@@ -1,4 +1,4 @@
-(ns cljctools.bittorrent.dht-crawl.find-nodes
+(ns ipfs-shipyard.find.bittorrent-find-nodes
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -7,10 +7,10 @@
    [clojure.core.async.impl.protocols :refer [closed?]]
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
-   [cljctools.bittorrent.dht-crawl.impl :refer [decode-nodes
-                                                now]]))
+   [ipfs-shipyard.find.impl :refer [decode-nodes
+                                    now]]))
 
-#?(:clj (do (set! *warn-on-reflection* true) (set! *unchecked-math* true)))
+(do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
 
 (defn start-bootstrap-query
   [{:as opts
