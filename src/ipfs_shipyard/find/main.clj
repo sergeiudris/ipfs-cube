@@ -8,12 +8,11 @@
    [clojure.string]
    [clojure.java.io :as io]
 
-   [ipfs-shipyard.find.bittorrent-dht-crawl :as find.bittorrent-dht-crawl]
-   [cljctools.ipfs.runtime.dht :as ipfs.runtime.dht]
-
    [ipfs-shipyard.find.spec :as find.spec]
    [ipfs-shipyard.find.cljfx :as find.cljfx]
    [ipfs-shipyard.find.db :as find.db]
+   [ipfs-shipyard.find.bittorrent-dht-crawl :as find.bittorrent-dht-crawl]
+   [ipfs-shipyard.find.ipfs-dht :as find.ipfs-dht]
    [ipfs-shipyard.find.bittorrent :as find.bittorrent]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
