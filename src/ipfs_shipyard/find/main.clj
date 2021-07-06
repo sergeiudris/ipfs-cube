@@ -13,7 +13,8 @@
 
    [ipfs-shipyard.find.spec :as find.spec]
    [ipfs-shipyard.find.cljfx :as find.cljfx]
-   [ipfs-shipyard.find.db :as find.db]))
+   [ipfs-shipyard.find.db :as find.db]
+   [ipfs-shipyard.find.bittorrent :as find.bittorrent]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
 (println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))

@@ -17,6 +17,7 @@
                        :tag "0.4.31-alpha"}
         com.cognitect/transit-clj {:mvn/version "1.0.324"}
         io.replikativ/datahike {:mvn/version "0.3.6"}
+        com.github.atomashpolskiy/bt-core {:mvn/version "1.9"}
 
         github.cljctools.cljctools/bittorrent-dht-crawl-jvm {:local/root "../cljctools/bittorrent-dht-crawl-jvm"}
         github.cljctools.cljctools/ipfs-jvm {:local/root "../cljctools/ipfs-jvm"}}
