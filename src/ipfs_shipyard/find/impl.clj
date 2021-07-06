@@ -33,7 +33,7 @@
                [(:idBA node)
                 (->>
                  (clojure.string/split (:host node) #"\.")
-                 (map Integer/parseInt)
+                 (map #(Integer/parseInt %))
                  (bytes.runtime.core/byte-array))
                 (->
                  (doto
