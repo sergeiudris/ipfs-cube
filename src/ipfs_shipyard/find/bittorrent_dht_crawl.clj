@@ -18,6 +18,9 @@
    [cljctools.datagram-socket.protocols :as datagram-socket.protocols]
    [cljctools.datagram-socket.spec :as datagram-socket.spec]
 
+   [cljctools.fs.runtime.core :as fs.runtime.core]
+   [cljctools.fs.protocols :as fs.protocols]
+
    [ipfs-shipyard.find.impl :refer [hash-key-distance-comparator-fn
                                     send-krpc-request-fn
                                     encode-nodes
@@ -51,7 +54,7 @@
   [{:as opts
     :keys [data-dir]}]
   (go
-    (let [state-filepath (-> (io/file data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.json")  (.getCanonicalPath))
+    (let [state-filepath (fs.runtime.core/path-join data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.json")
           stateA (atom
                   (merge
                    (let [self-idBA  (codec.runtime.core/hex-to-bytes "a8fb5c14469fc7c46e91679c493160ed3d13be3d") #_(bytes.runtime.core/random-bytes 20)]
@@ -233,7 +236,7 @@
 
       ; save state to file periodically
       (go
-        (when-not (.exists (io/file state-filepath))
+        (when-not (fs.runtime.core/path-exists? state-filepath)
           (<! (write-state-file state-filepath @stateA)))
         (loop []
           (<! (timeout (* 4.5 1000)))
@@ -388,13 +391,13 @@
            count-torrentsA
            count-messages-sybilA]}]
   (let [started-at (now)
-        filepath (-> (io/file data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.log.edn")  (.getCanonicalPath))
-        _ (io/delete-file filepath true)
-        _ (io/make-parents filepath)
-        writer (io/writer filepath :append true)
+        filepath (fs.runtime.core/path-join data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.log.edn")
+        _ (fs.runtime.core/remove filepath)
+        _ (fs.runtime.core/make-parents filepath)
+        writer (fs.runtime.core/writer filepath :append true)
         countA (atom 0)
         release (fn []
-                  (.close writer))]
+                  (fs.protocols/close* writer))]
     (go
       (loop []
         (alt!
@@ -421,8 +424,8 @@
                        [:sybils| (str (- (fixed-buf-size sybils|) (count (chan-buf sybils|))) "/" (fixed-buf-size sybils|))]
                        [:time (str (int (/ (- (now) started-at) 1000 60)) "min")]]]
              (pprint info)
-             (.write writer (with-out-str (pprint info)))
-             (.write writer "\n"))
+             (fs.protocols/write* writer (with-out-str (pprint info)))
+             (fs.protocols/write* writer "\n"))
            (recur))
 
           stop|

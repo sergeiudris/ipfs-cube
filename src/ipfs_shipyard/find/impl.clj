@@ -9,6 +9,7 @@
 
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
+   [cljctools.fs.runtime.core :as fs.runtime.core]
    [cljctools.transit.runtime.core :as transit.runtime.core]
    [cognitect.transit :as transit]))
 
@@ -161,8 +162,8 @@
   [filepath]
   (go
     (try
-      (when (.exists (io/file filepath))
-        (let [data-string (bytes.runtime.core/to-string (slurp filepath))]
+      (when (fs.runtime.core/path-exists? filepath)
+        (let [data-string (bytes.runtime.core/to-string (fs.runtime.core/read-file filepath))]
           (transit-read data-string)))
       (catch Exception ex (println ::read-state-file ex)))))
 
@@ -171,8 +172,8 @@
   (go
     (try
       (let [data-string (transit-write data)]
-        (io/make-parents filepath)
-        (spit filepath data-string))
+        (fs.runtime.core/make-parents filepath)
+        (fs.runtime.core/write-file filepath data-string))
       (catch Exception ex (println ::write-state-file ex)))))
 
 (defn send-krpc-request-fn

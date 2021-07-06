@@ -20,6 +20,7 @@
 
         github.cljctools.cljctools/bytes-jvm {:local/root "../cljctools/bytes-jvm"}
         github.cljctools.cljctools/codec-jvm {:local/root "../cljctools/codec-jvm"}
+        github.cljctools.cljctools/fs-jvm {:local/root "../cljctools/fs-jvm"}
         github.cljctools.cljctools/transit-jvm {:local/root "../cljctools/transit-jvm"}
         github.cljctools.cljctools/datagram-socket-jvm {:local/root "../cljctools/datagram-socket-jvm"}
         github.cljctools.cljctools/socket-jvm {:local/root "../cljctools/socket-jvm"}

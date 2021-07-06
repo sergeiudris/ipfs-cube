@@ -8,6 +8,9 @@
    [clojure.string]
    [clojure.java.io :as io]
 
+   [cljctools.fs.runtime.core :as fs.runtime.core]
+   [cljctools.fs.protocols :as fs.protocols]
+
    [ipfs-shipyard.find.spec :as find.spec]
    [ipfs-shipyard.find.cljfx :as find.cljfx]
    [ipfs-shipyard.find.db :as find.db]
@@ -30,12 +33,8 @@
          (let [stateA (atom {})
                system-exit| (chan 1)
                peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
-               data-dir (->
-                         (io/file (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
-                         (.getCanonicalPath))
-               state-dir (->
-                          (io/file data-dir "state")
-                          (.getCanonicalPath))]
+               data-dir (fs.runtime.core/path-join (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
+               state-dir (fs.runtime.core/path-join data-dir "state")]
            (go
              (<! system-exit|)
              (println ::exit|)
