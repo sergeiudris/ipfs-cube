@@ -16,7 +16,6 @@
                        :sha "4438103d96e00927f777229bc22576bf4fd6c901"
                        :tag "0.4.31-alpha"}
         io.replikativ/datahike {:mvn/version "0.3.6"}
-        com.github.atomashpolskiy/bt-core {:mvn/version "1.9"}
 
         github.cljctools.cljctools/bytes-jvm {:local/root "../cljctools/bytes-jvm"}
         github.cljctools.cljctools/codec-jvm {:local/root "../cljctools/codec-jvm"}
