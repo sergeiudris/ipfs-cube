@@ -9,14 +9,14 @@
    [clojure.string]
    [clojure.walk]
 
-   [manifold.deferred :as d]
-   [manifold.stream :as sm]
-   [aleph.udp]
-
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
-
    [cljctools.bencode.core :as bencode.core]
+
+   [cljctools.datagram-socket.runtime.core :as datagram-socket.runtime.core]
+   [cljctools.datagram-socket.protocols :as datagram-socket.protocols]
+   [cljctools.datagram-socket.spec :as datagram-socket.spec]
+   
    [ipfs-shipyard.find.impl :refer [hash-key-distance-comparator-fn
                                     send-krpc-request-fn
                                     encode-nodes
@@ -330,51 +330,28 @@
            port]}]
   (let [ex| (chan 1)
         evt| (chan (sliding-buffer 10))
-
-        streamV  (volatile! nil)
+        socket (datagram-socket.runtime.core/create
+                {::datagram-socket.spec/host host
+                 ::datagram-socket.spec/port port
+                 ::datagram-socket.spec/evt| evt|
+                 ::datagram-socket.spec/msg| msg|
+                 ::datagram-socket.spec/ex| ex|})
         release (fn []
-                  (some-> @streamV (sm/close!)))]
-
+                  (datagram-socket.protocols/close* socket))]
     (go
-
-      (->
-       (d/chain
-        (aleph.udp/socket {:socket-address (InetSocketAddress. ^String host ^int port)
-                           :insecure? true})
-        (fn [stream]
-          (vreset! streamV stream)
-          (put! evt| {:op :listening})
-          stream)
-        (fn [stream]
-          (d/loop []
-            (->
-             (sm/take! stream ::none)
-             (d/chain
-              (fn [msg]
-                (when-not (identical? msg ::none)
-                  (let [^InetSocketAddress inet-socket-address (:sender msg)]
-                    #_[^InetAddress inet-address (.getAddress inet-socket-address)]
-                    #_(.getHostAddress inet-address)
-                    (put! msg| {:msgBA (:message msg)
-                                :host (.getHostString inet-socket-address)
-                                :port (.getPort inet-socket-address)}))
-                  (d/recur))))
-             (d/catch Exception (fn [ex]
-                                  (put! ex| ex)))))))
-       (d/catch Exception (fn [ex]
-                            (put! ex| ex))))
+      (datagram-socket.protocols/listen* socket)
       (<! evt|)
       (println (format "listening on %s:%s" host port))
-
-
       (loop []
         (alt!
           send|
           ([{:keys [msg host port] :as value}]
            (when value
-             (sm/put! @streamV {:host host
-                                :port port
-                                :message (bencode.core/encode msg)})
+             (datagram-socket.protocols/send*
+              socket
+              (bencode.core/encode msg)
+              {:host host
+               :port port})
              (recur)))
 
           #_evt|
