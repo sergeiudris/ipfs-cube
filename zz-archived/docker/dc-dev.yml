@@ -1,0 +1,49 @@
+version: "3.8"
+
+networks:
+  dev-network:
+    driver: overlay
+    name: find-dev
+
+volumes:
+  ctx:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../../
+      o: bind
+
+services:
+  compiler:
+    image: find.compiler
+    build:
+      context: ./app
+      dockerfile: ./Dockerfile
+      args:
+        workdir: /ctx/find/bin/app
+    command: tail -f /dev/null
+    # command: bash f dev
+    # expose:
+    #   - 7788
+    ports:
+      - 9500:9500
+      - 8899:8899
+      - 9630:9630
+      - 8500:8000
+    # user: 1000:1000
+    networks:
+      dev-network:
+    volumes:
+      - ./app/volumes/root:/root
+      - type: volume
+        source: ctx
+        target: /ctx
+        volume:
+          nocopy: true
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4096M
