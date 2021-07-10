@@ -32,7 +32,6 @@
   :repl-options {:init-ns          ~MAIN
                  :main             ~MAIN
                  :init ~(macroexpand  `(init-fn ~MAIN ~*command-line-args*))
-                 #_~(macroexpand `(clojure.core/apply project.program.main/-main '~*command-line-args*))
                  :host             "0.0.0.0"
                  :port             7788}
   :profiles {:dev  {:main         ^{:skip-aot false} ~MAIN
