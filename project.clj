@@ -6,7 +6,7 @@
   [main-ns args]
   `(clojure.core/apply ~(symbol (str main-ns "/-main")) '~args))
 
-(defproject app "0.1.0"
+(defproject program "0.1.0"
 
   :repositories [["central" {:url "https://repo1.maven.org/maven2/"}]
                  ["clojars" {:url "https://clojars.org/repo/"}]
@@ -23,7 +23,7 @@
   :middleware [lein-tools-deps.plugin/resolve-dependencies-with-deps-edn]
 
   :lein-tools-deps/config {:config-files [:install :user :project]
-                           :aliases [:core :app]}
+                           :aliases [:core :program]}
 
   :global-vars {*warn-on-reflection* true
                 *unchecked-math* true
@@ -32,7 +32,7 @@
   :repl-options {:init-ns          ~MAIN
                  :main             ~MAIN
                  :init ~(macroexpand  `(init-fn ~MAIN ~*command-line-args*))
-                 #_~(macroexpand `(clojure.core/apply project.app.main/-main '~*command-line-args*))
+                 #_~(macroexpand `(clojure.core/apply project.program.main/-main '~*command-line-args*))
                  :host             "0.0.0.0"
                  :port             7788}
   :profiles {:dev  {:main         ^{:skip-aot false} ~MAIN
@@ -54,7 +54,7 @@
                        :native-image {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
              :hidpi-ui-scale {:jvm-opts ["-Dglass.gtk.uiScale=2"]}}
 
-  :native-image {:name "app.native"            ;; name of output image, optional
+  :native-image {:name "program.native"            ;; name of output image, optional
                 ;  :graal-bin "/path/to/graalvm/" ;; path to GraalVM home, optional
                  :opts ["--no-server" ;; pass-thru args to GraalVM native-image, optional
                         ; "--report-unsupported-elements-at-runtime"
