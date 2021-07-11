@@ -16,7 +16,7 @@ torrent and IPFS client, with search
 - binaries - repo has no binary releases, only source code and "build from source" in readme, build is done with Makefile, like linux, tor browser
 - runtime - program runs on JVM, will not be GraalVM compiled, it's not on Jesus level
 - interface - cljfx
-- system tray - no
+- system tray - no, program runs in foreground
 - database - datahike
 - build - should happen without docker, on OS, all binaries needed for build should be downloaded into aa-bin
 - repository - should be at github.com/ipfs-shipyard/find
