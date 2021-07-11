@@ -18,7 +18,7 @@ torrent and IPFS client, with search
 - interface - cljfx
 - system tray - no, program runs in foreground
 - database - datahike
-- build - should happen without docker, on OS, build tool - Gradle, JVM if missing will be downloaded into repo dir for use by build
+- build - should happen without docker, on OS, build tool - Gradle, JVM if missing will be downloaded into repo dir for use by build, build is done with one command - ./gradlew build
 - repository - should be at github.com/ipfs-shipyard/find
 - docs - no : only program and readme with two sections - goal and build from source
 - tests - no
