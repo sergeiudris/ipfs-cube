@@ -12,6 +12,7 @@
    [cljctools.fs.protocols :as fs.protocols]
 
    [ipfs-shipyard.find.spec :as find.spec]
+   [ipfs-shipyard.find.cljfx :as find.cljfx]
    [ipfs-shipyard.find.db :as find.db]
    [ipfs-shipyard.find.bittorrent-dht-crawl :as find.bittorrent-dht-crawl]
    [ipfs-shipyard.find.ipfs-dht :as find.ipfs-dht]))
@@ -39,7 +40,8 @@
              (println ::exiting)
              (System/exit 0))
 
-           #_(<! (find.bittorrent-dht-crawl/start {:data-dir state-dir}))))))
+           #_(<! (find.bittorrent-dht-crawl/start {:data-dir state-dir}))
+           (find.cljfx/start)))))
 
 (comment
 
