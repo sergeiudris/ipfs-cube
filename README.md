@@ -15,7 +15,7 @@ torrent and IPFS client, with search
 - installation - desktop program
 - binaries - repo has no binary releases, only source code and "build from source" in readme, build is done with Makefile, like linux, tor browser
 - runtime - program runs on JVM, will not be GraalVM compiled, it's not on Jesus level
-- build and interface - will use existing programs as base, mainly IntelliJ IDEA Community
+- interface - cljfx
 - database - datahike
 - build - should happen without docker, on OS, all binaries needed for build should be downloaded into aa-bin
 - repository - should be at github.com/ipfs-shipyard/find
