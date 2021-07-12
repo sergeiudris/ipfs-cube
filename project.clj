@@ -54,16 +54,6 @@
                        :native-image {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
              :hidpi-ui-scale {:jvm-opts ["-Dglass.gtk.uiScale=2"]}}
 
-  :native-image {:name "program.native"            ;; name of output image, optional
-                ;  :graal-bin "/path/to/graalvm/" ;; path to GraalVM home, optional
-                 :opts ["--no-server" ;; pass-thru args to GraalVM native-image, optional
-                        ; "--report-unsupported-elements-at-runtime"
-                        "--allow-incomplete-classpath"
-                        "--initialize-at-build-time"
-                        "--enable-url-protocols=http"
-                        "--verbose"
-                        "--no-fallback"]}
-
   :main ^{:skip-aot false} ~MAIN
   :jvm-opts ["-Xms768m" "-Xmx11998m" "-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
 
