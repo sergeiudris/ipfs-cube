@@ -19,15 +19,15 @@ gen-proto(){
 	protoc --java_out=${OUT} --proto_path ${SRC}/cljctools/ipfs/runtime dht_proto.proto
 }
 
-depstar-uberjar(){
-  clojure -X:depstar uberjar \
-    :aot true \
-    :jar target/find.standalone.jar \
-    :verbose false \
-    :main-class ipfs-shipyard.find.main
-}
+uberjar(){
 
-lein-uberjar(){
+  # clojure -X:depstar uberjar \
+  #   :aot true \
+  #   :jar target/find.standalone.jar \
+  #   :verbose false \
+  #   :main-class ipfs-shipyard.find.main
+
+
   lein with-profiles +prod uberjar
   #  java -Dclojure.core.async.pool-size=1 -jar target/find-standalone.jar
 }
