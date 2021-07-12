@@ -38,13 +38,15 @@ j-package(){
   echo "Starting build..."
 
   if [ "$OS" == "windows" ]; then
-    J_ARG="--win-menu --win-dir-chooser --win-shortcut"
+    J_ARG='--win-menu --win-dir-chooser --win-shortcut --icon resources/icon.ico'
           
   elif [ "$OS" == "linux" ]; then
-      J_ARG="--linux-shortcut"
+      J_ARG='--linux-shortcut --linux-menu-group "find" --icon resources/icon256x256.png'
   else
-      J_ARG=""
+      J_ARG='--icon resources/icon.icns'
   fi
+
+  APP_VERSION=0.1.0
 
   jpackage \
     --input target \
@@ -55,8 +57,11 @@ j-package(){
     --arguments -m \
     --arguments ipfs-shipyard.find.main \
     --resource-dir resources \
+    --java-options -Xmx2048m \
+    --app-version ${APP_VERSION} \
     $J_ARG
   
 }
+
 
 "$@"
