@@ -11,18 +11,21 @@
   (:import
    (javafx.event Event EventHandler)
    (javafx.stage WindowEvent)
-   (javafx.scene.control DialogEvent Dialog ButtonType ButtonBar$ButtonData)))
+   (javafx.scene.control DialogEvent Dialog ButtonType ButtonBar$ButtonData)
+   (javafx.application Platform)))
 
 (set! *warn-on-reflection* true)
 
 (defn root
   [{:as opts
-    :keys [state]}]
+    :keys [state
+           system-exit|]}]
   {:fx/type :stage
    :showing true
-   :on-close-request (fn [^WindowEvent event]
-                       (println :on-close-request)
-                       #_(.consume event))
+   #_:on-close-request #_(fn [^WindowEvent event]
+                           (println :on-close-request)
+                           (close! system-exit|)
+                           #_(.consume event))
    :width 1024
    :height 768
    :icons ["logo/logo.png"]
@@ -43,6 +46,7 @@
 (defn start
   [{:as ctx
     :keys [stateA]}]
+  (Platform/setImplicitExit true)
   (render ctx @stateA)
   #_(cljfx.api/mount-renderer stateA render))
 
