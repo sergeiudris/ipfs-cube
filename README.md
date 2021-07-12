@@ -21,6 +21,7 @@ torrent and IPFS client, with search
 - build - should happen without docker, on OS, JVM and needed binaries if missing will be downloaded into repo dir for use by build, build is done with one command
 - no plugins, no extensions - program is exactly torrent and IPFS client, with search
 - repository - should be at github.com/ipfs-shipyard/find
+- issues - program repository has no issues or discussions, only code
 - docs - no : only program and readme with two sections - goal and build from source
 - tests - no
 - just a program - simple, entirely free, open source, no barriers ratio-limits ads donations rewards economies links - just a program that does its thing, like transmission on linux, but with search
