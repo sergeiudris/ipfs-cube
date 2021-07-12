@@ -24,6 +24,7 @@ torrent and IPFS client, with search
 - issues - program repository has no issues or discussions, only code
 - attribution headers in files - no, only code
 - programmer names in readme - no, repo is code only
+- license files - no, repo is only code
 - docs - no : only program and readme with two sections - goal and build from source
 - tests - no
 - just a program - simple, entirely free, open source, no barriers ratio-limits ads donations rewards economies links - just a program that does its thing, like transmission on linux, but with search
