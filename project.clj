@@ -49,7 +49,8 @@
                             :jvm-opts ["-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
                             :aot  nil #_[datastore.serdes]}
              :uberjar {:aot :all
-                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"
+                                  "-Dcljfx.skip-javafx-initialization=true"]
                        :native-image {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
              :hidpi-ui-scale {:jvm-opts ["-Dglass.gtk.uiScale=2"]}}
 
