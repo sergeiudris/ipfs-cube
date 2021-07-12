@@ -6,7 +6,7 @@
   [main-ns args]
   `(clojure.core/apply ~(symbol (str main-ns "/-main")) '~args))
 
-(defproject ipfs-shipyard.find "0.1.0"
+(defproject program "0.1.0"
 
   :repositories [["central" {:url "https://repo1.maven.org/maven2/"}]
                  ["clojars" {:url "https://clojars.org/repo/"}]
