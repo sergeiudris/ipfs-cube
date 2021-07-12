@@ -15,10 +15,9 @@
 
 (set! *warn-on-reflection* true)
 
-(defonce stateA (atom {::searchS ""}))
-
 (defn root
-  [{:keys [::searchS]}]
+  [{:as opts
+    :keys [state]}]
   {:fx/type :stage
    :showing true
    :on-close-request (fn [^WindowEvent event]
@@ -31,32 +30,19 @@
            :root {:fx/type :h-box
                   :children [{:fx/type :label :text "find"}
                              {:fx/type :text-field
-                              :text searchS}]}}})
+                              :text (:searchS state)}]}}})
 
 (def renderer (cljfx.api/create-renderer))
 
 (defn render
-  ([]
-   (render @stateA))
-  ([new-state]
-   (renderer (merge
-              {:fx/type root #_(var-get #'root)}
-              new-state))))
-
-(defonce _ (add-watch stateA :a-key (fn [k stateA old-state new-state] (render new-state))))
+  [ctx new-state]
+  (renderer (-> ctx
+                (assoc :fx/type root)
+                (assoc :state new-state))))
 
 (defn start
-  []
-  (render)
+  [{:as ctx
+    :keys [stateA]}]
+  (render ctx @stateA)
   #_(cljfx.api/mount-renderer stateA render))
 
-(comment
-
-  (in-ns 'ipfs-shipyard.find.cljfx)
-
-  (render)
-
-  (swap! stateA assoc ::searchS "123")
-  
-  ;
-  )

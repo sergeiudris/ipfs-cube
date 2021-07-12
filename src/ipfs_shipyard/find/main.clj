@@ -22,38 +22,52 @@
 (clojure.spec.alpha/check-asserts true)
 (set! *warn-on-reflection* true)
 
-(defn stop
-  [{:keys [] :as opts}]
-  (go))
+(def ctxA (atom nil))
 
 (defn -main [& args]
   (println ::-main)
-  (<!! (go
-         (let [stateA (atom {})
-               system-exit| (chan 1)
-               peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
-               data-dir (fs.runtime.core/path-join (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
-               state-dir (fs.runtime.core/path-join data-dir "state")]
-           (go
-             (<! system-exit|)
-             (println ::exit|)
-             (println ::exiting)
-             (System/exit 0))
+  (let [stateA (atom {:searchS ""})
+        system-exit| (chan 1)
+        peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
+        data-dir (fs.runtime.core/path-join (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
+        state-dir (fs.runtime.core/path-join data-dir "state")
+        ctx {:stateA stateA
+             :system-exit| system-exit|}]
+    (add-watch stateA :watch-fn (fn [k stateA old-state new-state] (find.cljfx/render ctx new-state)))
+    (go
+      (<! system-exit|)
+      (println ::exit|)
+      (println ::exiting)
+      (System/exit 0))
 
-           #_(<! (find.bittorrent-dht-crawl/start {:data-dir state-dir}))
-           (find.cljfx/start)))))
+    (go
+      #_(<! (find.bittorrent-dht-crawl/start {:data-dir state-dir}))
+      (find.cljfx/start ctx))
+
+    (reset! ctxA ctx)))
 
 (comment
 
   (require
    '[cljctools.bytes.core :as bytes.core]
-   '[cljctools.ipfs.dht.core :as dht.core]
-   '[cljctools.ipfs.dht.impl :as dht.impl]
+   '[ipfs-shipyard.find.ipfs-dht :as find.ipfs-dht]
+   '[ipfs-shipyard.find.spec :as find.spec]
+   '[ipfs-shipyard.find.cljfx :as find.cljfx]
+   '[ipfs-shipyard.find.db :as find.db]
    :reload)
+  
+  (-main)
+
+  (do
+    (def ctx @ctxA)
+    (def stateA (:stateA ctx)))
+
+  (find.cljfx/render ctx @(:stateA ctx))
+
+  (swap! stateA assoc :searchS "123")
 
   ;
   )
-
 
 (comment
 
@@ -65,3 +79,4 @@
 
   ;;
   )
+
