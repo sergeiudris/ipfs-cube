@@ -18,13 +18,11 @@
 
 (defn root
   [{:as opts
-    :keys [state
-           system-exit|]}]
+    :keys [state]}]
   {:fx/type :stage
    :showing true
    #_:on-close-request #_(fn [^WindowEvent event]
                            (println :on-close-request)
-                           (close! system-exit|)
                            #_(.consume event))
    :width 1024
    :height 768

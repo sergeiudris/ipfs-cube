@@ -27,18 +27,11 @@
 (defn -main [& args]
   (println ::-main)
   (let [stateA (atom {:searchS ""})
-        system-exit| (chan 1)
         peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
         data-dir (fs.runtime.core/path-join (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
         state-dir (fs.runtime.core/path-join data-dir "state")
-        ctx {:stateA stateA
-             :system-exit| system-exit|}]
+        ctx {:stateA stateA}]
     (add-watch stateA :watch-fn (fn [k stateA old-state new-state] (find.cljfx/render ctx new-state)))
-    (go
-      (<! system-exit|)
-      (println ::exit|)
-      (println ::exiting)
-      (System/exit 0))
 
     (go
       #_(<! (find.bittorrent-dht-crawl/start {:data-dir state-dir}))
