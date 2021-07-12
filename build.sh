@@ -22,8 +22,8 @@ gen-proto(){
 depstar-uberjar(){
   clojure -X:depstar uberjar \
     :aot true \
-    :jar target/find.jar \
-    :verbose true \
+    :jar target/find.standalone.jar \
+    :verbose false \
     :main-class ipfs-shipyard.find.main
 }
 

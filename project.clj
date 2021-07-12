@@ -43,13 +43,13 @@
                               [cider/cider-nrepl "0.24.0"]]}
 
              :prod ^:leaky {:main ~MAIN
-                            :uberjar-name "find-standalone.jar"
+                            :uberjar-name "find.standalone.jar"
                             :jar-name     "find.jar"
                             :uberjar-exclusions []
                             :jvm-opts ["-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
                             :aot  nil #_[datastore.serdes]}
              :uberjar {:aot :all
-                       :jvm-opts ["-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
+                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
                        :native-image {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
              :hidpi-ui-scale {:jvm-opts ["-Dglass.gtk.uiScale=2"]}}
 
