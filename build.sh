@@ -41,7 +41,7 @@ j-package(){
     J_ARG='--win-menu --win-dir-chooser --win-shortcut --icon resources/icon.ico'
           
   elif [ "$OS" == "linux" ]; then
-      J_ARG='--linux-shortcut --linux-menu-group "find" --icon resources/icon256x256.png'
+      J_ARG='--linux-shortcut --icon resources/icon256x256.png'
   else
       J_ARG='--icon resources/icon.icns'
   fi
