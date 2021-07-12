@@ -50,7 +50,7 @@
                             :aot  nil #_[datastore.serdes]}
              :uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"
-                                  #_"-Dcljfx.skip-javafx-initialization=true"]
+                                  "-Dcljfx.skip-javafx-initialization=true"]
                        :native-image {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
              :hidpi-ui-scale {:jvm-opts ["-Dglass.gtk.uiScale=2"]}}
 
