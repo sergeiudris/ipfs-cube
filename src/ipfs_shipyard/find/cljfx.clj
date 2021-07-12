@@ -26,7 +26,7 @@
                            #_(.consume event))
    :width 1024
    :height 768
-   :icons [(str (io/resource "logo/logo.png"))]
+   :icons [(str (io/resource "icon256x256.png"))]
    :scene {:fx/type :scene
            :root {:fx/type :h-box
                   :children [{:fx/type :label :text "find"}
