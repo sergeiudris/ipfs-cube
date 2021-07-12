@@ -19,7 +19,6 @@ torrent and IPFS client, with search
 - system tray - no, program runs in foreground
 - database - datahike
 - build - should happen without docker, on OS
-- build tool - Gradle
 - no plugins, no extensions - program is exactly torrent and IPFS client, with search
 - repository - should be at github.com/ipfs-shipyard/find
 - docs - no : only program and readme with two sections - goal and build from source
