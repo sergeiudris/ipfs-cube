@@ -1,7 +1,7 @@
-# find
+find
 torrent and IPFS client, with search
 
-## program
+program
 
 - decentralized peer-to-peer program to search and download IPFS/torrent files
 - automated index - program crawles ipfs/torrent network, forming the index of files
