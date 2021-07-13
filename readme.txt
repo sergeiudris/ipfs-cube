@@ -10,7 +10,7 @@ program
 - automatic index echange - find programs discover each other and exchange the list of files
 - DHT - program uses existing DHT, not pubsub, to find other programs to share index (additional field to DHT's ping to discover/ask and ut_metadata-like extension to then download index)
 - extension - program is an extension of existing Bittorrent and IPFS networks
-- filters - peers can choose which filters to apply to the index they store
+- filters - peers can choose which filters to apply to the index they store (filters will use machine learning to filter out unwanted files from search)
 - can download files - it's a torrent client and IPFS client
 - installation - desktop program
 - binaries - repo has no binary releases, only source code and "build from source" in readme
