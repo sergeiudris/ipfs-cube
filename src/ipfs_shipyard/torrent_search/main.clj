@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.main
+(ns ipfs-shipyard.torrent-search.main
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close! onto-chan!
@@ -11,11 +11,11 @@
    [cljctools.fs.runtime.core :as fs.runtime.core]
    [cljctools.fs.protocols :as fs.protocols]
 
-   [ipfs-shipyard.find.spec :as find.spec]
-   [ipfs-shipyard.find.cljfx :as find.cljfx]
-   [ipfs-shipyard.find.db :as find.db]
-   [ipfs-shipyard.find.bittorrent-dht-crawl :as find.bittorrent-dht-crawl]
-   [ipfs-shipyard.find.ipfs-dht :as find.ipfs-dht]))
+   [ipfs-shipyard.torrent-search.spec :as torrent-search.spec]
+   [ipfs-shipyard.torrent-search.cljfx :as torrent-search.cljfx]
+   [ipfs-shipyard.torrent-search.db :as torrent-search.db]
+   [ipfs-shipyard.torrent-search.bittorrent-dht-crawl :as torrent-search.bittorrent-dht-crawl]
+   [ipfs-shipyard.torrent-search.ipfs-dht :as torrent-search.ipfs-dht]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
 (println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))
@@ -31,11 +31,11 @@
         data-dir (fs.runtime.core/path-join (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
         state-dir (fs.runtime.core/path-join data-dir "state")
         ctx {:stateA stateA}]
-    (add-watch stateA :watch-fn (fn [k stateA old-state new-state] (find.cljfx/render ctx new-state)))
+    (add-watch stateA :watch-fn (fn [k stateA old-state new-state] (torrent-search.cljfx/render ctx new-state)))
 
     (go
-      #_(<! (find.bittorrent-dht-crawl/start {:data-dir state-dir}))
-      (find.cljfx/start ctx))
+      #_(<! (torrent-search.bittorrent-dht-crawl/start {:data-dir state-dir}))
+      (torrent-search.cljfx/start ctx))
 
     (reset! ctxA ctx)))
 
@@ -43,10 +43,10 @@
 
   (require
    '[cljctools.bytes.core :as bytes.core]
-   '[ipfs-shipyard.find.ipfs-dht :as find.ipfs-dht]
-   '[ipfs-shipyard.find.spec :as find.spec]
-   '[ipfs-shipyard.find.cljfx :as find.cljfx]
-   '[ipfs-shipyard.find.db :as find.db]
+   '[ipfs-shipyard.torrent-search.ipfs-dht :as torrent-search.ipfs-dht]
+   '[ipfs-shipyard.torrent-search.spec :as torrent-search.spec]
+   '[ipfs-shipyard.torrent-search.cljfx :as torrent-search.cljfx]
+   '[ipfs-shipyard.torrent-search.db :as torrent-search.db]
    :reload)
   
   (-main)
@@ -55,7 +55,7 @@
     (def ctx @ctxA)
     (def stateA (:stateA ctx)))
 
-  (find.cljfx/render ctx @(:stateA ctx))
+  (torrent-search.cljfx/render ctx @(:stateA ctx))
 
   (swap! stateA assoc :searchS "123")
 

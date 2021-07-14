@@ -1,4 +1,4 @@
-(ns find.app.orbitdb
+(ns torrent-search.app.orbitdb
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -11,7 +11,7 @@
    [goog.string :refer [format]]
    [goog.object]
    [cljs.reader :refer [read-string]]
-   [find.app.core :refer [transit-write transit-read]]))
+   [torrent-search.app.core :refer [transit-write transit-read]]))
 
 (defonce fs (js/require "fs-extra"))
 (defonce path (js/require "path"))

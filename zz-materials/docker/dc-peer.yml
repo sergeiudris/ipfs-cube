@@ -24,7 +24,7 @@ volumes:
 services:
 
   app:
-    image: find.app
+    image: torrent-search.app
     build:
       context: ./app
       dockerfile: ./Dockerfile

@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.spec
+(ns ipfs-shipyard.torrent-search.spec
   (:require
    [clojure.spec.alpha :as s]))
 

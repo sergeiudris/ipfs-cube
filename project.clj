@@ -1,4 +1,4 @@
-(def MAIN 'ipfs-shipyard.find.main)
+(def MAIN 'ipfs-shipyard.torrent-search.main)
 #_(prn (clojure-version))
 #_(prn *command-line-args*)
 
@@ -43,8 +43,8 @@
                               [cider/cider-nrepl "0.24.0"]]}
 
              :prod ^:leaky {:main ~MAIN
-                            :uberjar-name "find.standalone.jar"
-                            :jar-name     "find.jar"
+                            :uberjar-name "torrent-search.standalone.jar"
+                            :jar-name     "torrent-search.jar"
                             :uberjar-exclusions []
                             :jvm-opts ["-Dclojure.compiler.direct-linking=true" "-Dclojure.core.async.pool-size=1"]
                             :aot  nil #_[datastore.serdes]}

@@ -1,4 +1,4 @@
-(ns ipfs.find.ui.main
+(ns ipfs.torrent-search.ui.main
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -47,7 +47,7 @@
    ["@ant-design/icons/SyncOutlined" :default AntIconSyncOutlined]
    ["@ant-design/icons/ReloadOutlined" :default AntIconReloadOutlined]
 
-   [ipfs-shipyard.find.spec :as find.spec]))
+   [ipfs-shipyard.torrent-search.spec :as torrent-search.spec]))
 
 (goog-define BAR_PORT 0)
 (goog-define FOO_ORIGIN "")
@@ -137,7 +137,7 @@
 #_(defn create-proc-ops
     [channels ctx opts]
     (let [{:keys [::ops|]} channels
-          {:keys [::find.spec/state*]} ctx]
+          {:keys [::torrent-search.spec/state*]} ctx]
       (go
         (loop []
           (when-let [[value port] (alts! [ops|])]

@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.bittorrent-sybil
+(ns ipfs-shipyard.torrent-search.bittorrent-sybil
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -15,7 +15,7 @@
    [cljctools.datagram-socket.protocols :as datagram-socket.protocols]
    [cljctools.datagram-socket.spec :as datagram-socket.spec]
    [cljctools.bencode.core :as bencode.core]
-   [ipfs-shipyard.find.impl :refer [decode-nodes
+   [ipfs-shipyard.torrent-search.impl :refer [decode-nodes
                                     gen-neighbor-id
                                     encode-nodes
                                     send-krpc-request-fn

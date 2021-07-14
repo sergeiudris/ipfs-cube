@@ -1,4 +1,4 @@
-(ns find.app.main
+(ns torrent-search.app.main
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -11,11 +11,11 @@
    [goog.string :refer [format]]
    [goog.object]
    [cljs.reader :refer [read-string]]
-   [find.app.http :as app.http]
-   [find.app.ipfs :as app.ipfs]
-   [find.app.electron :as app.electron]
-   [find.app.sqlitedb :as app.sqlitedb]
-   [find.bittorrent.crawl :as bittorrent.crawl]
+   [torrent-search.app.http :as app.http]
+   [torrent-search.app.ipfs :as app.ipfs]
+   [torrent-search.app.electron :as app.electron]
+   [torrent-search.app.sqlitedb :as app.sqlitedb]
+   [torrent-search.bittorrent.crawl :as bittorrent.crawl]
    [cljctools.peerdb.core :as peerdb.core]))
 
 (defonce fs (js/require "fs-extra"))
