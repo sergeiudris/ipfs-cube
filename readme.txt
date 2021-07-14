@@ -1,5 +1,5 @@
-find
-torrent and IPFS client, with search
+torrent-search
+
 
 program
 
