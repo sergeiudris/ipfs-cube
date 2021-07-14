@@ -8,6 +8,17 @@ main(){
   clojure -M:main
 }
 
+compile-java(){
+  lein javac
+}
+
+gen-proto(){
+  OUT=target/proto
+  mkdir -p $OUT
+  SRC=$(cd ../ && pwd)/cljctools/ipfs-jvm/src
+	protoc --java_out=${OUT} --proto_path ${SRC}/cljctools/ipfs/runtime dht_proto.proto
+}
+
 uberjar(){
 
   # clojure -X:depstar uberjar \
