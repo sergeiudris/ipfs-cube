@@ -14,7 +14,7 @@
    [ipfs-shipyard.torrent-search.spec :as torrent-search.spec]
    [ipfs-shipyard.torrent-search.cljfx :as torrent-search.cljfx]
    [ipfs-shipyard.torrent-search.db :as torrent-search.db]
-   [ipfs-shipyard.torrent-search.bittorrent-dht-crawl :as torrent-search.bittorrent-dht-crawl]
+   [ipfs-shipyard.torrent-search.dht-crawl :as torrent-search.dht-crawl]
    [ipfs-shipyard.torrent-search.ipfs-dht :as torrent-search.ipfs-dht]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
@@ -34,7 +34,7 @@
     (add-watch stateA :watch-fn (fn [k stateA old-state new-state] (torrent-search.cljfx/render ctx new-state)))
 
     (go
-      #_(<! (torrent-search.bittorrent-dht-crawl/start {:data-dir state-dir}))
+      #_(<! (torrent-search.dht-crawl/start {:data-dir state-dir}))
       (torrent-search.cljfx/start ctx))
 
     (reset! ctxA ctx)))

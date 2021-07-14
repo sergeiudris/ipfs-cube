@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.torrent-search.bittorrent-sybil
+(ns ipfs-shipyard.torrent-search.sybil
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -16,10 +16,10 @@
    [cljctools.datagram-socket.spec :as datagram-socket.spec]
    [cljctools.bencode.core :as bencode.core]
    [ipfs-shipyard.torrent-search.impl :refer [decode-nodes
-                                    gen-neighbor-id
-                                    encode-nodes
-                                    send-krpc-request-fn
-                                    fixed-buf-size]]))
+                                              gen-neighbor-id
+                                              encode-nodes
+                                              send-krpc-request-fn
+                                              fixed-buf-size]]))
 
 (do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
 
