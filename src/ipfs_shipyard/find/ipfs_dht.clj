@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.torrent-search.ipfs-dht
+(ns ipfs-shipyard.find.ipfs-dht
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -10,7 +10,7 @@
    [cljctools.ipfs.protocols :as ipfs.protocols]
    [cljctools.ipfs.runtime.core :as ipfs.runtime.core]
    
-   [ipfs-shipyard.torrent-search.spec :as torrent-search.spec])
+   [ipfs-shipyard.find.spec :as find.spec])
   (:import
    (io.libp2p.core Connection Host PeerId Stream)
    (io.libp2p.core.dsl HostBuilder)

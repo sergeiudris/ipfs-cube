@@ -12,14 +12,14 @@ uberjar(){
 
   # clojure -X:depstar uberjar \
   #   :aot true \
-  #   :jar target/torrent-search.standalone.jar \
+  #   :jar target/find.standalone.jar \
   #   :verbose false \
-  #   :main-class ipfs-shipyard.torrent-search.main
+  #   :main-class ipfs-shipyard.find.main
 
 
   lein with-profiles +prod uberjar
   mkdir -p target/jpackage-input
-  mv target/torrent-search.standalone.jar target/jpackage-input/
+  mv target/find.standalone.jar target/jpackage-input/
   #  java -Dclojure.core.async.pool-size=1 -jar target/find-standalone.jar
 }
 
@@ -42,11 +42,11 @@ j-package(){
   jpackage \
     --input target/jpackage-input \
     --dest target \
-    --main-jar torrent-search.standalone.jar \
+    --main-jar find.standalone.jar \
     --name "find" \
     --main-class clojure.main \
     --arguments -m \
-    --arguments ipfs-shipyard.torrent-search.main \
+    --arguments ipfs-shipyard.find.main \
     --resource-dir resources \
     --java-options -Xmx2048m \
     --app-version ${APP_VERSION} \

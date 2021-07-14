@@ -9,13 +9,13 @@
                :output-dir "resources/public/out"
                :asset-path "./out"
                :module-loader true
-               :modules {:main {:entries [ipfs.torrent-search.ui.main]}}
+               :modules {:main {:entries [ipfs.find.ui.main]}}
                :compiler-options {:infer-externs   false  #_:auto
                                   :closure-warnings {:global-this :off}
                                   :closure-defines
-                                  {ipfs.torrent-search.ui.main/BAR_PORT #shadow/env ["BAR_PORT" :as :int :default 7000]}}
+                                  {ipfs.find.ui.main/BAR_PORT #shadow/env ["BAR_PORT" :as :int :default 7000]}}
                :devtools
-               {:repl-init-ns ipfs.torrent-search.ui.main
+               {:repl-init-ns ipfs.find.ui.main
                 :repl-pprint true
                 :autobuild true
                 :devtools-url #shadow/env ["SHADOWCLJS_DEVTOOLS_URL" :default "http://localhost:9630"]

@@ -22,9 +22,9 @@ gen-proto:
 depstar-uberjar:
 	clojure -X:depstar uberjar \
     :aot true \
-    :jar target/torrent-search.jar \
+    :jar target/find.jar \
     :verbose true \
-    :main-class ipfs-shipyard.torrent-search.main
+    :main-class ipfs-shipyard.find.main
 
 lein-uberjar:
 	lein with-profiles +prod uberjar 

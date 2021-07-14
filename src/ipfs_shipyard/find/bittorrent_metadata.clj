@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.torrent-search.bittorrent-metadata
+(ns ipfs-shipyard.find.bittorrent-metadata
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -18,7 +18,7 @@
    [cljctools.bencode.core :as bencode.core]
    [cljctools.bittorrent.ut-metadata :as bittorrent.ut-metadata]
    [cljctools.bittorrent.spec :as bittorrent.spec]
-   [ipfs-shipyard.torrent-search.impl :refer [hash-key-distance-comparator-fn
+   [ipfs-shipyard.find.impl :refer [hash-key-distance-comparator-fn
                                     decode-nodes
                                     decode-values
                                     sorted-map-buffer

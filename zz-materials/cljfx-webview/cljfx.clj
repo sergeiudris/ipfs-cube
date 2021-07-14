@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.torrent-search.app.cljfx
+(ns ipfs-shipyard.find.app.cljfx
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close! onto-chan!

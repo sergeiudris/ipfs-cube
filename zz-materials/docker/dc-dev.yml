@@ -15,7 +15,7 @@ volumes:
 
 services:
   compiler:
-    image: torrent-search.compiler
+    image: find.compiler
     build:
       context: ./app
       dockerfile: ./Dockerfile

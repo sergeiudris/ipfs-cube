@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.torrent-search.app.http
+(ns ipfs-shipyard.find.app.http
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -40,7 +40,7 @@
 
    ;;
 
-   [ipfs-shipyard.torrent-search.spec :as torrent-search.spec]))
+   [ipfs-shipyard.find.spec :as find.spec]))
 
 (defonce ^:private registry-ref (atom {}))
 
@@ -87,24 +87,24 @@
 
      ["/sign-up"
       {:post {:summary "user sign-up"
-              :parameters {:body (s/keys :req [::torrent-search.spec/username
-                                               ::torrent-search.spec/password])}
-              :responses {200 {:body ::torrent-search.spec/user-info}}
-              :handler (fn [{{{:keys [::torrent-search.spec/username
-                                      ::torrent-search.spec/password]} :body} :parameters}]
+              :parameters {:body (s/keys :req [::find.spec/username
+                                               ::find.spec/password])}
+              :responses {200 {:body ::find.spec/user-info}}
+              :handler (fn [{{{:keys [::find.spec/username
+                                      ::find.spec/password]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            {:status 200
-                            :body {::torrent-search.spec/username "hello"}}))}}]
+                            :body {::find.spec/username "hello"}}))}}]
 
      ["/sign-in"
       {:post {:summary "user sign-in"
-              :parameters {:body (s/keys :req [::torrent-search.spec/username
-                                               ::torrent-search.spec/password])}
-              :responses {200 {:body ::torrent-search.spec/user-info}}
+              :parameters {:body (s/keys :req [::find.spec/username
+                                               ::find.spec/password])}
+              :responses {200 {:body ::find.spec/user-info}}
               :handler (fn [{{{:as body
-                               :keys [::torrent-search.spec/username
-                                      ::torrent-search.spec/password]} :body} :parameters}]
+                               :keys [::find.spec/username
+                                      ::find.spec/password]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            (let [token  nil
@@ -122,29 +122,29 @@
                                passord-valid?
                                {:status 200
                                 :headers {"Authorization" (format "Token %s" token)}
-                                :body (select-keys body [::torrent-search.spec/username])}))))}}]
+                                :body (select-keys body [::find.spec/username])}))))}}]
 
      ["/sign-out"
       {:post {:summary "user sign-out"
-              :parameters {:body (s/keys :req [::torrent-search.spec/username
-                                               ::torrent-search.spec/password])}
-              :responses {200 {:body ::torrent-search.spec/user-info}}
-              :handler (fn [{{{:keys [::torrent-search.spec/username
-                                      ::torrent-search.spec/password]} :body} :parameters}]
+              :parameters {:body (s/keys :req [::find.spec/username
+                                               ::find.spec/password])}
+              :responses {200 {:body ::find.spec/user-info}}
+              :handler (fn [{{{:keys [::find.spec/username
+                                      ::find.spec/password]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            {:status 200
-                            :body {::torrent-search.spec/username "hello"}}))}}]
+                            :body {::find.spec/username "hello"}}))}}]
 
      ["/user-info"
       {:post {:summary "get information about user by username"
-              :parameters {:body (s/keys :req [::torrent-search.spec/username])}
-              :responses {200 {:body ::torrent-search.spec/user-info}}
-              :handler (fn [{{{:keys [::torrent-search.spec/username]} :body} :parameters}]
+              :parameters {:body (s/keys :req [::find.spec/username])}
+              :responses {200 {:body ::find.spec/user-info}}
+              :handler (fn [{{{:keys [::find.spec/username]} :body} :parameters}]
                          (go
                            (<! (timeout 1000))
                            {:status 200
-                            :body {::torrent-search.spec/username "hello"}}))}}]
+                            :body {::find.spec/username "hello"}}))}}]
 
      ["/files"
       {:swagger {:tags ["files"]}}

@@ -23,10 +23,10 @@ main(){
 uberjar(){
   clojure -X:depstar uberjar \
     :aot true \
-    :jar target/torrent-search.jar \
+    :jar target/find.jar \
     :aliases '[:core :app]' \
     :verbose true \
-    :main-class ipfs-shipyard.torrent-search.main
+    :main-class ipfs-shipyard.find.main
 }
 
 lein-uberjar(){

@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.torrent-search.bittorrent-dht
+(ns ipfs-shipyard.find.bittorrent-dht
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -8,7 +8,7 @@
    [clojure.string]
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
-   [ipfs-shipyard.torrent-search.impl :refer [hash-key-distance-comparator-fn
+   [ipfs-shipyard.find.impl :refer [hash-key-distance-comparator-fn
                                     now]]))
 
 (do (set! *warn-on-reflection* true) (set! *unchecked-math* true))
