@@ -12,6 +12,7 @@ program
 - extension - program is an extension of existing Bittorrent and IPFS networks
 - filters - peers can choose which filters to apply to the index they store (filters will use machine learning to filter out unwanted files from search)
 - can download files - it's a torrent client and IPFS client
+- language - clojure
 - installation - desktop program
 - binaries - repo has no binary releases, only source code and "build from source" in readme
 - runtime - program runs on JVM, will not be GraalVM compiled, it's not on Jesus level
