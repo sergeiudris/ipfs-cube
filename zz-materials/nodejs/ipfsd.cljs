@@ -77,7 +77,7 @@
               counterV (volatile! (rand-int 100))]
           (.. ipfsd -api -pubsub
               (subscribe
-               "github-foo-torrent-search-ping"
+               "github-foo-find-ping"
                (fn [msg]
                  (when-not (= id (. msg -from))
                    (do
@@ -91,7 +91,7 @@
                 (vswap! counterV inc)
                 (.. ipfsd -api -pubsub
                     (publish
-                     "github-foo-torrent-search-ping"
+                     "github-foo-find-ping"
                      (.encode encoder (str {::count @counterV}))))
                 (recur))))
       ipfsd)))

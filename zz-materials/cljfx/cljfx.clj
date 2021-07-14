@@ -29,7 +29,7 @@
    :icons ["logo/logo.png"]
    :scene {:fx/type :scene
            :root {:fx/type :h-box
-                  :children [{:fx/type :label :text "torrent-search"}
+                  :children [{:fx/type :label :text "find"}
                              {:fx/type :text-field
                               :text searchS}]}}})
 

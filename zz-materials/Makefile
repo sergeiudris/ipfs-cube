@@ -28,4 +28,4 @@ depstar-uberjar:
 
 lein-uberjar:
 	lein with-profiles +prod uberjar 
-# java -Dclojure.core.async.pool-size=1 -jar target/torrent-search-standalone.jar	
+# java -Dclojure.core.async.pool-size=1 -jar target/find-standalone.jar	

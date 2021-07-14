@@ -3,7 +3,7 @@ version: "3.8"
 networks:
   dev-network:
     driver: overlay
-    name: torrent-search-dev
+    name: find-dev
 
 volumes:
   ctx:
@@ -20,7 +20,7 @@ services:
       context: ./app
       dockerfile: ./Dockerfile
       args:
-        workdir: /ctx/torrent-search/bin/app
+        workdir: /ctx/find/bin/app
     command: tail -f /dev/null
     # command: bash f dev
     # expose:

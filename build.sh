@@ -20,7 +20,7 @@ uberjar(){
   lein with-profiles +prod uberjar
   mkdir -p target/jpackage-input
   mv target/torrent-search.standalone.jar target/jpackage-input/
-  #  java -Dclojure.core.async.pool-size=1 -jar target/torrent-search-standalone.jar
+  #  java -Dclojure.core.async.pool-size=1 -jar target/find-standalone.jar
 }
 
 j-package(){
@@ -43,7 +43,7 @@ j-package(){
     --input target/jpackage-input \
     --dest target \
     --main-jar torrent-search.standalone.jar \
-    --name "torrent-search" \
+    --name "find" \
     --main-class clojure.main \
     --arguments -m \
     --arguments ipfs-shipyard.torrent-search.main \
