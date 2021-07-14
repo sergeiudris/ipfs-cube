@@ -29,7 +29,7 @@
    :icons [(str (io/resource "icon256x256.png"))]
    :scene {:fx/type :scene
            :root {:fx/type :h-box
-                  :children [{:fx/type :label :text "find"}
+                  :children [{:fx/type :label :text "torrent-search"}
                              {:fx/type :text-field
                               :text (:searchS state)}]}}})
 
