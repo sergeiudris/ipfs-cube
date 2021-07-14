@@ -216,7 +216,7 @@
       [:div {:href "/"
              :class "ui-logo"}
        #_[:img {:class "logo-img" :src "./img/logo-4.png"}]
-       [:div {:class "logo-name"} "torrent-search"]]
+       [:div {:class "logo-name"} "find"]]
       [:f> menu channels state*]]
      [ant-layout-content {:class "main-content"
                           :style {:margin-top "32px"
@@ -275,7 +275,7 @@
       [:div {:href "/"
              :class "ui-logo"}
        #_[:img {:class "logo-img" :src "./img/logo-4.png"}]
-       [:div {:class "logo-name"} "torrent-search"]]
+       [:div {:class "logo-name"} "find"]]
       [:f> menu channels state*]]
      [ant-layout-content {:class "main-content"
                           :style {:margin-top "32px"
