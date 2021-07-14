@@ -16,7 +16,7 @@
                 metosin/reitit {:mvn/version "0.5.12"}
                 metosin/reitit-spec {:mvn/version "0.5.12"}
                 metosin/reitit-frontend {:mvn/version "0.5.12"}
-                github.ipfs-shipyard.torrent-search/find {:local/root "../../find"}
+                github.ipfs-shipyard.torrent-search/torrent-search {:local/root "../../torrent-search"}
                 github.ipfs-shipyard.torrent-search/ui {:local/root "../../ui"}}}
 
   :shadow

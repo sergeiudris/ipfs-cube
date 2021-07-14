@@ -24,7 +24,7 @@
 (defonce async-exit-hook (js/require "async-exit-hook"))
 
 
-(def FIND_PEER_INDEX (or (.. js/process -env -FIND_PEER_INDEX) 1))
+(def TORRENT_SEARCH_PEER_INDEX (or (.. js/process -env -TORRENT_SEARCH_PEER_INDEX) 1))
 
 (declare)
 
@@ -40,16 +40,16 @@
   (go
     (let [data-dir (.join path
                           js/__dirname
-                          (format "../../volumes/peer%s" FIND_PEER_INDEX))]
+                          (format "../../volumes/peer%s" TORRENT_SEARCH_PEER_INDEX))]
       #_(<! (app.http/start))
       #_(app.electron/start {:on-close stop})
       #_(let [[peerdbA bittorrentA]
               (<! (a/map vector
                          [#_(bittorrent.crawl/start {:data-dir data-dir
-                                                     :peer-index FIND_PEER_INDEX})]))]
+                                                     :peer-index TORRENT_SEARCH_PEER_INDEX})]))]
           #_(pipe (:torrent| @bittorrentA) (:torrent| @peerdbA)))
 
-      #_(let [ipfsd (<! (app.ipfs/start {:peer-index FIND_PEER_INDEX
+      #_(let [ipfsd (<! (app.ipfs/start {:peer-index TORRENT_SEARCH_PEER_INDEX
                                          :data-dir data-dir}))])
       (<! (app.sqlitedb/start {:data-dir data-dir}))
       (doto js/process

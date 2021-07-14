@@ -32,7 +32,7 @@
                                                                          data-dir
                                                                          "orbitdb")})))
               eventlog (<p! (.eventlog orbitdb
-                                       "github-find-main-eventlog"
+                                       "github-torrent-search-main-eventlog"
                                        (clj->js {"accessController"
                                                  {"write" ["*"]}})))]
           (println (.. eventlog -address (toString)))
@@ -87,7 +87,7 @@
                                                                        "orbitdb")})))]
 
         (let [db (<p! (.eventlog orbitdb
-                                 "github-find-foo"
+                                 "github-torrent-search-foo"
                                  (clj->js {"accessController" {"write" ["*"]}
                                            "indexBy" "infohash"})))]
           (println (.. db -address (toString)))
@@ -143,7 +143,7 @@
                                                                          "orbitdb")})))]
 
           (let [db (<p! (.eventlog orbitdb
-                                   "github-find-foo"
+                                   "github-torrent-search-foo"
                                    (clj->js {"accessController" {"write" ["*"]}
                                              "indexBy" "infohash"})))]
             (println (.. db -address (toString)))
@@ -183,7 +183,7 @@
 
 
           #_(let [db (<p! (.docs orbitdb
-                                 "github-find-foo"
+                                 "github-torrent-search-foo"
                                  (clj->js {"accessController" {"write" ["*"]}
                                            "indexBy" "infohash"})))]
 

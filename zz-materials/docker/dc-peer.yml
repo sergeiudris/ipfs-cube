@@ -3,13 +3,13 @@ version: "3.8"
 networks:
   dev-network:
     driver: overlay
-    name: find-dev
+    name: torrent-search-dev
   main-network:
     driver: overlay
-    name: find-peer${FIND_PEER_INDEX}
+    name: torrent-search-peer${TORRENT_SEARCH_PEER_INDEX}
   ipfs-network:
     driver: bridge
-    name: find-ipfs
+    name: torrent-search-ipfs
 
 volumes:
   ctx:
@@ -19,7 +19,7 @@ volumes:
       device: ../../
       o: bind
   ipfs-volume:
-    name: find-ipfs-peer${FIND_PEER_INDEX}
+    name: torrent-search-ipfs-peer${TORRENT_SEARCH_PEER_INDEX}
 
 services:
 
@@ -29,24 +29,24 @@ services:
       context: ./app
       dockerfile: ./Dockerfile
       args:
-        workdir:  /ctx/find/bin/app
+        workdir:  /ctx/torrent-search/bin/app
     command: tail -f /dev/null
     # command: bash f dev
     ports:
-      - 840${FIND_PEER_INDEX}:8400
-      - 400${FIND_PEER_INDEX}:400${FIND_PEER_INDEX}
-      - 500${FIND_PEER_INDEX}:5001
-      - 880${FIND_PEER_INDEX}:8080
-      - 881${FIND_PEER_INDEX}:8081
+      - 840${TORRENT_SEARCH_PEER_INDEX}:8400
+      - 400${TORRENT_SEARCH_PEER_INDEX}:400${TORRENT_SEARCH_PEER_INDEX}
+      - 500${TORRENT_SEARCH_PEER_INDEX}:5001
+      - 880${TORRENT_SEARCH_PEER_INDEX}:8080
+      - 881${TORRENT_SEARCH_PEER_INDEX}:8081
     environment:
-      - FIND_PEER_INDEX=${FIND_PEER_INDEX}
+      - TORRENT_SEARCH_PEER_INDEX=${TORRENT_SEARCH_PEER_INDEX}
       - DISPLAY=$DISPLAY
     networks:
       main-network:
       ipfs-network:
       dev-network:
     volumes:
-      - ./app/volumes/root${FIND_PEER_INDEX}:/root
+      - ./app/volumes/root${TORRENT_SEARCH_PEER_INDEX}:/root
       - type: volume
         source: ctx
         target: /ctx

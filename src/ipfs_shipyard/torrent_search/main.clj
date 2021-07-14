@@ -27,7 +27,7 @@
 (defn -main [& args]
   (println ::-main)
   (let [stateA (atom {:searchS ""})
-        peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
+        peer-index (or (System/getenv "TORRENT_SEARCH_PEER_INDEX") 1)
         data-dir (fs.runtime.core/path-join (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))
         state-dir (fs.runtime.core/path-join data-dir "state")
         ctx {:stateA stateA}]
@@ -64,7 +64,7 @@
 
 (comment
 
-  (let [peer-index (or (System/getenv "FIND_PEER_INDEX") 1)
+  (let [peer-index (or (System/getenv "TORRENT_SEARCH_PEER_INDEX") 1)
         data-dir (io/file (System/getProperty "user.dir") "volumes" (format "peer%s" peer-index))]
     (println data-dir)
     (println (.getCanonicalFile data-dir))
