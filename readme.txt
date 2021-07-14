@@ -18,6 +18,7 @@ program
 - database - datahike
 - build - should happen without docker, on OS, JVM and needed binaries if missing will be downloaded into repo dir for use by build, build is done with one command
 - no plugins, no extensions - program is exactly torrent search
+- repository - should be at github.com/ipfs-shipyard/torrent-search
 - issues - program repository has no issues or discussions, only code
 - attribution headers in files - no, only code
 - programmer names in readme - no, repo is code only
