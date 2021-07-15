@@ -31,4 +31,5 @@ program
 - docs - no : only program and readme with two sections - goal and build from source
 - tests - no
 - releases - no: commit hashes as points
+- updates and update notifications - no
 - just a program - simple, entirely free, open source, no barriers ratio-limits ads donations rewards economies links - just a program that does its thing, like transmission on linux
