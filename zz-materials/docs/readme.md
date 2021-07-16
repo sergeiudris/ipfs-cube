@@ -127,11 +127,6 @@ Easiest way to try out the latest build is to download the latest built version 
 
 If you're interested in building from source, please see [the guide on how to contribute](https://github.com/ipfs-shipyard/cube/blob/master/docs/contributing.md).
 
-## Team
-
-* [Michelle Hertzfeld](https://github.com/meiqimichelle)
-* [Victor Bjelkholm](https://github.com/victorb)
-
 ## Contribute
 
 Cube is a work in progress. As such, there's a few things you can do right now to help out:
@@ -145,27 +140,3 @@ Read Cube [contributing.md](docs/contributing.md) for details on the latest deve
 ### Want to hack on Cube?
 
 [![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)](docs/contributing.md)
-
-# License
-
-The MIT License (MIT)
-
-Copyright (c) 2017 Protocol Labs Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
