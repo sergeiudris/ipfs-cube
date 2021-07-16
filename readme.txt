@@ -19,7 +19,8 @@ program
 - interface - cljfx
 - system tray - no, program runs in foreground
 - database - datahike
-- build - should happen without docker, on OS, JVM and needed binaries if missing will be downloaded into repo dir for use by build, build is done with one command - jpackage
+- build - should happen without docker, on OS - with jpackage,  build is done with one cli command
+- JVM - if missing will be downloaded into repo dir
 - run - program can be run with one cli command
 - no plugins, no extensions - program is exactly torrent and IPFS client, with search
 - repository - should be at github.com/ipfs-shipyard/find
