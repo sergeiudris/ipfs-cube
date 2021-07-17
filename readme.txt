@@ -33,7 +33,7 @@ program
 - docs - no : only program and readme with two sections - goal and build from source
 - tests - no
 - nesting - no, no dirs - all files are flat on a single level src/ipfs_shipyard/find
-- forbidden words - refactor, fix, helper, util(s), controller/manager, update, wrap, factory, play with,etc, misc, cleanup, service, org
+- forbidden words - refactor, fix, maintainer, archive, trash, helper, util(s), controller/manager, update, wrap, factory, play with,etc, misc, cleanup, service, org
 - releases - no: commit hashes as points
 - updates and update notifications - no
 - one branch, forks, no tags - main
