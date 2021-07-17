@@ -34,5 +34,5 @@ program
 - tests - no
 - releases - no: commit hashes as points
 - updates and update notifications - no
-- one branch - main
+- one branch, forks, no tags - main
 - just a program - simple, entirely free, open source, no barriers ratio-limits ads donations rewards economies links - just a program that does its thing, like transmission on linux
