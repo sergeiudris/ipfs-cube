@@ -32,6 +32,7 @@ program
 - authoring orgs, org links - no, repo is code only
 - docs - no : only program and readme with two sections - goal and build from source
 - tests - no
+- forbidden words - refactor, fix, helper, util(s), controller/manager, update, wrap, factory, play with,etc, misc, cleanup, service, org
 - releases - no: commit hashes as points
 - updates and update notifications - no
 - one branch, forks, no tags - main
