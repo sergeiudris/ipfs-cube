@@ -1,15 +1,5 @@
-.lein-repl-history
-.lein-failures
+.cpcache/
+target/
+volumes/
 .nrepl-port
-target/**
-resources/public/js
-resources/public/css
-resources/public/fonts
-node_modules/
-.cljs_nashorn_repl/
-figwheel_server.log
-nashorn_code_cache/
-
-# Installed automatically by `make install`
-src/ui/less/ipfs.css
-src/ui/less/tachyons.css
+.lein-repl-history

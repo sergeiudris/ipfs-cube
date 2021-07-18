@@ -1,0 +1,69 @@
+{:paths []
+ :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
+             "clojars" {:url "https://clojars.org/repo"}
+             "scijava" {:url "http://maven.scijava.org/content/repositories/public/"}
+             "jitpack" {:url "https://jitpack.io"}
+             "cloudsmith-jvm-libp2p" {:url "https://dl.cloudsmith.io/public/libp2p/jvm-libp2p/maven/"}}
+ :deps {}
+
+ :aliases
+ {:core
+  {:extra-deps {org.clojure/clojure {:mvn/version "1.10.3"}
+                org.clojure/core.async {:mvn/version "1.3.618"}
+                org.clojure/spec.alpha {:mvn/version "0.2.187"}}
+   :override-deps {org.clojure/test.check {:mvn/version "1.0.0"}}}
+
+  :app
+  {:extra-deps {metosin/reitit  {:mvn/version "0.5.12"}
+                aleph/aleph {:mvn/version "0.4.7-alpha5"}
+                byte-streams/byte-streams {:mvn/version "0.2.5-alpha2"}
+                manifold/manifold {:mvn/version "0.1.9-alpha3"}
+                github.cljfx/cljfx {:git/url "https://github.com/cljfx/cljfx"
+                                    :sha "ec3c34e619b2408026b9f2e2ff8665bebf70bf56"}
+                #_tick/tick #_{:git/url "https://github.com/juxt/tick"
+                               :sha "4438103d96e00927f777229bc22576bf4fd6c901"
+                               :tag "0.4.31-alpha"}
+                com.cognitect/transit-clj {:mvn/version "1.0.324"}
+                javax.servlet/servlet-api {:mvn/version "2.5"}
+                io.replikativ/datahike {:mvn/version "0.3.6"}
+
+                github.cljctools.cljctools/cljctools-jvm {:local/root "../../../cljctools/cljctools-jvm"}
+                github.cljctools.cljctools/bytes-jvm {:local/root "../../../cljctools/bytes-jvm"}
+                github.cljctools.cljctools/codec-jvm {:local/root "../../../cljctools/codec-jvm"}
+                github.cljctools.cljctools/socket-jvm {:local/root "../../../cljctools/socket-jvm"}
+                github.cljctools.cljctools/fs-jvm {:local/root "../../../cljctools/fs-jvm"}
+                github.cljctools.cljctools/transit-jvm {:local/root "../../../cljctools/transit-jvm"}
+                github.cljctools.cljctools/datagram-socket-jvm {:local/root "../../../cljctools/datagram-socket-jvm"}
+                github.cljctools.cljctools/system-tray {:local/root "../../../cljctools/system-tray"}
+                github.cljctools.cljctools/reitit-cors-interceptor {:local/root "../../../cljctools/reitit-cors-interceptor"}
+                github.cljctools.cljctools/varint {:local/root "../../../cljctools/varint"}
+                github.cljctools.cljctools/bencode {:local/root "../../../cljctools/bencode"}
+                github.cljctools.cljctools/bittorrent {:local/root "../../../cljctools/bittorrent"}
+                github.cljctools.cljctools/bittorrent-dht-crawl {:local/root "../../../cljctools/bittorrent-dht-crawl"}
+                github.cljctools.cljctools/ipfs-jvm {:local/root "../../../cljctools/ipfs-jvm"}
+                github.cljctools.cljctools/peerdb {:local/root "../../../cljctools/peerdb"}
+
+                github.find/find {:local/root "../../find"}
+                github.find/app {:local/root "../../app"}}
+   :extra-paths ["target/classes" "resources" "../ui/resources"]
+   :jvm-opts ["-Dclojure.core.async.pool-size=1" "-Dclojure.compiler.direct-linking=true"]
+   :main-opts ["-m" "find.app.main"]}
+
+  :repl
+  {:extra-deps {github.cljctools/deps-repl {:git/url "https://github.com/cljctools/deps-repl"
+                                            :sha "08283d3841c5948b0b9d36a977ebfdad111cdb2f"
+                                            :tag "v2.0.1"}
+                nrepl/nrepl {:mvn/version "0.8.3"}
+                cider/cider-nrepl {:mvn/version "0.25.5"}}
+   :main-opts ["-m" "lambdaisland.nrepl.main"
+               "--init-ns" "find.app.main"
+               "--port" "7788"
+               "--bind" "0.0.0.0"
+               "--middleware" "cider.nrepl/cider-middleware"]}
+
+  :depstar
+  {:replace-deps {com.github.seancorfield/depstar {:git/url "https://github.com/seancorfield/depstar"
+                                                   :sha "19aa2a828e9adfeb72f302ca1011c9064fa863ce"
+                                                   :tag "2.0.216 + 9"}}
+   :ns-default hf.depstar
+   :exec-args {}}}}

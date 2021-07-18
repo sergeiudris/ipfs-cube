@@ -1,0 +1,42 @@
+#!/bin/bash
+
+repl(){
+  clj -A:core:app:repl
+}
+
+compile-java(){
+  lein javac
+}
+
+gen-proto(){
+  OUT=target/proto
+  mkdir -p $OUT
+  SRC=$(cd ../../../ && pwd)/cljctools/ipfs-jvm/src
+  protoc --java_out=${OUT} --proto_path ${SRC}/cljctools/ipfs/runtime node_proto.proto
+}
+
+main(){
+  clojure -A:core:app
+}
+
+
+uberjar(){
+  clojure -X:depstar uberjar \
+    :aot true \
+    :jar target/find.jar \
+    :aliases '[:core :app]' \
+    :verbose true \
+    :main-class find.main
+}
+
+lein-uberjar(){
+  lein with-profiles +prod uberjar 
+  #  java -Dclojure.core.async.pool-size=1 -jar target/find-standalone.jar
+}
+
+resources(){
+  mkdir -p resources/repo/
+  cp -r ../../src resources/repo/
+}
+
+"$@"
