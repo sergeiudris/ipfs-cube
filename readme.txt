@@ -23,7 +23,6 @@ program
 - JVM - if missing will be downloaded into repo dir
 - run - program can be run with one cli command
 - no plugins, no extensions - program is exactly torrent and IPFS client, with search
-- repository - should be at github.com/ipfs-shipyard/find
 - issues - program repository has no issues or discussions, only code
 - attribution headers in files - no, only code
 - programmer names in readme - no, repo is code only
