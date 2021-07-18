@@ -1,7 +1,7 @@
-# find
+find
 torrent and IPFS client, with search
 
-## program
+program
 
 - decentralized peer-to-peer program to search and download IPFS/torrent files
 - automated index - program crawles ipfs/torrent network, forming the index of files
@@ -14,6 +14,7 @@ torrent and IPFS client, with search
 - can download files - it's a torrent client and IPFS client
 - language - clojure
 - installation - desktop program
+- binaries - repo has no binary releases, only source code and "build from source" in readme
 - runtime - program runs on JVM, will not be GraalVM compiled, it's not on Jesus level
 - interface - cljfx
 - system tray - no, program runs in foreground
@@ -23,7 +24,20 @@ torrent and IPFS client, with search
 - run - program can be run with one cli command
 - no plugins, no extensions - program is exactly torrent and IPFS client, with search
 - repository - should be at github.com/ipfs-shipyard/find
+- issues - program repository has no issues or discussions, only code
+- attribution headers in files - no, only code
+- programmer names in readme - no, repo is code only
+- license files - no, repo is only code
+- authors - no, repo is only code
+- authoring orgs, org links - no, repo is code only
+- docs - no : only program and readme with two sections - goal and build from source
+- tests - no
 - nesting - no, no dirs - all files are flat on a single level src/ipfs_shipyard/find
-- one branch - main and forks
+- forbidden words - refactor, fix, maintainer, archive, trash, helper, util, controller/manager, update, wrap, factory, play with,etc, misc, cleanup, service, org, test, alpha
+- releases - no: commit hashes as points
+- updates and update notifications - no
+- one branch, forks, no tags - main
 - rebase or merge - merge
+- pull requests - github, but merge from command line, no programmer names - --ff or 'from fork/main into upstream/main'
+- programmer names or emails in commit history - no, repo is code only
 - just a program - simple, entirely free, open source, no barriers ratio-limits ads donations rewards economies links - just a program that does its thing, like transmission on linux
