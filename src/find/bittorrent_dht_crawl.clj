@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.bittorrent-dht-crawl
+(ns find.bittorrent-dht-crawl
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -21,7 +21,7 @@
    [cljctools.fs.runtime.core :as fs.runtime.core]
    [cljctools.fs.protocols :as fs.protocols]
 
-   [ipfs-shipyard.find.impl :refer [hash-key-distance-comparator-fn
+   [find.impl :refer [hash-key-distance-comparator-fn
                                     send-krpc-request-fn
                                     encode-nodes
                                     decode-nodes
@@ -32,11 +32,11 @@
                                     fixed-buf-size
                                     chan-buf]]
 
-   [ipfs-shipyard.find.bittorrent-dht :as find.bittorrent-dht]
-   [ipfs-shipyard.find.bittorrent-find-nodes :as find.bittorrent-find-nodes]
-   [ipfs-shipyard.find.bittorrent-metadata :as find.bittorrent-metadata]
-   [ipfs-shipyard.find.bittorrent-sybil :as find.bittorrent-sybil]
-   [ipfs-shipyard.find.bittorrent-sample-infohashes :as find.bittorrent-sample-infohashes])
+   [find.bittorrent-dht :as find.bittorrent-dht]
+   [find.bittorrent-find-nodes :as find.bittorrent-find-nodes]
+   [find.bittorrent-metadata :as find.bittorrent-metadata]
+   [find.bittorrent-sybil :as find.bittorrent-sybil]
+   [find.bittorrent-sample-infohashes :as find.bittorrent-sample-infohashes])
   (:import
    (java.net InetSocketAddress InetAddress)
    (io.netty.bootstrap Bootstrap)
@@ -54,7 +54,7 @@
   [{:as opts
     :keys [data-dir]}]
   (go
-    (let [state-filepath (fs.runtime.core/path-join data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.json")
+    (let [state-filepath (fs.runtime.core/path-join data-dir "find.bittorrent-dht-crawl.json")
           stateA (atom
                   (merge
                    (let [self-idBA  (codec.runtime.core/hex-to-bytes "a8fb5c14469fc7c46e91679c493160ed3d13be3d") #_(bytes.runtime.core/random-bytes 20)]
@@ -391,7 +391,7 @@
            count-torrentsA
            count-messages-sybilA]}]
   (let [started-at (now)
-        filepath (fs.runtime.core/path-join data-dir "ipfs-shipyard.find.bittorrent-dht-crawl.log.edn")
+        filepath (fs.runtime.core/path-join data-dir "find.bittorrent-dht-crawl.log.edn")
         _ (fs.runtime.core/remove filepath)
         _ (fs.runtime.core/make-parents filepath)
         writer (fs.runtime.core/writer filepath :append true)
@@ -416,7 +416,7 @@
                        [:nodes-to-sample| (count (chan-buf nodes-to-sample|))
                         :nodes-from-sampling| (count (chan-buf nodes-from-sampling|))]
                        [:messages [:dht @count-messagesA :sybil @count-messages-sybilA]]
-                       [:sockets @ipfs-shipyard.find.bittorrent-metadata/count-socketsA]
+                       [:sockets @find.bittorrent-metadata/count-socketsA]
                        [:routing-table (count (:routing-table state))]
                        [:dht-keyspace (map (fn [[id routing-table]] (count routing-table)) (:dht-keyspace state))]
                        [:routing-table-find-noded  (count (:routing-table-find-noded state))]

@@ -24,7 +24,7 @@ depstar-uberjar:
     :aot true \
     :jar target/find.jar \
     :verbose true \
-    :main-class ipfs-shipyard.find.main
+    :main-class find.main
 
 lein-uberjar:
 	lein with-profiles +prod uberjar 

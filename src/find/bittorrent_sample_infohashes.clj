@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.bittorrent-sample-infohashes
+(ns find.bittorrent-sample-infohashes
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -7,7 +7,7 @@
    [clojure.core.async.impl.protocols :refer [closed?]]
    [cljctools.bytes.runtime.core :as bytes.runtime.core]
    [cljctools.codec.runtime.core :as codec.runtime.core]
-   [ipfs-shipyard.find.impl :refer [decode-samples
+   [find.impl :refer [decode-samples
                                     decode-nodes
                                     now]]))
 

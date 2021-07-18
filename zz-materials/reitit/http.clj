@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.app.http
+(ns find.app.http
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close!
@@ -40,7 +40,7 @@
 
    ;;
 
-   [ipfs-shipyard.find.spec :as find.spec]))
+   [find.spec :as find.spec]))
 
 (defonce ^:private registry-ref (atom {}))
 

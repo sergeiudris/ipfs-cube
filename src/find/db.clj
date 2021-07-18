@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.db
+(ns find.db
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close! onto-chan!
                                      pub sub unsub mult tap untap mix admix unmix pipe
@@ -26,7 +26,7 @@
 (comment
 
   (require
-   '[ipfs-shipyard.find.db :as find.db]
+   '[find.db :as find.db]
    '[cljctools.bytes.runtime.core :as bytes.runtime.core]
    '[cljctools.codec.runtime.core :as codec.runtime.core]
    '[cljctools.bittorrent.spec :as bittorrent.spec]

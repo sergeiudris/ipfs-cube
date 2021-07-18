@@ -32,7 +32,7 @@ program
 - authoring orgs, org links - no, repo is code only
 - docs - no : only program and readme with two sections - goal and build from source
 - tests - no
-- nesting - no, no dirs - all files are flat on a single level src/ipfs_shipyard/find
+- nesting - no, no dirs - all files are flat on a single level src/find
 - forbidden words - refactor, fix, maintainer, archive, trash, helper, util, controller/manager, update, wrap, factory, play with,etc, misc, cleanup, service, org, test, alpha
 - releases - no: commit hashes as points
 - updates and update notifications - no

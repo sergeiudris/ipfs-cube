@@ -25,7 +25,7 @@ uberjar(){
   #   :aot true \
   #   :jar target/find.standalone.jar \
   #   :verbose false \
-  #   :main-class ipfs-shipyard.find.main
+  #   :main-class find.main
 
 
   lein with-profiles +prod uberjar
@@ -57,7 +57,7 @@ j-package(){
     --name "find" \
     --main-class clojure.main \
     --arguments -m \
-    --arguments ipfs-shipyard.find.main \
+    --arguments find.main \
     --resource-dir resources \
     --java-options -Xmx2048m \
     --app-version ${APP_VERSION} \

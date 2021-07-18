@@ -1,4 +1,4 @@
-(def MAIN 'ipfs-shipyard.find.main)
+(def MAIN 'find.main)
 #_(prn (clojure-version))
 #_(prn *command-line-args*)
 

@@ -1,4 +1,4 @@
-(ns ipfs-shipyard.find.main
+(ns find.main
   (:gen-class)
   (:require
    [clojure.core.async :as a :refer [chan go go-loop <! >! <!! >!!  take! put! offer! poll! alt! alts! close! onto-chan!
@@ -11,11 +11,11 @@
    [cljctools.fs.runtime.core :as fs.runtime.core]
    [cljctools.fs.protocols :as fs.protocols]
 
-   [ipfs-shipyard.find.spec :as find.spec]
-   [ipfs-shipyard.find.cljfx :as find.cljfx]
-   [ipfs-shipyard.find.db :as find.db]
-   [ipfs-shipyard.find.bittorrent-dht-crawl :as find.bittorrent-dht-crawl]
-   [ipfs-shipyard.find.ipfs-dht :as find.ipfs-dht]))
+   [find.spec :as find.spec]
+   [find.cljfx :as find.cljfx]
+   [find.db :as find.db]
+   [find.bittorrent-dht-crawl :as find.bittorrent-dht-crawl]
+   [find.ipfs-dht :as find.ipfs-dht]))
 
 (println "clojure.core.async.pool-size" (System/getProperty "clojure.core.async.pool-size"))
 (println "clojure.compiler.direct-linking" (System/getProperty "clojure.compiler.direct-linking"))
@@ -43,10 +43,10 @@
 
   (require
    '[cljctools.bytes.core :as bytes.core]
-   '[ipfs-shipyard.find.ipfs-dht :as find.ipfs-dht]
-   '[ipfs-shipyard.find.spec :as find.spec]
-   '[ipfs-shipyard.find.cljfx :as find.cljfx]
-   '[ipfs-shipyard.find.db :as find.db]
+   '[find.ipfs-dht :as find.ipfs-dht]
+   '[find.spec :as find.spec]
+   '[find.cljfx :as find.cljfx]
+   '[find.db :as find.db]
    :reload)
   
   (-main)
